@@ -1,39 +1,42 @@
 import React, { useState } from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
 
-interface PasswordConfirmationInputProps {
-  password: string;
-  confirmPassword: string;
+interface NameInputProps {
+  value: string;
   onChange: (text: string) => void;
   label?: string;
   placeholder?: string;
 }
 
-export default function ConfirmPasswordPassword({
-  password,
-  confirmPassword,
+const validateName = (fullName: string): boolean => {
+  return fullName.trim().length > 3;
+};
+
+export default function FullnameInput({
+  value,
   onChange,
-  label = 'Confirmação de senha',
-  placeholder = 'Repita a sua senha',
-}: PasswordConfirmationInputProps) {
+  label = 'Nome completo',
+  placeholder = 'Digite o seu nome completo'
+}: NameInputProps) {
   const [touched, setTouched] = useState(false);
-  const isMatch = password === confirmPassword;
+  const isValid = validateName(value);
 
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput 
-        placeholder={placeholder}
-        secureTextEntry={true}
-        autoCapitalize="none"
-        autoComplete="password"
-        style={styles.input}
-        value={confirmPassword}
-        onChangeText={onChange}
-        onBlur={() => setTouched(true)}
-      />
-      {touched && !isMatch && (
-        <Text style={styles.error}>Senhas não são identicas</Text>
+        <TextInput
+          placeholder='Digite seu nome'
+          keyboardType='default'
+          autoCapitalize='words'
+          autoComplete='name'
+          style={styles.input}
+          onChangeText={onChange}
+          onBlur={() => setTouched(true)}
+       />
+      {touched && !isValid && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.error}>Insira um nome válido</Text>
+        </View>
       )}
     </View>
   );
@@ -62,6 +65,5 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     fontSize: 14,
-    marginBottom: 10
   }
 });

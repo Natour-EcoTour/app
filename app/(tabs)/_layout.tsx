@@ -23,16 +23,16 @@ export default function TabLayout() {
         options={{
           title: 'Perfil',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
+            <Ionicons name={focused ? 'person-circle' : 'person-circle-outline'} color={color} size={24} />
           ),
         }}
       />
       <Tabs.Screen
-        name="about"
+        name="map"
         options={{
           title: 'Pontos',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+            <Ionicons name={focused ? 'map' : 'map-outline'} color={color} size={24}/>
           ),
         }}
       />
@@ -42,7 +42,7 @@ export default function TabLayout() {
         options={{
           title: 'Configurações',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'person-add' : 'person-add-outline'} color={color} size={24}/>
+            <Ionicons name={focused ? 'options' : 'options-outline'} color={color} size={24}/>
           ),
         }}
       />
