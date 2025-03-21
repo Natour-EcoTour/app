@@ -9,7 +9,7 @@ const markers = [
     description: 'Trilha de caminhada',
     coordinate: { latitude: -23.484787, longitude: -46.206867 },
     type: 'hiking',
-    icon: require('../../assets/points/trail_ico.svg'),
+    icon: require('../../assets/points/trail_ico.png'),
   },
   {
     id: 2,

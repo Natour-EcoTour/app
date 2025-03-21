@@ -1,48 +1,61 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 interface PasswordInputProps {
-  value: string;
-  onChange: (text: string) => void;
   label?: string;
   placeholder?: string;
 }
 
-const validatePassword = (password: string): boolean => {
-  const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
-  return regex.test(password);
-};
+const passwordSchema = yup.object({
+  password: yup
+    .string()
+    .required('Senha é obrigatória')
+    .matches(
+      /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
+      'A senha deve ter pelo menos 8 caracteres\n1 letra maiúscula\n1 caractere especial'
+    ),
+});
 
 export default function PasswordInput({
-  value,
-  onChange,
   label = 'Senha',
-  placeholder = 'Digite a sua senha'
+  placeholder = 'Digite a sua senha',
 }: PasswordInputProps) {
-  const [touched, setTouched] = useState(false);
-  const isValid = validatePassword(value);
+  const {
+    control,
+    formState: { errors },
+    trigger,
+  } = useForm({
+    resolver: yupResolver(passwordSchema),
+    defaultValues: { password: '' },
+  });
 
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput 
-        placeholder={placeholder}
-        secureTextEntry={true}
-        autoCapitalize="none"
-        autoComplete="password"
-        style={styles.input}
-        value={value}
-        onChangeText={onChange}
-        onBlur={() => setTouched(true)}
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder={placeholder}
+            keyboardType="default"
+            autoCapitalize="none"
+            secureTextEntry
+            autoComplete="password"
+            style={styles.input}
+            value={value}
+            onChangeText={(text) => {
+              onChange(text);
+              trigger('password');
+            }}
+            onBlur={onBlur}
+          />
+        )}
       />
-      {touched && !isValid && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.error}>A senha deve conter:</Text>
-          <Text style={styles.error}>8 ou mais caracteres</Text>
-          <Text style={styles.error}>Letra maiúscula</Text>
-          <Text style={styles.error}>Caracter especial</Text>
-        </View>
-      )}
+      {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
     </View>
   );
 }
@@ -63,12 +76,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 4,
   },
-  errorContainer: {
-    marginTop: 5,
-    marginBottom: 15,
-  },
   error: {
     color: 'red',
     fontSize: 14,
-  }
+  },
 });

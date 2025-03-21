@@ -2,7 +2,6 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import React, { useState } from 'react';
 import CpfInput from '../components/CpfInput';
 import EmailInput from '../components/EmailInput';
-import PasswordInput from '../components/PasswordInput';
 import ConfirmPasswordPassword from '../components/ConfirmPasswordInput';
 import FullnameInput from '../components/NameInput';
 
@@ -24,7 +23,6 @@ export default function RegisterScreen() {
           <FullnameInput value={fullName} onChange={setFullName} />
           <EmailInput value={email} onChange={setEmail} />
           <CpfInput value={cpf} onChange={setCpf} />
-          <PasswordInput value={password} onChange={setPassword} />
           <ConfirmPasswordPassword
             password={password}
             confirmPassword={confirmPassword}

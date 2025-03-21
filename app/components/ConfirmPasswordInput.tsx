@@ -1,47 +1,106 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
-interface PasswordConfirmationInputProps {
-  password: string;
-  confirmPassword: string;
-  onChange: (text: string) => void;
+interface PasswordFormProps {
   label?: string;
   placeholder?: string;
+  confirmLabel?: string;
+  confirmPlaceholder?: string;
 }
 
-export default function ConfirmPasswordPassword({
-  password,
-  confirmPassword,
-  onChange,
-  label = 'Confirmação de senha',
-  placeholder = 'Repita a sua senha',
-}: PasswordConfirmationInputProps) {
-  const [touched, setTouched] = useState(false);
-  const isMatch = password === confirmPassword;
+const passwordSchema = yup.object({
+  password: yup
+    .string()
+    .required('Senha é obrigatória')
+    .matches(
+      /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
+      'A senha deve ter pelo menos 8 caracteres\n1 letra maiúscula\n1 caractere especial'
+    ),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Senhas não são idênticas')
+    .required('Confirmação de senha é obrigatória'),
+});
+
+export default function PasswordForm({
+  label = 'Senha',
+  placeholder = 'Digite a sua senha',
+  confirmLabel = 'Confirmação de senha',
+  confirmPlaceholder = 'Repita a sua senha',
+}: PasswordFormProps) {
+  const {
+    control,
+    formState: { errors },
+    trigger,
+  } = useForm({
+    resolver: yupResolver(passwordSchema),
+    defaultValues: { password: '', confirmPassword: '' },
+  });
 
   return (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput 
-        placeholder={placeholder}
-        secureTextEntry={true}
-        autoCapitalize="none"
-        autoComplete="password"
-        style={styles.input}
-        value={confirmPassword}
-        onChangeText={onChange}
-        onBlur={() => setTouched(true)}
-      />
-      {touched && !isMatch && (
-        <Text style={styles.error}>Senhas não são identicas</Text>
-      )}
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>{label}</Text>
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder={placeholder}
+              keyboardType="default"
+              autoCapitalize="none"
+              secureTextEntry
+              autoComplete="password"
+              style={styles.input}
+              value={value}
+              onChangeText={(text) => {
+                onChange(text);
+                trigger('password');
+              }}
+              onBlur={onBlur}
+            />
+          )}
+        />
+        {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>{confirmLabel}</Text>
+        <Controller
+          control={control}
+          name="confirmPassword"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder={confirmPlaceholder}
+              keyboardType="default"
+              autoCapitalize="none"
+              secureTextEntry
+              autoComplete="password"
+              style={styles.input}
+              value={value}
+              onChangeText={(text) => {
+                onChange(text);
+                trigger('confirmPassword');
+              }}
+              onBlur={onBlur}
+            />
+          )}
+        />
+        {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message}</Text>}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  container: {
     width: '100%',
+  },
+  inputContainer: {
+    marginBottom: 20,
   },
   label: {
     color: '#fff',
@@ -52,16 +111,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 10,
     fontSize: 16,
-    marginBottom: 15,
     borderRadius: 4,
-  },
-  errorContainer: {
-    marginTop: 5,
-    marginBottom: 15,
   },
   error: {
     color: 'red',
     fontSize: 14,
-    marginBottom: 10
-  }
+    marginTop: 5,
+  },
 });
