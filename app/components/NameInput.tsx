@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 interface NameInputProps {
-  value: string;
-  onChange: (text: string) => void;
   label?: string;
   placeholder?: string;
 }
@@ -16,34 +14,41 @@ const nameSchema = yup.object({
 });
 
 export default function FullnameInput({
-  value,
-  onChange,
   label = 'Nome completo',
   placeholder = 'Digite o seu nome completo'
 }: NameInputProps) {
   const {
     control,
-    handleSubmit,
     formState: { errors },
+    trigger,
   } = useForm({
     resolver: yupResolver(nameSchema),
-    defaultValues: { name: value },
+    defaultValues: { name: '' },
   });
-
-  const [touched, setTouched] = useState(false);
 
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
         <Controller
-          placeholder={placeholder}
-          keyboardType='default'
-          autoCapitalize='words'
-          autoComplete='name'
-          style={styles.input}
-          onChangeText={onChange}
-          onBlur={() => setTouched(true)}
-       />
+          control={control}
+          name="name"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder={placeholder}
+              keyboardType="default"
+              autoCapitalize="none"
+              autoComplete="name"
+              style={styles.input}
+              value={value}
+              onChangeText={(text) => {
+                onChange(text);
+                trigger('name');
+              }}
+              onBlur={onBlur}
+          />
+        )}
+      />
+      {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
     </View>
   );
 }
@@ -64,12 +69,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 4,
   },
-  errorContainer: {
-    marginTop: 5,
-    marginBottom: 15,
-  },
   error: {
     color: 'red',
     fontSize: 14,
-  }
+  },
 });

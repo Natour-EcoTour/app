@@ -16,20 +16,15 @@ const emailSchema = yup.object({
 export default function EmailInput({
   label = 'E-mail',
   placeholder = 'Digite seu e-mail',
-  
 }: EmailInputProps) {
   const {
     control,
-    handleSubmit,
     formState: { errors },
+    trigger,
   } = useForm({
     resolver: yupResolver(emailSchema),
     defaultValues: { email: '' },
   });
-
-  const onSubmit = (data: { email: string }) => {
-    console.log('E-mail enviado:', data);
-  };
 
   return (
     <View style={styles.inputContainer}>
@@ -45,7 +40,10 @@ export default function EmailInput({
             autoComplete="email"
             style={styles.input}
             value={value}
-            onChangeText={onChange}
+            onChangeText={(text) => {
+              onChange(text);
+              trigger('email');
+            }}
             onBlur={onBlur}
           />
         )}
@@ -74,10 +72,5 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     fontSize: 14,
-  },
-  submit: {
-    color: '#4CAF50',
-    fontSize: 16,
-    marginTop: 10,
   },
 });
