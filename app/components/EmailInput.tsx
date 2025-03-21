@@ -1,43 +1,56 @@
 import React from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 interface EmailInputProps {
-  value: string;
-  onChange: (text: string) => void;
   label?: string;
   placeholder?: string;
 }
 
-const validateEmail = (email: string): boolean => {
-  const regex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/;
-  return regex.test(email);
-}
+const emailSchema = yup.object({
+  email: yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
+});
 
 export default function EmailInput({
-  value,
-  onChange,
   label = 'E-mail',
   placeholder = 'Digite seu e-mail',
+  
 }: EmailInputProps) {
-  const [touched, setTouched] = React.useState(false);
-  const isValid = validateEmail(value);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(emailSchema),
+    defaultValues: { email: '' },
+  });
+
+  const onSubmit = (data: { email: string }) => {
+    console.log('E-mail enviado:', data);
+  };
 
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput 
-        placeholder={placeholder}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoComplete="email"
-        style={styles.input}
-        value={value}
-        onChangeText={onChange}
-        onBlur={() => setTouched(true)}
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder={placeholder}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoComplete="email"
+            style={styles.input}
+            value={value}
+            onChangeText={onChange}
+            onBlur={onBlur}
+          />
+        )}
       />
-      {touched && !isValid && (
-        <Text style={styles.error}>E-mail inválido</Text>
-      )}
+      {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
     </View>
   );
 }
@@ -58,12 +71,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 4,
   },
-  errorContainer: {
-    marginTop: 5,
-    marginBottom: 15,
-  },
   error: {
     color: 'red',
     fontSize: 14,
-  }
+  },
+  submit: {
+    color: '#4CAF50',
+    fontSize: 16,
+    marginTop: 10,
+  },
 });

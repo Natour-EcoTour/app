@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 interface NameInputProps {
   value: string;
@@ -8,9 +11,9 @@ interface NameInputProps {
   placeholder?: string;
 }
 
-const validateName = (fullName: string): boolean => {
-  return fullName.trim().length > 3;
-};
+const nameSchema = yup.object({
+  name: yup.string().required('Nome é obrigatório').min(3, 'Nome muito curto'),
+});
 
 export default function FullnameInput({
   value,
@@ -18,14 +21,22 @@ export default function FullnameInput({
   label = 'Nome completo',
   placeholder = 'Digite o seu nome completo'
 }: NameInputProps) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(nameSchema),
+    defaultValues: { name: value },
+  });
+
   const [touched, setTouched] = useState(false);
-  const isValid = validateName(value);
 
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
-        <TextInput
-          placeholder='Digite seu nome'
+        <Controller
+          placeholder={placeholder}
           keyboardType='default'
           autoCapitalize='words'
           autoComplete='name'
@@ -33,11 +44,6 @@ export default function FullnameInput({
           onChangeText={onChange}
           onBlur={() => setTouched(true)}
        />
-      {touched && !isValid && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.error}>Insira um nome válido</Text>
-        </View>
-      )}
     </View>
   );
 }
