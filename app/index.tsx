@@ -1,13 +1,27 @@
-import { Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { Text, Image, StyleSheet, ScrollView, TextInput } from 'react-native';
 import { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { loginSchema } from '../app/utils/validationSchema';
 
-import EmailInput from './components/EmailInput';
-import PasswordInput from './components/PasswordInput';
-import LoginButton from './components/LoginButton';
-import LogedInModal from './components/LogedInModal';
+import PasswordInput from '../app/components/PasswordInput';
+import LoginButton from '../app/components/LoginButton';
+import LogedInModal from '../app/components/LogedInModal';
 
 export default function Index() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+  
+  const onSubmit = (data: any) => {
+    console.log('Form data:', data);
+  };
 
   return (
     <ScrollView 
@@ -19,9 +33,41 @@ export default function Index() {
       />
       <Text style={styles.title}>Login</Text>
       
-      <EmailInput />
-      <PasswordInput />
-      <LoginButton onPress={() => setIsModalVisible(true)} />
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <>
+            <Text style={styles.label}>E-mail</Text>
+            <TextInput
+              placeholder="Digite seu e-mail"
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
+          </>
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <>
+            <PasswordInput 
+              value={value} 
+              onChange={onChange} 
+            />
+            {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
+          </>
+        )}
+      />
+
+      <LoginButton onPress={handleSubmit(onSubmit)} />
 
       {isModalVisible && (
         <LogedInModal 
@@ -56,6 +102,23 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
   },
+  label: {
+    color: '#fff',
+    marginBottom: 5,
+    fontSize: 16,
+  },
+  input: {
+    backgroundColor: '#ffffff',
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 15,
+    borderRadius: 4,
+  },
+  error: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 15,
+  },
   button: {
     backgroundColor: '#04d361',
     padding: 15,
@@ -65,8 +128,5 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-  },
-  text: {
-    color: '#fff',
   },
 });

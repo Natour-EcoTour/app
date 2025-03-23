@@ -1,37 +1,137 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import React, { useState } from 'react';
-import CpfInput from '../components/CpfInput';
-import EmailInput from '../components/EmailInput';
-import ConfirmPasswordPassword from '../components/ConfirmPasswordInput';
-import FullnameInput from '../components/NameInput';
+import React from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { registerSchema } from '../utils/validationSchema';
 
 export default function RegisterScreen() {
-  const [fullName, setFullName] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(registerSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      cpf: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const onSubmit = (data: any) => {
+    console.log('Form data:', data);
+  };
+
+  const formatCpf = (cpf: string) => {
+    cpf = cpf.replace(/\D/g, '');
+    if (cpf.length > 3) cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
+    if (cpf.length > 6) cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+    if (cpf.length > 9) cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
+    return cpf;
+  };
 
   return (
-    <ScrollView 
-      contentContainerStyle={styles.scrollContentContainer}
-      style={styles.scrollView}
-    >
+    <ScrollView contentContainerStyle={styles.scrollContentContainer} style={styles.scrollView}>
       <View style={styles.container}>
         <Text style={styles.title}>Cadastro</Text>
         <View style={styles.inputContainer}>
-          <FullnameInput value={fullName} onChange={setFullName} />
-          <EmailInput value={email} onChange={setEmail} />
-          <CpfInput value={cpf} onChange={setCpf} />
-          <ConfirmPasswordPassword
-            password={password}
-            confirmPassword={confirmPassword}
-            onChange={setConfirmPassword}
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <Text style={styles.label}>Nome completo</Text>
+                <TextInput
+                  placeholder="Digite o seu nome completo"
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+                {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+              </>
+            )}
           />
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => console.log('Cadastrado!')}
-          >
+
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <Text style={styles.label}>E-mail</Text>
+                <TextInput
+                  placeholder="Digite seu e-mail"
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="cpf"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <Text style={styles.label}>CPF</Text>
+                <TextInput
+                  placeholder="Insira seu CPF"
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={(text) => onChange(formatCpf(text))}
+                  value={value}
+                  keyboardType="numeric"
+                  maxLength={14}
+                />
+                {errors.cpf && <Text style={styles.error}>{errors.cpf.message as string}</Text>}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <Text style={styles.label}>Senha</Text>
+                <TextInput
+                  placeholder="Digite a sua senha"
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                  autoCapitalize="none"
+                />
+                {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <Text style={styles.label}>Confirmação de senha</Text>
+                <TextInput
+                  placeholder="Repita a sua senha"
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                  autoCapitalize="none"
+                />
+                {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
+              </>
+            )}
+          />
+
+          <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
             <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
         </View>
@@ -62,6 +162,23 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
+  },
+  label: {
+    color: '#fff',
+    marginBottom: 5,
+    fontSize: 16,
+  },
+  input: {
+    backgroundColor: '#ffffff',
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 15,
+    borderRadius: 4,
+  },
+  error: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 15,
   },
   button: {
     backgroundColor: '#04d361',
