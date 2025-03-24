@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 14,
     marginBottom: 15,
+    alignSelf: 'flex-start'
   },
   button: {
     backgroundColor: '#04d361',

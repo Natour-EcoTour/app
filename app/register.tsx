@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from './utils/validationSchema';
+import RegisterModal from '../app/components/RegisterModal';
+
 
 export default function RegisterScreen() {
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      cpf: '',
-      password: '',
-      confirmPassword: '',
+      name: 'Vitor Antunes Ferreira',
+      email: 'vitinho@gmail.com',
+      cpf: '45999669839',
+      password: 'Aa12345678!',
+      confirmPassword: 'Aa12345678!',
     },
   });
 
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
+    setIsModalVisible(true);
   };
 
   const formatCpf = (cpf: string) => {
@@ -136,6 +142,12 @@ export default function RegisterScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      {isModalVisible && (
+              <RegisterModal 
+                isVisible={isModalVisible} 
+                onClose={() => setIsModalVisible(false)}
+              />
+            )}
     </ScrollView>
   );
 }
