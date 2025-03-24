@@ -75,7 +75,7 @@ export default function Index() {
       </Text>
 
       <Text style={styles.noAccountText} onPress={() => router.push('/forgotPassword')}>
-        Esqueci a minha senha
+        Esqueceu sua senha?
       </Text>
 
       {isModalVisible && (
@@ -84,6 +84,9 @@ export default function Index() {
           onClose={() => setIsModalVisible(false)}
         />
       )}
+
+      
+
     </ScrollView>
   );
 }
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   noAccountText: {
-    color: '#fff',
+    color: '#04d361',
     marginTop: 20,
     textDecorationLine: 'underline',
   }

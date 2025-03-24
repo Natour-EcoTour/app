@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from './utils/validationSchema';
 import RegisterModal from '../app/components/RegisterModal';
+import { router } from 'expo-router';
 
 
 export default function RegisterScreen() {
@@ -148,6 +149,9 @@ export default function RegisterScreen() {
                 onClose={() => setIsModalVisible(false)}
               />
             )}
+
+      <Text style={styles.link} onPress={() => router.push('/')}>Voltar para o login</Text>
+
     </ScrollView>
   );
 }
@@ -202,4 +206,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  link: {
+    color: '#04d361',
+    marginTop: 20,
+    textDecorationLine: 'underline',
+  }
 });

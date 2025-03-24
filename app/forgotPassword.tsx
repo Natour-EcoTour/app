@@ -5,8 +5,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { forgotPasswordSchema } from '../app/utils/validationSchema';
 
 import EmailInput from './components/EmailInput';
+import { useState } from 'react';
+import SentPasswordModal from './components/SentPasswordModal';
+import { router } from 'expo-router';
 
 export default function forgotPassword() {
+
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(forgotPasswordSchema),
         defaultValues: {
@@ -14,12 +20,20 @@ export default function forgotPassword() {
         },
       });
 
+      const onSubmit = (data: any) => {
+        console.log('Form data:', data);
+        setIsModalVisible(true);
+      };
+      
   return (
     <ScrollView 
       style={styles.scrollView} 
       contentContainerStyle={styles.scrollContentContainer}
     >
-      <Text style={styles.title}>Esqueci a minha senha</Text>
+      <Text style={styles.title}>Esqueceu sua senha?</Text>
+
+      <Text style={styles.text}>Digite o e-mail cadastrado na Natour.</Text>
+      <Text style={styles.text}>Enviaremos um link para redefinir sua senha.</Text>
 
       <Controller
         control={control}
@@ -36,10 +50,18 @@ export default function forgotPassword() {
       />
       <TouchableOpacity 
             style={styles.button} 
-            onPress={handleSubmit(() => {console.log('enviar')})}
+            onPress={handleSubmit(onSubmit)}
         >
             <Text style={styles.buttonText}>Enviar</Text>
       </TouchableOpacity>
+      {isModalVisible && (
+        <SentPasswordModal 
+          isVisible={isModalVisible} 
+          onClose={() => setIsModalVisible(false)}
+        />
+      )}
+
+      <Text style={styles.link} onPress={() => router.push('/')}>Voltar para o login</Text>
     
     </ScrollView>
   );
@@ -64,6 +86,16 @@ const styles = StyleSheet.create({
       color: '#fff',
       fontSize: 20,
       marginBottom: 20,
+    },
+    text: {
+      color: '#fff',
+      fontSize: 15,
+      marginBottom: 5,
+    },
+    link: {
+      color: '#04d361',
+      marginTop: 20,
+      textDecorationLine: 'underline',
     },
     inputContainer: {
       width: '100%',
@@ -91,6 +123,7 @@ const styles = StyleSheet.create({
       padding: 15,
       alignItems: 'center',
       borderRadius: 4,
+      width: '100%',
     },
     buttonText: {
       color: '#fff',
