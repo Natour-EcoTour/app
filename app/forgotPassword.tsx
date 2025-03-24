@@ -101,15 +101,4 @@ const styles = StyleSheet.create({
       marginTop: 20,
       textDecorationLine: 'underline',
     },
-    button: {
-        backgroundColor: '#04d361',
-        padding: 15,
-        width: 200,
-        alignItems: 'center',
-        borderRadius: 4,
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 16,
-    },
 });
