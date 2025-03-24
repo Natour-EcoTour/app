@@ -74,7 +74,9 @@ export default function Index() {
         Não possui um cadastro?
       </Text>
 
-      <Text style={styles.noAccountText}>Esqueci a minha senha</Text>
+      <Text style={styles.noAccountText} onPress={() => router.push('/forgotPassword')}>
+        Esqueci a minha senha
+      </Text>
 
       {isModalVisible && (
         <LogedInModal 

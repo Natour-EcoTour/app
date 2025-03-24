@@ -62,3 +62,7 @@ export const loginSchema = yup.object().shape({
 });
 
 export default { registerSchema, loginSchema };
+
+export const forgotPasswordSchema = yup.object().shape({
+  email: yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
+});
