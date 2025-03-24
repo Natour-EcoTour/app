@@ -60,3 +60,5 @@ export const loginSchema = yup.object().shape({
       'A senha deve ter pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial'
     ),
 });
+
+export default { registerSchema, loginSchema };

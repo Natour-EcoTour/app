@@ -14,7 +14,7 @@ export default function LogedInModal({ isVisible, children, onClose }: Props) {
 
   const handleClose = () => {
     onClose();
-    router.push('/(tabs)/banana');
+    router.push('/(tabs)/map');
   };
 
   return (

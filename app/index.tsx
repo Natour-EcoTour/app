@@ -1,5 +1,7 @@
 import { Text, Image, StyleSheet, ScrollView, TextInput } from 'react-native';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
+
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../app/utils/validationSchema';
@@ -7,20 +9,24 @@ import { loginSchema } from '../app/utils/validationSchema';
 import PasswordInput from '../app/components/PasswordInput';
 import LoginButton from '../app/components/LoginButton';
 import LogedInModal from '../app/components/LogedInModal';
+import EmailInput from './components/EmailInput';
 
 export default function Index() {
+  const router = useRouter();
+
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'a@a.com',
+      password: 'Aa12345678!',
     },
   });
   
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
+    setIsModalVisible(true);
   };
 
   return (
@@ -39,14 +45,9 @@ export default function Index() {
         render={({ field: { onChange, onBlur, value } }) => (
           <>
             <Text style={styles.label}>E-mail</Text>
-            <TextInput
-              placeholder="Digite seu e-mail"
-              style={styles.input}
-              onBlur={onBlur}
-              onChangeText={onChange}
+            <EmailInput
               value={value}
-              keyboardType="email-address"
-              autoCapitalize="none"
+              onChange={onChange}
             />
             {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
           </>
@@ -69,10 +70,16 @@ export default function Index() {
 
       <LoginButton onPress={handleSubmit(onSubmit)} />
 
+      <Text style={styles.noAccountText} onPress={() => router.push('/register')}>
+        Não possui um cadastro?
+      </Text>
+
+      <Text style={styles.noAccountText}>Esqueci a minha senha</Text>
+
       {isModalVisible && (
         <LogedInModal 
           isVisible={isModalVisible} 
-          onClose={() => setIsModalVisible(false)} 
+          onClose={() => setIsModalVisible(false)}
         />
       )}
     </ScrollView>
@@ -129,4 +136,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  noAccountText: {
+    color: '#fff',
+    marginTop: 20,
+    textDecorationLine: 'underline',
+  }
 });

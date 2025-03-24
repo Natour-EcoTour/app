@@ -19,9 +19,9 @@ export default function TabLayout() {
         }}
       >
       <Tabs.Screen
-        name="banana"
+        name="profile"
         options={{
-          title: 'banana',
+          title: 'Perfil',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'person-circle' : 'person-circle-outline'} color={color} size={24} />
           ),
@@ -38,7 +38,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="register"
+        name="settings"
         options={{
           title: 'Configurações',
           tabBarIcon: ({ color, focused }) => (

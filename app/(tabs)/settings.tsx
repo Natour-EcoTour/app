@@ -4,7 +4,7 @@ import { Link } from 'expo-router'
 export default function Banana() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Natour</Text>
+      <Text style={styles.text}>CONFIGURAÇÔES</Text>
     
     </View>
   );
