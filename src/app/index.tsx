@@ -4,12 +4,12 @@ import { useRouter } from 'expo-router';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { loginSchema } from '../app/utils/validationSchema';
+import { loginSchema } from '../validations/validationSchema';
 
-import PasswordInput from '../app/components/PasswordInput';
-import LoginButton from '../app/components/LoginButton';
-import LogedInModal from '../app/components/LogedInModal';
-import EmailInput from './components/EmailInput';
+import PasswordInput from '../components/PasswordInput';
+import LoginButton from '../components/LoginButton';
+import LogedInModal from '../components/LogedInModal';
+import EmailInput from '../components/EmailInput';
 
 export default function Index() {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function Index() {
       contentContainerStyle={styles.scrollContentContainer} 
       style={styles.scrollView}>
       <Image 
-        source={require('../assets/images/icon.png')} 
+        source={require('../../assets/images/icon.png')} 
         style={{ width: 200, height: 200 }}
       />
       <Text style={styles.title}>Login</Text>
@@ -70,11 +70,11 @@ export default function Index() {
 
       <LoginButton onPress={handleSubmit(onSubmit)} />
 
-      <Text style={styles.noAccountText} onPress={() => router.push('/register')}>
+      <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/register')}>
         Não possui um cadastro?
       </Text>
 
-      <Text style={styles.noAccountText} onPress={() => router.push('/forgotPassword')}>
+      <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/forgotPassword')}>
         Esqueceu sua senha?
       </Text>
 

@@ -8,14 +8,14 @@ const markers = [
     title: 'Pico do urubu',
     description: 'Trilha de caminhada',
     coordinate: { latitude: -23.484787, longitude: -46.206867 },
-    icon: require('../../assets/points/trail_ico.png'),
+    icon: require('../../../../assets/points/trail_ico.png'),
   },
   {
     id: 2,
     title: 'Sítio do Seu Joaquim',
     description: 'Sítio',
     coordinate: { latitude: -23.474011, longitude: -46.216179 },
-    icon: require('../../assets/points/house_ico.png'),
+    icon: require('../../../../assets/points/house_ico.png'),
   },
 ];
 

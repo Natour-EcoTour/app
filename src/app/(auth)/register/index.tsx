@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { router } from 'expo-router';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerSchema } from './utils/validationSchema';
-import RegisterModal from '../app/components/RegisterModal';
-import { router } from 'expo-router';
+import { registerSchema } from '@/src/validations/validationSchema';
+import RegisterModal from '@/src/components/RegisterModal';
+
 
 
 export default function RegisterScreen() {
