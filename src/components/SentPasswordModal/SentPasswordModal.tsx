@@ -1,6 +1,5 @@
 import { Modal, View, Text, Image, StyleSheet, Button } from 'react-native';
 import { PropsWithChildren } from 'react';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 
 
@@ -9,12 +8,12 @@ type Props = PropsWithChildren<{
   onClose: () => void;
 }>;
 
-export default function LogedInModal({ isVisible, children, onClose }: Props) {
+export default function SentPasswordModal({ isVisible, children, onClose }: Props) {
     const router = useRouter();
 
   const handleClose = () => {
     onClose();
-    router.push('/(main)/map');
+    router.push('/');
   };
 
   return (
@@ -22,10 +21,10 @@ export default function LogedInModal({ isVisible, children, onClose }: Props) {
       <Modal animationType="fade" transparent={true} visible={isVisible}>
         <View style={styles.modalContent}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>Login feito com sucesso!</Text>
+            <Text style={styles.title}>Senha enviada!</Text>
           </View>
           <View style={styles.iconContainer}>
-            <Image source={require('../../assets/images/icon.png')} style={{ width: 200, height: 200 }} />
+            <Image source={require('../../../assets/images/icon.png')} style={{ width: 200, height: 200 }} />
           </View>
           <View style={styles.buttonContainer}>
             <Button title="Fechar" onPress={handleClose} color="#464C55" />

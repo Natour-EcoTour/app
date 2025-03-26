@@ -1,5 +1,5 @@
 import { Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import SentPasswordModal from '@/src/components/SentPasswordModal';
+
 import { useState } from 'react';
 import { router } from 'expo-router';
 
@@ -7,6 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { forgotPasswordSchema } from '@/src/validations/validationSchema';
 
+import SentPasswordModal from '@/src/components/SentPasswordModal/SentPasswordModal';
 import EmailInput from '@/src/components/EmailInput';
 
 export default function forgotPassword() {

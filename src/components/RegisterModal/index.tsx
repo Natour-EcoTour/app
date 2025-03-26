@@ -24,7 +24,7 @@ export default function LogedInModal({ isVisible, children, onClose }: Props) {
             <Text style={styles.title}>Cadastro feito com sucesso!</Text>
           </View>
           <View style={styles.iconContainer}>
-            <Image source={require('../../assets/images/icon.png')} style={{ width: 200, height: 200 }} />
+            <Image source={require('../../../assets/images/icon.png')} style={{ width: 200, height: 200 }} />
           </View>
           <View style={styles.buttonContainer}>
             <Button title="Fechar" onPress={handleClose} color="#464C55" />
