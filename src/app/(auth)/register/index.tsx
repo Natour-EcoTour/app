@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { router } from 'expo-router';
+import { Linking } from 'react-native';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,7 +18,7 @@ export default function RegisterScreen() {
     defaultValues: {
       name: 'Vitor Antunes Ferreira',
       email: 'vitinho@gmail.com',
-      cpf: '45999669839',
+      // cpf: '45999669839',
       password: 'Aa12345678!',
       confirmPassword: 'Aa12345678!',
     },
@@ -28,13 +29,13 @@ export default function RegisterScreen() {
     setIsModalVisible(true);
   };
 
-  const formatCpf = (cpf: string) => {
-    cpf = cpf.replace(/\D/g, '');
-    if (cpf.length > 3) cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
-    if (cpf.length > 6) cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-    if (cpf.length > 9) cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
-    return cpf;
-  };
+  // const formatCpf = (cpf: string) => {
+  //   cpf = cpf.replace(/\D/g, '');
+  //   if (cpf.length > 3) cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
+  //   if (cpf.length > 6) cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+  //   if (cpf.length > 9) cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
+  //   return cpf;
+  // };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContentContainer} style={styles.scrollView}>
@@ -79,7 +80,7 @@ export default function RegisterScreen() {
             )}
           />
 
-          <Controller
+          {/* <Controller
             control={control}
             name="cpf"
             render={({ field: { onChange, onBlur, value } }) => (
@@ -97,7 +98,7 @@ export default function RegisterScreen() {
                 {errors.cpf && <Text style={styles.error}>{errors.cpf.message as string}</Text>}
               </>
             )}
-          />
+          /> */}
 
           <Controller
             control={control}
@@ -142,6 +143,18 @@ export default function RegisterScreen() {
           <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
             <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
+
+            <View style={styles.termsContainer}>
+              <Text style={styles.termsText}
+                onPress={() => Linking.openURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
+                Termos de uso
+              </Text>
+              <Text style={styles.termsText}
+                onPress={() => Linking.openURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
+                Política de privacidade
+              </Text>
+            </View>
+
         </View>
       </View>
       {isModalVisible && (
@@ -171,6 +184,19 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
+  },
+  termsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 20
+  },
+  termsText: {
+    marginRight: 20,
+    marginLeft: 25,
+    color: '#04d361',
+    textDecorationLine: 'underline',
+    fontWeight: 'bold',
   },
   title: {
     color: '#fff',
