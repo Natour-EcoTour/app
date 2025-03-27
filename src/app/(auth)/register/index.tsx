@@ -8,19 +8,22 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '@/src/validations/validationSchema';
 import RegisterModal from '@/src/components/RegisterModal';
 
+import Fullnamelnput from "@/src/components/NameInput";
+import EmailInput  from '@/src/components/EmailInput';
+import PasswordForm from '@/src/components/ConfirmPasswordInput';
 
 
 export default function RegisterScreen() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       name: 'Vitor Antunes Ferreira',
       email: 'vitinho@gmail.com',
       // cpf: '45999669839',
       password: 'Aa12345678!',
-      confirmPassword: 'Aa12345678!',
+      confirmPassword: '',
     },
   });
 
@@ -47,12 +50,9 @@ export default function RegisterScreen() {
             name="name"
             render={({ field: { onChange, onBlur, value } }) => (
               <>
-                <Text style={styles.label}>Nome completo</Text>
-                <TextInput
+                <Fullnamelnput
                   placeholder="Digite o seu nome completo"
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
+                  onChange={onChange}
                   value={value}
                 />
                 {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
@@ -65,15 +65,10 @@ export default function RegisterScreen() {
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
               <>
-                <Text style={styles.label}>E-mail</Text>
-                <TextInput
+                <EmailInput
                   placeholder="Digite seu e-mail"
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
+                  onChange={onChange}
                   value={value}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
                 />
                 {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
               </>
@@ -103,17 +98,12 @@ export default function RegisterScreen() {
           <Controller
             control={control}
             name="password"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, value } }) => (
               <>
                 <Text style={styles.label}>Senha</Text>
-                <TextInput
-                  placeholder="Digite a sua senha"
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                  autoCapitalize="none"
+                <PasswordForm
+                  password={value}
+                  onChangePassword={onChange}
                 />
                 {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
               </>
@@ -121,6 +111,21 @@ export default function RegisterScreen() {
           />
 
           <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, value } }) => (
+              <>
+                <Text style={styles.label}>Confirmação de senha</Text>
+                <PasswordForm
+                  password={value}
+                  onChangePassword={onChange}
+                />
+                {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
+              </>
+            )}
+          />
+
+          {/* <Controller
             control={control}
             name="confirmPassword"
             render={({ field: { onChange, onBlur, value } }) => (
@@ -138,7 +143,7 @@ export default function RegisterScreen() {
                 {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
               </>
             )}
-          />
+          /> */}
 
           <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
             <Text style={styles.buttonText}>Cadastrar</Text>
@@ -173,7 +178,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
-    backgroundColor: '#25292e',
+    backgroundColor: '',
   },
   scrollContentContainer: {
     flexGrow: 1,
@@ -199,15 +204,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   title: {
-    color: '#fff',
+    color: '#04d361',
     fontSize: 20,
     marginBottom: 20,
+    fontWeight: 'bold',
   },
   inputContainer: {
     width: '100%',
   },
   label: {
-    color: '#fff',
+    color: '#000',
     marginBottom: 5,
     fontSize: 16,
   },

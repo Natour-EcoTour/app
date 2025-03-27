@@ -36,12 +36,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   label: {
-    color: '#fff',
+    color: '#000',
     marginBottom: 5,
     fontSize: 16,
   },
   input: {
     backgroundColor: '#ffffff',
+    borderColor: '#000',
+    borderWidth: 1,
     padding: 10,
     fontSize: 16,
     marginBottom: 15,

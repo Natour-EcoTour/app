@@ -94,7 +94,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
-    backgroundColor: '#25292e',
+    backgroundColor: '',
   },
   scrollContentContainer: {
     flexGrow: 1,
@@ -107,9 +107,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: '#fff',
-    fontSize: 20,
+    color: '#04d361',
+    fontSize: 35,
     marginBottom: 20,
+    fontWeight: 'bold',
   },
   inputContainer: {
     width: '100%',
