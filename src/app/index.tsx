@@ -1,4 +1,4 @@
-import { Text, Image, StyleSheet, ScrollView, TextInput } from 'react-native';
+import { Text, Image, StyleSheet, ScrollView, View, ImageBackground } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 
@@ -13,7 +13,6 @@ import EmailInput from '../components/EmailInput';
 
 export default function Index() {
   const router = useRouter();
-
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const { control, handleSubmit, formState: { errors } } = useForm({
@@ -30,71 +29,81 @@ export default function Index() {
   };
 
   return (
-    <ScrollView 
-      contentContainerStyle={styles.scrollContentContainer} 
-      style={styles.scrollView}>
-      <Image 
-        source={require('../../assets/images/icon.png')} 
-        style={{ width: 200, height: 200 }}
-      />
-      <Text style={styles.title}>Login</Text>
-      
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <Text style={styles.label}>E-mail</Text>
-            <EmailInput
-              value={value}
-              onChange={onChange}
+    <ImageBackground 
+      source={require('../../assets/images/leaf_bg.jpg')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <ScrollView 
+        contentContainerStyle={styles.scrollContentContainer} 
+        style={styles.scrollView}
+      >
+        <View style={styles.containerBox}>
+          <Image 
+            source={require('../../assets/images/icon.png')} 
+            style={{ width: 200, height: 200 }}
+          />
+          <Text style={styles.title}>Login</Text>
+          
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <Text style={styles.label}>E-mail</Text>
+                <EmailInput
+                  value={value}
+                  onChange={onChange}
+                />
+                {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <PasswordInput 
+                  value={value} 
+                  onChange={onChange} 
+                />
+                {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
+              </>
+            )}
+          />
+
+          <LoginButton onPress={handleSubmit(onSubmit)} />
+
+          <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/register')}>
+            Não possui um cadastro?
+          </Text>
+
+          <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/forgotPassword')}>
+            Esqueceu sua senha?
+          </Text>
+
+          {isModalVisible && (
+            <LogedInModal 
+              isVisible={isModalVisible} 
+              onClose={() => setIsModalVisible(false)}
             />
-            {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
-          </>
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <PasswordInput 
-              value={value} 
-              onChange={onChange} 
-            />
-            {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
-          </>
-        )}
-      />
-
-      <LoginButton onPress={handleSubmit(onSubmit)} />
-
-      <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/register')}>
-        Não possui um cadastro?
-      </Text>
-
-      <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/forgotPassword')}>
-        Esqueceu sua senha?
-      </Text>
-
-      {isModalVisible && (
-        <LogedInModal 
-          isVisible={isModalVisible} 
-          onClose={() => setIsModalVisible(false)}
-        />
-      )}
-
-      
-
-    </ScrollView>
+          )}
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   scrollView: {
     flex: 1,
-    backgroundColor: '',
   },
   scrollContentContainer: {
     flexGrow: 1,
@@ -102,8 +111,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  container: {
+  containerBox: {
+    backgroundColor: 'rgba(235, 237, 240, 0.9)',
+    borderRadius: 20,
+    padding: 50,
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 15,
     alignItems: 'center',
   },
   title: {
@@ -112,36 +129,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontWeight: 'bold',
   },
-  inputContainer: {
-    width: '100%',
-  },
   label: {
-    color: '#fff',
+    color: '#333',
     marginBottom: 5,
     fontSize: 16,
-  },
-  input: {
-    backgroundColor: '#ffffff',
-    padding: 10,
-    fontSize: 16,
-    marginBottom: 15,
-    borderRadius: 4,
   },
   error: {
     color: 'red',
     fontSize: 14,
     marginBottom: 15,
     alignSelf: 'flex-start'
-  },
-  button: {
-    backgroundColor: '#04d361',
-    padding: 15,
-    alignItems: 'center',
-    borderRadius: 4,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
   },
   noAccountText: {
     color: '#04d361',

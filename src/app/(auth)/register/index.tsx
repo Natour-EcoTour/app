@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
 import { router } from 'expo-router';
 import { Linking } from 'react-native';
 
@@ -23,7 +23,7 @@ export default function RegisterScreen() {
       email: 'vitinho@gmail.com',
       // cpf: '45999669839',
       password: 'Aa12345678!',
-      confirmPassword: '',
+      confirmPassword: 'Aa12345678!',
     },
   });
 
@@ -41,6 +41,11 @@ export default function RegisterScreen() {
   // };
 
   return (
+    <ImageBackground 
+          source={require('../../../../assets/images/leaf_bg.jpg')}
+          style={styles.backgroundImage}
+          resizeMode="cover"
+    >
     <ScrollView contentContainerStyle={styles.scrollContentContainer} style={styles.scrollView}>
       <View style={styles.container}>
         <Text style={styles.title}>Cadastro</Text>
@@ -159,8 +164,9 @@ export default function RegisterScreen() {
                 Política de privacidade
               </Text>
             </View>
-
+          
         </View>
+        <Text style={styles.link} onPress={() => router.push('/')}>Voltar para o login</Text>
       </View>
       {isModalVisible && (
               <RegisterModal 
@@ -168,14 +174,17 @@ export default function RegisterScreen() {
                 onClose={() => setIsModalVisible(false)}
               />
             )}
-
-      <Text style={styles.link} onPress={() => router.push('/')}>Voltar para o login</Text>
-
     </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   scrollView: {
     flex: 1,
     backgroundColor: '',
@@ -187,7 +196,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   container: {
+    backgroundColor: 'rgba(235, 237, 240, 0.9)',
+    borderRadius: 20,
+    padding: 50,
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 15,
     alignItems: 'center',
   },
   termsContainer: {
@@ -198,7 +215,7 @@ const styles = StyleSheet.create({
   },
   termsText: {
     marginRight: 20,
-    marginLeft: 25,
+    marginLeft: 10,
     color: '#04d361',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
