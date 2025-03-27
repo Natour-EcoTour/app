@@ -156,11 +156,11 @@ export default function RegisterScreen() {
 
             <View style={styles.termsContainer}>
               <Text style={styles.termsText}
-                onPress={() => Linking.openURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
+                onPress={() => router.push('/(terms)/userTerms')}>
                 Termos de uso
               </Text>
               <Text style={styles.termsText}
-                onPress={() => Linking.openURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
+                onPress={() => router.push('/(terms)/privacyPolicy')}>
                 Política de privacidade
               </Text>
             </View>
