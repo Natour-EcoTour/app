@@ -1,80 +1,128 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react'; 
+import MapView, { Marker } from 'react-native-maps'; 
+import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity } from 'react-native';  
+import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler'; 
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; 
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+const { width } = Dimensions.get('window'); 
 
-const markers = [
-  {
-    id: 1,
-    title: 'Pico do urubu',
-    description: 'Trilha de caminhada',
-    coordinate: { latitude: -23.484787, longitude: -46.206867 },
+const markers = [ 
+  { 
+    id: 1, 
+    title: 'Pico do urubu', 
+    description: 'Trilha de caminhada', 
+    coordinate: { latitude: -23.484787, longitude: -46.206867 }, 
     icon: require('../../../../assets/points/trail_ico.png'),
-  },
-  {
-    id: 2,
-    title: 'Sítio do Seu Joaquim',
-    description: 'Sítio',
-    coordinate: { latitude: -23.474011, longitude: -46.216179 },
+    images: [
+      'https://media.discordapp.net/attachments/827008047054192720/1300183225057935390/image.png?ex=67ec41fd&is=67eaf07d&hm=b7d360e8ba92d3abc8778ab444959d54e7a10e539b98e5aa30c5ea86d79b3e07&=&format=webp&quality=lossless&width=1075&height=680',
+      'https://media.discordapp.net/attachments/827008047054192720/1241429142243643412/Untitled-1.png?ex=67ec15fc&is=67eac47c&hm=a494ca42eff43d1578af57e4285a867cd86fa9cac7175501978b5cbad74580a1&=&format=webp&quality=lossless&width=125&height=125'
+    ],
+  }, 
+  { 
+    id: 2, 
+    title: 'Sítio do Seu Joaquim', 
+    description: 'Sítio', 
+    coordinate: { latitude: -23.474011, longitude: -46.216179 }, 
     icon: require('../../../../assets/points/house_ico.png'),
-  },
-];
+    images: [
+      'https://media.discordapp.net/attachments/827008047054192720/1300183225057935390/image.png?ex=67ec41fd&is=67eaf07d&hm=b7d360e8ba92d3abc8778ab444959d54e7a10e539b98e5aa30c5ea86d79b3e07&=&format=webp&quality=lossless&width=1075&height=680',
+      'https://media.discordapp.net/attachments/827008047054192720/1241429142243643412/Untitled-1.png?ex=67ec15fc&is=67eac47c&hm=a494ca42eff43d1578af57e4285a867cd86fa9cac7175501978b5cbad74580a1&=&format=webp&quality=lossless&width=125&height=125'
+    ],
+  }, 
+]; 
 
-export default function App() {
-  // State to store the selected marker
+export default function App() { 
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
-
-  // ref for bottom sheet
+  const [currentIndex, setCurrentIndex] = useState(0); // Add state to track the current image index
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // Bottom Sheet snap points
+  const flatListRef = useRef<FlatList>(null); // Reference for FlatList
+  
   const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-  // Handle marker press
+  
   const handleMarkerPress = (marker: any) => {
     setSelectedMarker(marker);
-    bottomSheetRef.current?.expand(); // Expand Bottom Sheet when a marker is clicked
+    setCurrentIndex(0); // Reset to first image when a new marker is selected
+    bottomSheetRef.current?.expand();
   };
 
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: -23.550377,
-            longitude: -46.63394,
-            latitudeDelta: 6,
-            longitudeDelta: 6,
-          }}
-        >
-          {markers.map((marker) => (
-            <Marker
-              key={marker.id}
-              coordinate={marker.coordinate}
-              image={marker.icon}
-              onPress={() => handleMarkerPress(marker)}
-            />
-          ))}
-        </MapView>
+  const handleArrowPress = (direction: 'left' | 'right') => {
+    let newIndex = currentIndex;
+    if (direction === 'right') {
+      newIndex = (currentIndex + 1) % markers[0].images.length; // Loop back to first image when reaching the end
+    } else if (direction === 'left') {
+      newIndex = (currentIndex - 1 + markers[0].images.length) % markers[0].images.length; // Loop to last image when at the start
+    }
+    setCurrentIndex(newIndex); // Update the current index
+    flatListRef.current?.scrollToIndex({ index: newIndex }); // Scroll FlatList to the selected index
+  };
 
-        <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={snapPoints} enablePanDownToClose={true}>
-          <BottomSheetView style={styles.sheetContent}>
-            {selectedMarker ? (
-              <>
-                <Text style={styles.title}>{selectedMarker.title}</Text>
-                <Text style={styles.description}>{selectedMarker.description}</Text>
-              </>
-            ) : (
-              <Text style={styles.title}>Selecione um ponto no mapa</Text>
-            )}
-          </BottomSheetView>
-        </BottomSheet>
-      </View>
-    </GestureHandlerRootView>
-  );
+  return ( 
+    <GestureHandlerRootView style={{ flex: 1 }}> 
+      <View style={styles.container}> 
+        <MapView 
+          style={styles.map} 
+          initialRegion={{ 
+            latitude: -23.550377, 
+            longitude: -46.63394, 
+            latitudeDelta: 6, 
+            longitudeDelta: 6, 
+          }} 
+        > 
+          {markers.map((marker) => ( 
+            <Marker 
+              key={marker.id} 
+              coordinate={marker.coordinate} 
+              image={marker.icon} 
+              onPress={() => handleMarkerPress(marker)} 
+            /> 
+          ))} 
+        </MapView> 
+        
+        <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={snapPoints} enablePanDownToClose={true}> 
+          <BottomSheetView style={styles.sheetContent}> 
+            {selectedMarker ? ( 
+              <> 
+                <Text style={styles.title}>{selectedMarker.title}</Text> 
+                <Text style={styles.description}>{selectedMarker.description}</Text> 
+
+                <View style={styles.arrowRow}> 
+                  <TouchableOpacity onPress={() => handleArrowPress('left')}> 
+                    <Image 
+                      style={styles.arrowIcon} 
+                      source={require('../../../../assets/icons/esquerda.png')} 
+                    /> 
+                  </TouchableOpacity> 
+                  <TouchableOpacity onPress={() => handleArrowPress('right')}> 
+                    <Image 
+                      style={styles.arrowIcon} 
+                      source={require('../../../../assets/icons/direita.png')} 
+                    /> 
+                  </TouchableOpacity> 
+                </View> 
+
+                <FlatList 
+                  ref={flatListRef} 
+                  style={styles.imageContainer} 
+                  keyExtractor={item => item.id} 
+                  data={[{ id: '1', url: 'https://media.discordapp.net/attachments/827008047054192720/1300183225057935390/image.png?ex=67ec41fd&is=67eaf07d&hm=b7d360e8ba92d3abc8778ab444959d54e7a10e539b98e5aa30c5ea86d79b3e07&=&format=webp&quality=lossless&width=1075&height=680' }, 
+                        { id: '2', url: 'https://media.discordapp.net/attachments/827008047054192720/1241429142243643412/Untitled-1.png?ex=67ec15fc&is=67eac47c&hm=a494ca42eff43d1578af57e4285a867cd86fa9cac7175501978b5cbad74580a1&=&format=webp&quality=lossless&width=125&height=125' }]} 
+                  renderItem={({item}) => ( 
+                    <Image source={{ uri: item?.url }} style={styles.listImage} /> 
+                  )} 
+                  contentContainerStyle={{ gap: 20 }} 
+                  snapToInterval={40} 
+                  pagingEnabled 
+                  horizontal 
+                /> 
+              </> 
+            ) : ( 
+              <Text style={styles.title}>Selecione um ponto no mapa</Text> 
+            )} 
+          </BottomSheetView> 
+        </BottomSheet> 
+      </View> 
+    </GestureHandlerRootView> 
+  ); 
 }
 
 const styles = StyleSheet.create({
@@ -102,5 +150,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 5,
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    overflow: 'hidden',
+    marginTop: 10,
+    marginRight: 10,
+    alignContent: 'center',
+  },
+  listImage: {
+    width: 100,
+    height: 100,
+  },
+  arrowRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: 100,
+    marginVertical: 10,
+  },
+  arrowButton: {
+    marginHorizontal: 20,
+  },
+  arrowIcon: {
+    width: 40,
+    height: 40,
   },
 });
