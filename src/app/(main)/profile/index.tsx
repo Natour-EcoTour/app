@@ -5,7 +5,6 @@ export default function Banana() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>PERFIL</Text>
-    
     </View>
   );
 }
