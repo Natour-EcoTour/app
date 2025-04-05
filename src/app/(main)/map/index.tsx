@@ -1,107 +1,169 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'; 
-import MapView, { Marker } from 'react-native-maps'; 
-import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity } from 'react-native';  
-import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler'; 
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; 
+import React, { useMemo, useRef, useState, useCallback } from 'react';
+import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet, View, Text, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 
-import StarRating from '../../../components/StarRating';
+import ImageModal from '../../../components/ImageModal';
 
-const { width } = Dimensions.get('window'); 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const ARROW_BUTTON_WIDTH = 40; // fixed width for each arrow button
+const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32; // subtract arrow widths and container padding
 
-const markers = [ 
-  { 
-    id: 1, 
-    title: 'Pico do urubu', 
-    description: 'O Pico do Urubu, é um pico com 1140 metros de altitude localizado no município de Mogi das Cruzes, Estado de São Paulo.', 
-    coordinate: { latitude: -23.484787, longitude: -46.206867 }, 
+const markers = [
+  {
+    id: 1,
+    title: 'Pico do urubu',
+    description: 'Trilha de caminhada',
+    coordinate: { latitude: -23.484787, longitude: -46.206867 },
     icon: require('../../../../assets/points/trail_ico.png'),
     images: [
-      'https://images-ext-1.discordapp.net/external/FUjYOjNNNSC1lXOSKcECRLga4eBpKrcHVFlNUT860z0/https/pbs.twimg.com/media/GaM0XF5aUAAwCf8.jpg%3Alarge?format=webp&width=585&height=780',
-      'https://media.discordapp.net/attachments/827008047054192720/1241429142243643412/Untitled-1.png?ex=67ec15fc&is=67eac47c&hm=a494ca42eff43d1578af57e4285a867cd86fa9cac7175501978b5cbad74580a1&=&format=webp&quality=lossless&width=125&height=125'
+      { id: '1', image: 'https://instagram.fgru4-1.fna.fbcdn.net/v/t51.29350-15/481771387_1024103336198671_2426967987717668001_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTc5OS5zZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UifQ&_nc_ht=instagram.fgru4-1.fna.fbcdn.net&_nc_cat=107&_nc_oc=Q6cZ2QEokspsqfRrq8cOgtfzrtQdC_91pi_9I-nN9Ux0Pt485vLBs_HwqBhuAyNUDpuGpU2XU7zq5bqV1rERTsWkw_2P&_nc_ohc=Coq7xYGCcvsQ7kNvwFo5JZY&_nc_gid=LFRImXyAyr9VnEtfa5Jb-g&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MzU3NjgzNzk0NTI4Mzk3NDY4Ng%3D%3D.3-ccb7-5&oh=00_AYE8L81sto4BWDk9smt9rxnqqVLjkeNjhP5yHGdyUUAyVw&oe=67F753EE&_nc_sid=fc8dfb'},
+      { id: '2', image: 'https://instagram.fgru4-1.fna.fbcdn.net/v/t51.29350-15/472456028_1265383644748431_5860172356905565300_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTgwMC5zZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UifQ&_nc_ht=instagram.fgru4-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QEnBiDvog0AbhtApyzU0e4pW4iLsjm99lbL9eXJvRH7s8EpxgnRpaWc9q0T1WkmMTusX7z2iR0kRagUH7w6hq-T&_nc_ohc=VqAndmfqka8Q7kNvwFQMknd&_nc_gid=4aF49uoJ6JfRaEKs-yeOuQ&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MzUzOTAzMzcyMDE0MzU3MzMyNg%3D%3D.3-ccb7-5&oh=00_AYFPuCvfZiEfmKnvbNUpAY9m7NqkD3rln788CG8ARB54CQ&oe=67F73279&_nc_sid=fc8dfb'},
+      { id: '3', image: 'https://pbs.twimg.com/media/GhCVa14XMAAIv6i.jpg' },
     ],
-  }, 
-  { 
-    id: 2, 
-    title: 'Sítio do Seu Joaquim', 
-    description: 'Sítio', 
-    coordinate: { latitude: -23.474011, longitude: -46.216179 }, 
+  },
+  {
+    id: 2,
+    title: 'Sítio do Seu Joaquim',
+    description: 'Sítio',
+    coordinate: { latitude: -23.474011, longitude: -46.216179 },
     icon: require('../../../../assets/points/house_ico.png'),
     images: [
-      'https://media.discordapp.net/attachments/827008047054192720/1300183225057935390/image.png?ex=67ec41fd&is=67eaf07d&hm=b7d360e8ba92d3abc8778ab444959d54e7a10e539b98e5aa30c5ea86d79b3e07&=&format=webp&quality=lossless&width=1075&height=680',
-      'https://media.discordapp.net/attachments/827008047054192720/1241429142243643412/Untitled-1.png?ex=67ec15fc&is=67eac47c&hm=a494ca42eff43d1578af57e4285a867cd86fa9cac7175501978b5cbad74580a1&=&format=webp&quality=lossless&width=125&height=125'
+      { id: '1', image: 'https://instagram.fgru4-1.fna.fbcdn.net/v/t51.29350-15/481771387_1024103336198671_2426967987717668001_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTc5OS5zZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UifQ&_nc_ht=instagram.fgru4-1.fna.fbcdn.net&_nc_cat=107&_nc_oc=Q6cZ2QEokspsqfRrq8cOgtfzrtQdC_91pi_9I-nN9Ux0Pt485vLBs_HwqBhuAyNUDpuGpU2XU7zq5bqV1rERTsWkw_2P&_nc_ohc=Coq7xYGCcvsQ7kNvwFo5JZY&_nc_gid=LFRImXyAyr9VnEtfa5Jb-g&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MzU3NjgzNzk0NTI4Mzk3NDY4Ng%3D%3D.3-ccb7-5&oh=00_AYE8L81sto4BWDk9smt9rxnqqVLjkeNjhP5yHGdyUUAyVw&oe=67F753EE&_nc_sid=fc8dfb'},
+      { id: '2', image: 'https://instagram.fgru4-1.fna.fbcdn.net/v/t51.29350-15/472456028_1265383644748431_5860172356905565300_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTgwMC5zZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UifQ&_nc_ht=instagram.fgru4-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QEnBiDvog0AbhtApyzU0e4pW4iLsjm99lbL9eXJvRH7s8EpxgnRpaWc9q0T1WkmMTusX7z2iR0kRagUH7w6hq-T&_nc_ohc=VqAndmfqka8Q7kNvwFQMknd&_nc_gid=4aF49uoJ6JfRaEKs-yeOuQ&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MzUzOTAzMzcyMDE0MzU3MzMyNg%3D%3D.3-ccb7-5&oh=00_AYFPuCvfZiEfmKnvbNUpAY9m7NqkD3rln788CG8ARB54CQ&oe=67F73279&_nc_sid=fc8dfb'},
+      { id: '3', image: 'https://pbs.twimg.com/media/GhCVa14XMAAIv6i.jpg' },
     ],
-  }, 
-]; 
+  },
+];
 
-export default function App() { 
+export default function App() {
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
-  const [currentIndex, setCurrentIndex] = useState(0); // Add state to track the current image index
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const flatListRef = useRef<FlatList>(null); // Reference for FlatList
-  
+  const flatListRef = useRef<FlatList>(null);
   const snapPoints = useMemo(() => ['25%', '50%'], []);
-  
+
   const handleMarkerPress = (marker: any) => {
     setSelectedMarker(marker);
-    setCurrentIndex(0); // Reset to first image when a new marker is selected
+    setCurrentImageIndex(0);
     bottomSheetRef.current?.expand();
-  };
-  
-  return ( 
-    <GestureHandlerRootView style={{ flex: 1 }}> 
-      <View style={styles.container}> 
-        <MapView 
-          style={styles.map} 
-          initialRegion={{ 
-            latitude: -23.550377, 
-            longitude: -46.63394, 
-            latitudeDelta: 6, 
-            longitudeDelta: 6, 
-          }} 
-        > 
-          {markers.map((marker) => ( 
-            <Marker 
-              key={marker.id} 
-              coordinate={marker.coordinate} 
-              image={marker.icon} 
-              onPress={() => handleMarkerPress(marker)} 
-            /> 
-          ))} 
-        </MapView> 
-        
-        <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={snapPoints} enablePanDownToClose={true}> 
-          <BottomSheetView style={styles.sheetContent}> 
-            {selectedMarker ? ( 
-              <> 
-                <Text style={styles.title}>{selectedMarker.title}</Text> 
+    // Scroll to first image whenever a marker is selected
+    flatListRef.current?.scrollToIndex({ index: 0, animated: false });
 
-                <FlatList 
-                  ref={flatListRef} 
-                  style={styles.imageContainer} 
-                  keyExtractor={(item, index) => index.toString()} 
-                  data={selectedMarker.images.map((img: string) => ({ url: img }))} 
-                  renderItem={({item}) => ( 
-                    <Image source={{ uri: item?.url }} style={styles.listImage} /> 
-                  )} 
-                  contentContainerStyle={{ gap: 20 }} 
-                  snapToInterval={40} 
-                  pagingEnabled 
-                  horizontal 
-                />
+  }
+
+  const viewabilityConfig = useMemo(() => ({ viewAreaCoveragePercentThreshold: 50 }), []);
+  
+  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+    if (viewableItems.length > 0) {
+      setCurrentImageIndex(viewableItems[0].index);
+    }
+  }).current;
+
+  const scrollToIndex = (index: number) => {
+    flatListRef.current?.scrollToIndex({ index, animated: true });
+    setCurrentImageIndex(index);
+  };
+
+  const handlePrev = useCallback(() => {
+    if (selectedMarker && currentImageIndex > 0) {
+      scrollToIndex(currentImageIndex - 1);
+    }
+  }, [currentImageIndex, selectedMarker]);
+
+  const handleNext = useCallback(() => {
+    if (selectedMarker && currentImageIndex < selectedMarker.images.length - 1) {
+      scrollToIndex(currentImageIndex + 1);
+    }
+  }, [currentImageIndex, selectedMarker]);
+
+  const renderImageItem = ({ item }: { item: { id: string; image: string } }) => (
+    <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: item.image }} style={styles.image} resizeMode="center" />
+      </View>
+    </TouchableOpacity>
+  );
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: -23.550377,
+            longitude: -46.63394,
+            latitudeDelta: 6,
+            longitudeDelta: 6,
+          }}
+        >
+          {markers.map((marker) => (
+            <Marker
+              key={marker.id}
+              coordinate={marker.coordinate}
+              image={marker.icon}
+              onPress={() => handleMarkerPress(marker)}
+            />
+          ))}
+        </MapView>
+
+        <BottomSheet 
+          ref={bottomSheetRef} 
+          index={-1} 
+          snapPoints={snapPoints} 
+          enablePanDownToClose={true}
+        >
+          <BottomSheetView style={styles.sheetContent}>
+            {selectedMarker ? (
+              <>
+                <Text style={styles.title}>{selectedMarker.title}</Text>
+                <View style={styles.carouselContainer}>
+                  <TouchableOpacity style={[styles.arrowButton, { width: ARROW_BUTTON_WIDTH }]} onPress={handlePrev} disabled={currentImageIndex === 0}>
+                    <Text style={styles.arrowText}>{'<'}</Text>
+                  </TouchableOpacity>
+                  
+                  <View style={[styles.flatListContainer, { width: CAROUSEL_WIDTH }]}>
+                    <FlatList
+                      ref={flatListRef}
+                      data={selectedMarker.images}
+                      horizontal
+                      pagingEnabled
+                      keyExtractor={(item) => item.id}
+                      renderItem={renderImageItem}
+                      showsHorizontalScrollIndicator={false}
+                      onViewableItemsChanged={onViewableItemsChanged}
+                      viewabilityConfig={viewabilityConfig}
+                    />  
+                  </View>
+                  <TouchableOpacity style={[styles.arrowButton, { width: ARROW_BUTTON_WIDTH }]} onPress={handleNext} disabled={selectedMarker && currentImageIndex === selectedMarker.images.length - 1}>
+                    <Text style={styles.arrowText}>{'>'}</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.ImagesIndex}>
+                  <Text>{currentImageIndex + 1 }/{selectedMarker.images.length}</Text>
+                </View>
 
                 <Text style={styles.description}>{selectedMarker.description}</Text>
-                
-                <StarRating />
-                
-              </> 
-            ) : ( 
-              <Text style={styles.title}>Selecione um ponto no mapa</Text> 
-            )} 
-          </BottomSheetView> 
-        </BottomSheet> 
-      </View> 
-    </GestureHandlerRootView> 
-  ); 
+              </>
+            ) : (
+              <Text style={styles.title}>Selecione um ponto no mapa</Text>
+            )}
+          </BottomSheetView>
+        </BottomSheet>
+      </View>
+      {isModalVisible && (
+        <ImageModal 
+          isVisible={isModalVisible} 
+          onClose={() => setIsModalVisible(false)}
+          imageUri={selectedMarker?.images[currentImageIndex]?.image}
+        />
+      )}
+    </GestureHandlerRootView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -116,11 +178,6 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
   },
-  markerIcon: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-  },
   title: {
     fontSize: 25,
     fontWeight: 'bold',
@@ -131,7 +188,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   imageContainer: {
-    width: width - 40,
+    width: SCREEN_WIDTH - 40,
     height: 200,
     overflow: 'hidden',
     marginTop: 10,
@@ -139,7 +196,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   listImage: {
-    width: width - 40,
+    width: SCREEN_WIDTH - 40,
     height: 200,
     resizeMode: 'cover',
   },
@@ -149,11 +206,35 @@ const styles = StyleSheet.create({
     width: 100,
     marginVertical: 10,
   },
-  arrowButton: {
-    marginHorizontal: 20,
-  },
   arrowIcon: {
     width: 40,
     height: 40,
   },
+  carouselContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  arrowButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  arrowText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'gray',
+  },
+  flatListContainer: {
+    // This container reserves the proper width for the FlatList
+    overflow: 'hidden',
+  },
+  image: {
+    width: CAROUSEL_WIDTH,
+    height: 200, // adjust as needed
+  },
+  ImagesIndex: {
+    alignContent: 'center',
+  }
 });
+

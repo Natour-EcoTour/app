@@ -24,4 +24,8 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: '#fff',
   },
+  carouselContainer: {
+    marginBottom: 30,
+    width: '100%',
+  },
 });

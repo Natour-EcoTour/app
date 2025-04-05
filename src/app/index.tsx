@@ -1,7 +1,6 @@
 import { Text, Image, StyleSheet, ScrollView, View, ImageBackground } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../validations/validationSchema';
@@ -97,6 +96,11 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#eee',
+    justifyContent: 'center',
+  },
   backgroundImage: {
     flex: 1,
     width: '100%',
