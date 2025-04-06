@@ -100,8 +100,6 @@ export default function App() {
                   setIsModalVisible(true);
                   }}
                 />
-
-                <Text style={styles.description}>{selectedMarker.description}</Text>
               </>
             ) : (
               <Text style={styles.title}>Selecione um ponto no mapa</Text>
@@ -136,59 +134,4 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  description: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  imageContainer: {
-    width: SCREEN_WIDTH - 40,
-    height: 200,
-    overflow: 'hidden',
-    marginTop: 10,
-    marginRight: 10,
-    alignContent: 'center',
-  },
-  listImage: {
-    width: SCREEN_WIDTH - 40,
-    height: 200,
-    resizeMode: 'cover',
-  },
-  arrowRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: 100,
-    marginVertical: 10,
-  },
-  arrowIcon: {
-    width: 40,
-    height: 40,
-  },
-  carouselContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  arrowButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-  },
-  arrowText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'gray',
-  },
-  flatListContainer: {
-    // This container reserves the proper width for the FlatList
-    overflow: 'hidden',
-  },
-  image: {
-    width: CAROUSEL_WIDTH,
-    height: 200, // adjust as needed
-  },
-  ImagesIndex: {
-    alignContent: 'center',
-  }
 });
-
