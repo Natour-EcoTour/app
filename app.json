@@ -28,9 +28,9 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#232323",
-          "image": "./assets/images/natour_logo.png",
+          "image": "./assets/images/natour_splash.png",
           "dark": {
-            "image": "./assets/images/natour_logo.png",
+            "image": "./assets/images/natour_splash.png",
             "backgroundColor": "#000000"
           },
           "imageWidth": 200
