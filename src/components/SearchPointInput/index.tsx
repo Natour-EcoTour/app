@@ -22,7 +22,7 @@ export default function SearchPointInput({
         style={styles.input}
         value={value}
         onChangeText={onChange}
-        placeholderTextColor="#999"
+        placeholderTextColor="black"
       />
     </View>
   );
@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   input: {
-    borderColor: '#ccc',
+    borderColor: 'rgba(0, 0, 0, 0.36)',
     borderWidth: 2,
     backgroundColor: '#fff',
     padding: 10,
     fontSize: 16,
-    borderRadius: 25,
+    borderRadius: 15,
     width: SCREEN_WIDTH - 20,
     alignSelf: 'center',
   },

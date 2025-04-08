@@ -6,8 +6,9 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 
 import ImageModal from '../../../components/ImageModal';
 import ImageCarousel from '../../../components/ImageCarousel';
-
 import SearchPointInput from '../../../components/SearchPointInput';
+
+import customMapStyle  from '../../../utils/map_style';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ARROW_BUTTON_WIDTH = 40; // fixed width for each arrow button
@@ -62,6 +63,9 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <MapView
+          customMapStyle={customMapStyle}
+          showsBuildings={false}
+          showsCompass={false}
           style={styles.map}
           initialRegion={{
             latitude: -23.550377,
@@ -148,7 +152,7 @@ const styles = StyleSheet.create({
   },
   searchWrapper: {
     position: 'absolute',
-    top: 2,
+    top: 36,
     left: 0,
     right: 0,
     alignItems: 'center',
