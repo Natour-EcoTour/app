@@ -7,6 +7,8 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import ImageModal from '../../../components/ImageModal';
 import ImageCarousel from '../../../components/ImageCarousel';
 
+import SearchPointInput from '../../../components/SearchPointInput';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ARROW_BUTTON_WIDTH = 40; // fixed width for each arrow button
 const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32; // subtract arrow widths and container padding
@@ -47,6 +49,8 @@ export default function App() {
   const flatListRef = useRef<FlatList>(null);
   const snapPoints = useMemo(() => ['25%', '50%'], []);
 
+  const [searchText, setSearchText] = useState('');
+
   const handleMarkerPress = (marker: any) => {
     setSelectedMarker(marker);
     setCurrentImageIndex(0);
@@ -75,6 +79,13 @@ export default function App() {
             />
           ))}
         </MapView>
+
+        <View style={styles.searchWrapper}>
+          <SearchPointInput 
+            onChange={(text) => setSearchText(text)}
+            value={searchText}
+          />
+        </View>
 
         <BottomSheet 
           ref={bottomSheetRef} 
@@ -121,6 +132,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent'
   },
   map: {
     width: '100%',
@@ -133,5 +145,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: 'bold',
+  },
+  searchWrapper: {
+    position: 'absolute',
+    top: 2,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 10,
   },
 });
