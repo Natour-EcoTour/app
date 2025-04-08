@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 export default function Banana() {
   // https://docs.expo.dev/tutorial/image-picker/
+  // teste
   const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
 
   const pickImageAsync = async () => {
