@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   searchWrapper: {
     position: 'absolute',
-    top: 36,
+    top: 20,
     left: 0,
     right: 0,
     alignItems: 'center',
