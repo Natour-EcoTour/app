@@ -42,7 +42,7 @@ export default function RegisterScreen() {
 
   return (
     <ImageBackground 
-          source={require('../../../../assets/images/leaf_bg.jpg')}
+          source={require('../../../../assets/images/background.png')}
           style={styles.backgroundImage}
           resizeMode="cover"
     >

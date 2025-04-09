@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 export default function UserTerms() {
   return (
     <ImageBackground 
-      source={require('../../../../assets/images/leaf_bg.jpg')}
+      source={require('../../../../assets/images/background.png')}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
