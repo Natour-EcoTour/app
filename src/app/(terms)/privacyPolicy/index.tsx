@@ -50,16 +50,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    backgroundColor: 'rgba(235, 237, 240, 0.9)',
-    borderRadius: 20,
-    padding: 40,
     width: '90%', 
     height: '80%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 15,
     alignItems: 'center',
   },
   title: {
@@ -71,9 +63,11 @@ const styles = StyleSheet.create({
   textBox: {
     width: '100%', 
     height: '90%',
-    padding: 30,
+    padding: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 10,
+    borderColor: 'rgba(0, 0, 0, 0.31)',
+    borderWidth: 2,
   },
   text: {
     color: '#000',

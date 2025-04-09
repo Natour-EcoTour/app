@@ -96,11 +96,6 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#eee',
-    justifyContent: 'center',
-  },
   backgroundImage: {
     flex: 1,
     width: '100%',
@@ -116,15 +111,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   containerBox: {
-    backgroundColor: 'rgba(235, 237, 240, 0.9)',
-    borderRadius: 20,
     padding: 50,
     width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 15,
     alignItems: 'center',
   },
   title: {

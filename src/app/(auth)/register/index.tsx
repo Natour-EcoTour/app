@@ -187,7 +187,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    backgroundColor: '',
   },
   scrollContentContainer: {
     flexGrow: 1,
@@ -196,15 +195,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   container: {
-    backgroundColor: 'rgba(235, 237, 240, 0.9)',
-    borderRadius: 20,
     padding: 50,
     width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 15,
     alignItems: 'center',
   },
   termsContainer: {
