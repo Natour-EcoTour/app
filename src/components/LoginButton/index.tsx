@@ -12,18 +12,19 @@ export default function RegisterButton( { onPress }: LoginButtonProps) {
             style={styles.button} 
             onPress={onPress}
         >
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
     button: {
-      backgroundColor: '#04d361',
+      backgroundColor: '#00672e',
       padding: 15,
-      width: 200,
+      width: 350,
       alignItems: 'center',
-      borderRadius: 4,
+      borderRadius: 10,
+      marginTop: 20,
     },
     buttonText: {
       color: '#fff',

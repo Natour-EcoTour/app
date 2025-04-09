@@ -42,14 +42,14 @@ export default function Index() {
             source={require('../../assets/images/icon.png')} 
             style={{ width: 200, height: 200 }}
           />
-          <Text style={styles.title}>Login</Text>
           
+          <Text style={styles.title}>Entre na sua conta</Text>
+
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
               <>
-                <Text style={styles.label}>E-mail</Text>
                 <EmailInput
                   value={value}
                   onChange={onChange}
@@ -73,15 +73,20 @@ export default function Index() {
             )}
           />
 
+          <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/forgotPassword')}>
+            Esquecia minha senha
+          </Text>
+
           <LoginButton onPress={handleSubmit(onSubmit)} />
 
-          <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/register')}>
-            Não possui um cadastro?
-          </Text>
-
-          <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/forgotPassword')}>
-            Esqueceu sua senha?
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+            <Text>
+              Não tem uma conta?{' '}
+            </Text>
+            <Text style={styles.noAccountText} onPress={() => router.push('/(auth)/register')}>
+              Cadastre-se
+            </Text>
+          </View>
 
           {isModalVisible && (
             <LogedInModal 
@@ -116,10 +121,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: '#04d361',
-    fontSize: 35,
-    marginBottom: 20,
-    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    fontSize: 17, 
+    marginTop: 35, 
+    marginBottom: 5,
+    fontWeight: 'bold', 
+    color: '#00672e'
   },
   label: {
     color: '#333',
@@ -133,8 +140,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
   },
   noAccountText: {
-    color: '#04d361',
-    marginTop: 20,
+    color: '#00672e',
     textDecorationLine: 'underline',
   }
 });
