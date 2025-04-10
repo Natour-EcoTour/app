@@ -10,7 +10,7 @@ interface PasswordInputProps {
 
 export default function PasswordInput({
   label = 'Senha',
-  placeholder = 'Digite a sua senha',
+  placeholder = 'Insira sua senha',
   value,
   onChange,
 }: PasswordInputProps) {
@@ -42,11 +42,11 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#ffffff',
-    borderColor: '#000',
+    borderColor: 'rgba(0, 0, 0, 0.56)',
     borderWidth: 1,
     padding: 10,
     fontSize: 16,
     marginBottom: 15,
-    borderRadius: 4,
+    borderRadius: 10,
   },
 });

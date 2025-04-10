@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
 import { router } from 'expo-router';
-import { Linking } from 'react-native';
+
+import { Checkbox } from 'react-native-paper';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,6 +15,8 @@ import PasswordForm from '@/src/components/ConfirmPasswordInput';
 
 
 export default function RegisterScreen() {
+  const [isChecked, setIsChecked] = useState(false);
+
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
@@ -107,6 +110,7 @@ export default function RegisterScreen() {
               <>
                 <Text style={styles.label}>Senha</Text>
                 <PasswordForm
+                  placeholder="Insira sua senha"
                   password={value}
                   onChangePassword={onChange}
                 />
@@ -122,6 +126,7 @@ export default function RegisterScreen() {
               <>
                 <Text style={styles.label}>Confirmação de senha</Text>
                 <PasswordForm
+                  placeholder="Confirme sua senha"
                   password={value}
                   onChangePassword={onChange}
                 />
@@ -150,23 +155,34 @@ export default function RegisterScreen() {
             )}
           /> */}
 
+          <View style={styles.termsContainer}>
+            <Checkbox
+              status={isChecked ? 'checked' : 'unchecked'}
+              onPress={() => setIsChecked(!isChecked)}
+              color="#00672e"
+            />
+            <Text style={{  fontSize: 13 }}>Declaro que li e aceito os </Text>
+            <Text style={[styles.termsText, {  fontSize: 13 }]} onPress={() => router.push('/(terms)/userTerms')}>
+              termos de uso
+            </Text>
+            {/* <Text style={{  fontSize: 10 }}> e </Text>
+            <Text style={[styles.termsText, {  fontSize: 10 }]} onPress={() => router.push('/(terms)/privacyPolicy')}>
+              política de privacidade
+            </Text> */}
+          </View>
+
           <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
             <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
-
-            <View style={styles.termsContainer}>
-              <Text style={styles.termsText}
-                onPress={() => router.push('/(terms)/userTerms')}>
-                Termos de uso
-              </Text>
-              <Text style={styles.termsText}
-                onPress={() => router.push('/(terms)/privacyPolicy')}>
-                Política de privacidade
-              </Text>
-            </View>
-          
         </View>
-        <Text style={styles.link} onPress={() => router.push('/')}>Voltar para o login</Text>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+          <Text>Já tem uma conta?{' '}</Text>
+          <Text style={styles.link} onPress={() => router.push('/')}>
+            Entrar
+          </Text>
+        </View>
+
       </View>
       {isModalVisible && (
               <RegisterModal 
@@ -203,17 +219,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 20
+    marginBottom:20,
+    fontSize: 15
   },
   termsText: {
-    marginRight: 20,
-    marginLeft: 10,
-    color: '#04d361',
+    color: '#00672e',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
   },
   title: {
-    color: '#04d361',
+    color: '#00672e',
     fontSize: 20,
     marginBottom: 20,
     fontWeight: 'bold',
@@ -239,7 +254,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   button: {
-    backgroundColor: '#04d361',
+    backgroundColor: '#00672e',
     padding: 15,
     alignItems: 'center',
     borderRadius: 4,
@@ -249,8 +264,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   link: {
-    color: '#04d361',
-    marginTop: 20,
+    color: '#00672e',
     textDecorationLine: 'underline',
+    fontWeight: 'bold',
   }
 });

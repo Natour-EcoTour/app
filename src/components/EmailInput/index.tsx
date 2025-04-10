@@ -10,7 +10,7 @@ interface EmailInputProps {
 
 export default function EmailInput({
   label = 'E-mail',
-  placeholder = 'Digite seu e-mail',
+  placeholder = 'Insira seu e-mail',
   value,
   onChange,
 }: EmailInputProps) {
@@ -41,11 +41,11 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#ffffff',
-    borderColor: '#000',
+    borderColor: 'rgba(0, 0, 0, 0.56)',
     borderWidth: 1,
     padding: 10,
     fontSize: 16,
     marginBottom: 15,
-    borderRadius: 4,
+    borderRadius: 10,
   },
 });
