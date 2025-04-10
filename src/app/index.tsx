@@ -51,6 +51,7 @@ export default function Index() {
             render={({ field: { onChange, onBlur, value } }) => (
               <>
                 <EmailInput
+                  editable={true}
                   value={value}
                   onChange={onChange}
                 />
@@ -142,5 +143,6 @@ const styles = StyleSheet.create({
   noAccountText: {
     color: '#00672e',
     textDecorationLine: 'underline',
+    fontWeight: 'bold',
   }
 });

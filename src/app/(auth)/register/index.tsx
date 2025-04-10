@@ -15,7 +15,6 @@ import PasswordForm from '@/src/components/ConfirmPasswordInput';
 
 
 export default function RegisterScreen() {
-  const [isChecked, setIsChecked] = useState(false);
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -27,6 +26,7 @@ export default function RegisterScreen() {
       // cpf: '45999669839',
       password: 'Aa12345678!',
       confirmPassword: 'Aa12345678!',
+      termsAccept: true,
     },
   });
 
@@ -59,6 +59,7 @@ export default function RegisterScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <>
                 <Fullnamelnput
+                  editable={true}
                   placeholder="Digite o seu nome completo"
                   onChange={onChange}
                   value={value}
@@ -74,6 +75,7 @@ export default function RegisterScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <>
                 <EmailInput
+                  editable={true}
                   placeholder="Digite seu e-mail"
                   onChange={onChange}
                   value={value}
@@ -155,21 +157,29 @@ export default function RegisterScreen() {
             )}
           /> */}
 
-          <View style={styles.termsContainer}>
-            <Checkbox
-              status={isChecked ? 'checked' : 'unchecked'}
-              onPress={() => setIsChecked(!isChecked)}
-              color="#00672e"
-            />
-            <Text style={{  fontSize: 13 }}>Declaro que li e aceito os </Text>
-            <Text style={[styles.termsText, {  fontSize: 13 }]} onPress={() => router.push('/(terms)/userTerms')}>
-              termos de uso
-            </Text>
-            {/* <Text style={{  fontSize: 10 }}> e </Text>
-            <Text style={[styles.termsText, {  fontSize: 10 }]} onPress={() => router.push('/(terms)/privacyPolicy')}>
-              política de privacidade
-            </Text> */}
-          </View>
+          <Controller
+            control={control}
+            name="termsAccept"
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <>
+                <View style={styles.termsContainer}>
+                  <Checkbox
+                    status={value ? 'checked' : 'unchecked'}
+                    onPress={() => onChange(!value)}
+                    color="#00672e"
+                  />
+                  <Text style={{ fontSize: 13 }}>Declaro que li e aceito os </Text>
+                  <Text
+                    style={[styles.termsText, { fontSize: 13 }]}
+                    onPress={() => router.push('/(terms)/userTerms')}
+                  >
+                    termos de uso
+                  </Text>
+                </View>
+                {error && <Text style={styles.error}>{error.message}</Text>}
+              </>
+            )}
+          />
 
           <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
             <Text style={styles.buttonText}>Cadastrar</Text>
@@ -219,7 +229,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom:20,
     fontSize: 15
   },
   termsText: {

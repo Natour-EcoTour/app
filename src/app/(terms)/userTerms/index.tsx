@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: '#04d361',
+    color: '#00672e',
     fontSize: 24,
     marginBottom: 20,
     fontWeight: 'bold',
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   link: {
-    color: '#04d361',
+    color: '#00672e',
     marginTop: 10,
     fontSize: 16,
     textDecorationLine: 'underline',

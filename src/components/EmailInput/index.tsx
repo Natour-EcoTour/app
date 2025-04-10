@@ -5,6 +5,7 @@ interface EmailInputProps {
   label?: string;
   placeholder?: string;
   value: string;
+  editable: boolean;
   onChange: (text: string) => void;
 }
 
@@ -12,12 +13,14 @@ export default function EmailInput({
   label = 'E-mail',
   placeholder = 'Insira seu e-mail',
   value,
+  editable,
   onChange,
 }: EmailInputProps) {
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        editable={editable}
         placeholder={placeholder}
         keyboardType="email-address"
         autoCapitalize="none"

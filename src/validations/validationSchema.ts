@@ -48,6 +48,10 @@ export const registerSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref('password')], 'Senhas não são idênticas')
     .required('Confirmação de senha é obrigatória'),
+  termsAccept: yup
+    .boolean()
+    .oneOf([true], 'Você deve aceitar os termos e condições')
+    .required('Você deve aceitar os termos e condições'),
 });
 
 export const loginSchema = yup.object().shape({

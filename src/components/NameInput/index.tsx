@@ -5,6 +5,7 @@ interface NameInputProps {
   label?: string;
   placeholder?: string;
   value: string;
+  editable: boolean;
   onChange: (text: string) => void;
 }
 
@@ -12,12 +13,14 @@ export default function FullnameInput({
   label = 'Nome completo',
   placeholder = 'Insira o nome',
   value,
+  editable,
   onChange,
 }: NameInputProps) {
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        editable={editable}
         placeholder={placeholder}
         keyboardType="default"
         autoCapitalize="none"
