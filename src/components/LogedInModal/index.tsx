@@ -10,7 +10,7 @@ type Props = PropsWithChildren<{
 }>;
 
 export default function LogedInModal({ isVisible, children, onClose }: Props) {
-    const router = useRouter();
+  const router = useRouter();
 
   const handleClose = () => {
     onClose();

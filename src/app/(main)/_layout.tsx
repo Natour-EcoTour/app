@@ -6,21 +6,21 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 export default function TabLayout() {
   return (
     <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarInactiveTintColor: 'green',
-          tabBarActiveTintColor: 'darkgreen',
-          headerStyle: {
-            backgroundColor: 'white',
-          },
-          headerShadowVisible: true,
-          headerTintColor: 'darkgreen',
-          tabBarStyle: {
+      screenOptions={{
+        headerShown: false,
+        tabBarInactiveTintColor: 'green',
+        tabBarActiveTintColor: 'darkgreen',
+        headerStyle: {
           backgroundColor: 'white',
-          },
-          
-        }}
-      >
+        },
+        headerShadowVisible: true,
+        headerTintColor: 'darkgreen',
+        tabBarStyle: {
+          backgroundColor: 'white',
+        },
+
+      }}
+    >
       <Tabs.Screen
         name="profile/index"
         options={{
@@ -35,7 +35,7 @@ export default function TabLayout() {
         options={{
           title: 'Pontos',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'map' : 'map-outline'} color={color} size={24}/>
+            <Ionicons name={focused ? 'map' : 'map-outline'} color={color} size={24} />
           ),
         }}
       />
@@ -45,7 +45,7 @@ export default function TabLayout() {
         options={{
           title: 'Configurações',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'options' : 'options-outline'} color={color} size={24}/>
+            <Ionicons name={focused ? 'options' : 'options-outline'} color={color} size={24} />
           ),
         }}
       />

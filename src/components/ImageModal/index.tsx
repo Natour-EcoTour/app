@@ -20,26 +20,26 @@ export default function ImageModal({ isVisible, imageUri, onClose }: Props) {
 
   return (
     <View>
-      <Modal 
-        animationType="fade" 
+      <Modal
+        animationType="fade"
         visible={isVisible}
         transparent={true}
       >
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
             <View style={styles.buttonContainer}>
-              <Button 
-                title="Fechar" 
-                onPress={handleClose} 
-                color="#464C55" 
+              <Button
+                title="Fechar"
+                onPress={handleClose}
+                color="#464C55"
                 accessibilityLabel="Fechar modal"
               />
             </View>
 
             <View style={styles.imageContainer}>
               {imageUri ? (
-                <Image 
-                  source={{ uri: imageUri }} 
+                <Image
+                  source={{ uri: imageUri }}
                   resizeMode="contain"
                   style={styles.image}
                 />

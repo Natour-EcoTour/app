@@ -21,28 +21,28 @@ export default function Index() {
       password: 'Aa12345678!',
     },
   });
-  
+
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
     setIsModalVisible(true);
   };
 
   return (
-    <ImageBackground 
+    <ImageBackground
       source={require('../../assets/images/background.png')}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
-      <ScrollView 
-        contentContainerStyle={styles.scrollContentContainer} 
+      <ScrollView
+        contentContainerStyle={styles.scrollContentContainer}
         style={styles.scrollView}
       >
         <View style={styles.containerBox}>
-          <Image 
-            source={require('../../assets/images/icon.png')} 
+          <Image
+            source={require('../../assets/images/icon.png')}
             style={{ width: 200, height: 200 }}
           />
-          
+
           <Text style={styles.title}>Entre na sua conta</Text>
 
           <Controller
@@ -65,9 +65,9 @@ export default function Index() {
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
               <>
-                <PasswordInput 
-                  value={value} 
-                  onChange={onChange} 
+                <PasswordInput
+                  value={value}
+                  onChange={onChange}
                 />
                 {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
               </>
@@ -90,8 +90,8 @@ export default function Index() {
           </View>
 
           {isModalVisible && (
-            <LogedInModal 
-              isVisible={isModalVisible} 
+            <LogedInModal
+              isVisible={isModalVisible}
               onClose={() => setIsModalVisible(false)}
             />
           )}
@@ -123,10 +123,10 @@ const styles = StyleSheet.create({
   },
   title: {
     alignSelf: 'flex-start',
-    fontSize: 17, 
-    marginTop: 35, 
+    fontSize: 17,
+    marginTop: 35,
     marginBottom: 5,
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     color: '#00672e'
   },
   label: {

@@ -46,7 +46,7 @@ export default function Banana() {
 
   return (
     <GestureHandlerRootView>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.container}
       >
@@ -115,7 +115,7 @@ export default function Banana() {
           )}
 
           {isEditable && (
-              <Controller
+            <Controller
               control={control}
               name="confirmPassword"
               render={({ field: { onChange, value } }) => (

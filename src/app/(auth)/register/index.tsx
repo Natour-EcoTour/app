@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import { router } from 'expo-router';
 
 import { Checkbox } from 'react-native-paper';
@@ -10,7 +10,7 @@ import { registerSchema } from '@/src/validations/validationSchema';
 import RegisterModal from '@/src/components/RegisterModal';
 
 import Fullnamelnput from "@/src/components/NameInput";
-import EmailInput  from '@/src/components/EmailInput';
+import EmailInput from '@/src/components/EmailInput';
 import PasswordForm from '@/src/components/ConfirmPasswordInput';
 
 
@@ -44,48 +44,48 @@ export default function RegisterScreen() {
   // };
 
   return (
-    <ImageBackground 
-          source={require('../../../../assets/images/background.png')}
-          style={styles.backgroundImage}
-          resizeMode="cover"
+    <ImageBackground
+      source={require('../../../../assets/images/background.png')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
     >
-    <ScrollView contentContainerStyle={styles.scrollContentContainer} style={styles.scrollView}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Cadastro</Text>
-        <View style={styles.inputContainer}>
-          <Controller
-            control={control}
-            name="name"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <Fullnamelnput
-                  editable={true}
-                  placeholder="Digite o seu nome completo"
-                  onChange={onChange}
-                  value={value}
-                />
-                {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
-              </>
-            )}
-          />
+      <ScrollView contentContainerStyle={styles.scrollContentContainer} style={styles.scrollView}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Cadastro</Text>
+          <View style={styles.inputContainer}>
+            <Controller
+              control={control}
+              name="name"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <>
+                  <Fullnamelnput
+                    editable={true}
+                    placeholder="Digite o seu nome completo"
+                    onChange={onChange}
+                    value={value}
+                  />
+                  {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+                </>
+              )}
+            />
 
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <EmailInput
-                  editable={true}
-                  placeholder="Digite seu e-mail"
-                  onChange={onChange}
-                  value={value}
-                />
-                {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
-              </>
-            )}
-          />
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <>
+                  <EmailInput
+                    editable={true}
+                    placeholder="Digite seu e-mail"
+                    onChange={onChange}
+                    value={value}
+                  />
+                  {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
+                </>
+              )}
+            />
 
-          {/* <Controller
+            {/* <Controller
             control={control}
             name="cpf"
             render={({ field: { onChange, onBlur, value } }) => (
@@ -105,39 +105,39 @@ export default function RegisterScreen() {
             )}
           /> */}
 
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <>
-                <Text style={styles.label}>Senha</Text>
-                <PasswordForm
-                  placeholder="Insira sua senha"
-                  password={value}
-                  onChangePassword={onChange}
-                />
-                {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
-              </>
-            )}
-          />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Text style={styles.label}>Senha</Text>
+                  <PasswordForm
+                    placeholder="Insira sua senha"
+                    password={value}
+                    onChangePassword={onChange}
+                  />
+                  {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
+                </>
+              )}
+            />
 
-          <Controller
-            control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, value } }) => (
-              <>
-                <Text style={styles.label}>Confirmação de senha</Text>
-                <PasswordForm
-                  placeholder="Confirme sua senha"
-                  password={value}
-                  onChangePassword={onChange}
-                />
-                {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
-              </>
-            )}
-          />
+            <Controller
+              control={control}
+              name="confirmPassword"
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Text style={styles.label}>Confirmação de senha</Text>
+                  <PasswordForm
+                    placeholder="Confirme sua senha"
+                    password={value}
+                    onChangePassword={onChange}
+                  />
+                  {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
+                </>
+              )}
+            />
 
-          {/* <Controller
+            {/* <Controller
             control={control}
             name="confirmPassword"
             render={({ field: { onChange, onBlur, value } }) => (
@@ -157,50 +157,50 @@ export default function RegisterScreen() {
             )}
           /> */}
 
-          <Controller
-            control={control}
-            name="termsAccept"
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <>
-                <View style={styles.termsContainer}>
-                  <Checkbox
-                    status={value ? 'checked' : 'unchecked'}
-                    onPress={() => onChange(!value)}
-                    color="#00672e"
-                  />
-                  <Text style={{ fontSize: 13 }}>Declaro que li e aceito os </Text>
-                  <Text
-                    style={[styles.termsText, { fontSize: 13 }]}
-                    onPress={() => router.push('/(terms)/userTerms')}
-                  >
-                    termos de uso
-                  </Text>
-                </View>
-                {error && <Text style={styles.error}>{error.message}</Text>}
-              </>
-            )}
+            <Controller
+              control={control}
+              name="termsAccept"
+              render={({ field: { value, onChange }, fieldState: { error } }) => (
+                <>
+                  <View style={styles.termsContainer}>
+                    <Checkbox
+                      status={value ? 'checked' : 'unchecked'}
+                      onPress={() => onChange(!value)}
+                      color="#00672e"
+                    />
+                    <Text style={{ fontSize: 13 }}>Declaro que li e aceito os </Text>
+                    <Text
+                      style={[styles.termsText, { fontSize: 13 }]}
+                      onPress={() => router.push('/(terms)/userTerms')}
+                    >
+                      termos de uso
+                    </Text>
+                  </View>
+                  {error && <Text style={styles.error}>{error.message}</Text>}
+                </>
+              )}
+            />
+
+            <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+              <Text style={styles.buttonText}>Cadastrar</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+            <Text>Já tem uma conta?{' '}</Text>
+            <Text style={styles.link} onPress={() => router.push('/')}>
+              Entrar
+            </Text>
+          </View>
+
+        </View>
+        {isModalVisible && (
+          <RegisterModal
+            isVisible={isModalVisible}
+            onClose={() => setIsModalVisible(false)}
           />
-
-          <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.buttonText}>Cadastrar</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-          <Text>Já tem uma conta?{' '}</Text>
-          <Text style={styles.link} onPress={() => router.push('/')}>
-            Entrar
-          </Text>
-        </View>
-
-      </View>
-      {isModalVisible && (
-              <RegisterModal 
-                isVisible={isModalVisible} 
-                onClose={() => setIsModalVisible(false)}
-              />
-            )}
-    </ScrollView>
+        )}
+      </ScrollView>
     </ImageBackground>
   );
 }

@@ -9,7 +9,7 @@ type Props = PropsWithChildren<{
 }>;
 
 export default function SentPasswordModal({ isVisible, children, onClose }: Props) {
-    const router = useRouter();
+  const router = useRouter();
 
   const handleClose = () => {
     onClose();

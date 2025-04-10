@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 
 export default function UserTerms() {
   return (
-    <ImageBackground 
+    <ImageBackground
       source={require('../../../../assets/images/background.png')}
       style={styles.backgroundImage}
       resizeMode="cover"
@@ -15,22 +15,22 @@ export default function UserTerms() {
         <View style={styles.textBox}>
           <ScrollView showsVerticalScrollIndicator={true}>
             <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat, 
-              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque. 
-              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu. 
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat,
+              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque.
+              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu.
               Integer dictum nisl et magna porttitor, a interdum lorem interdum. Aenean vel orci eu velit tristique malesuada.
               {"\n\n"}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
-              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat. 
+              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat.
               Suspendisse potenti. Proin sit amet sem nec justo pharetra vehicula vel eu dolor.
               {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat, 
-              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque. 
-              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu. 
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat,
+              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque.
+              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu.
               Integer dictum nisl et magna porttitor, a interdum lorem interdum. Aenean vel orci eu velit tristique malesuada.
               {"\n\n"}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
-              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat. 
+              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat.
               Suspendisse potenti. Proin sit amet sem nec justo pharetra vehicula vel eu dolor.
             </Text>
           </ScrollView>
@@ -46,11 +46,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
   },
   container: {
-    width: '90%', 
+    width: '90%',
     height: '80%',
     alignItems: 'center',
   },
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textBox: {
-    width: '100%', 
+    width: '100%',
     height: '90%',
     padding: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
