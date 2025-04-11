@@ -35,7 +35,7 @@ export default function PrivacyPolicy() {
             </Text>
           </ScrollView>
         </View>
-        <Text style={styles.link} onPress={() => router.push('/(auth)/register')}>Voltar</Text>
+        <Text style={styles.link} onPress={() => router.back()}>Voltar</Text>
       </View>
     </ImageBackground>
   );
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: '#04d361',
+    color: '#00672e',
     fontSize: 24,
     marginBottom: 20,
     fontWeight: 'bold',
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   link: {
-    color: '#04d361',
+    color: '#00672e',
     marginTop: 10,
     fontSize: 16,
     textDecorationLine: 'underline',

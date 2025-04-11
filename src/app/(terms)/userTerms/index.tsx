@@ -35,7 +35,7 @@ export default function UserTerms() {
             </Text>
           </ScrollView>
         </View>
-        <Text style={styles.link} onPress={() => router.push('/(auth)/register')}>Voltar</Text>
+        <Text style={styles.link} onPress={() => router.back()}>Voltar</Text>
       </View>
     </ImageBackground>
   );

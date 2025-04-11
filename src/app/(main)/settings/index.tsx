@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import SettingsButton from '../../../components/SettingsButton'
 
 export default function Settings() {
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Configurações</Text>
