@@ -4,13 +4,10 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox } from 'react-native-paper';
 import { registerSchema } from '@/src/validations/validationSchema';
-import { router } from 'expo-router';
 
 import Fullnamelnput from "@/src/components/NameInput";
 import EmailInput from '@/src/components/EmailInput';
-import PasswordForm from '@/src/components/ConfirmPasswordInput';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 
 export default function Profile() {
@@ -50,9 +47,13 @@ export default function Profile() {
         style={styles.scrollView}
         contentContainerStyle={styles.container}
       >
-        <Text style={styles.title}>PERFIL</Text>
+        <Text style={styles.title}>Perfil</Text>
 
-        <TouchableOpacity onPress={pickImageAsync}>
+        {isEditable && <Text style={styles.infoText}>Você pode alterar a sua foto de perfil clicando na imagem abaixo</Text>}
+        <TouchableOpacity
+          onPress={isEditable ? pickImageAsync : undefined}
+          disabled={!isEditable}
+        >
           <Image
             source={
               selectedImage
@@ -204,5 +205,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 100,
     resizeMode: 'contain',
+    alignSelf: 'center',
+  },
+  infoText: {
+    textAlign: 'center',
+
   }
 });

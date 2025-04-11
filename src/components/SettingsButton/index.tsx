@@ -2,20 +2,23 @@ import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
+import { useRouter, type RelativePathString } from 'expo-router';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
 interface LoginButtonProps {
     text: string;
     icon_type: IoniconName;
+    route: RelativePathString
 }
 
-export default function SettingsButton({ text, icon_type }: LoginButtonProps) {
+export default function SettingsButton({ text, icon_type, route }: LoginButtonProps) {
+    const router = useRouter();
 
     return (
         <TouchableOpacity
             style={styles.button}
-            onPress={() => alert(`Botão ${text} pressionado!`)}
+            onPress={() => router.push(route)}
         >
             <Ionicons
                 name={icon_type}

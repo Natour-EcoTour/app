@@ -3,28 +3,33 @@ import { Text, View, StyleSheet } from 'react-native';
 import SettingsButton from '../../../components/SettingsButton'
 
 export default function Settings() {
+  
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>CONFIGURAÇÔES</Text>
+      <Text style={styles.title}>Configurações</Text>
 
       <SettingsButton
         text='Pontos'
         icon_type='pin'
+        route='./map/'
       />
 
       <SettingsButton
         text='Termos de Uso'
         icon_type='documents'
+        route="../(terms)/userTerms"
       />
 
       <SettingsButton
         text='Política de Privacidade'
         icon_type='document'
+        route="../(terms)/privacyPolicy"
       />
 
       <SettingsButton
         text='Sair'
         icon_type='exit'
+        route='../../'
       />
 
     </View>
@@ -38,6 +43,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 50,
   },
   title: {
