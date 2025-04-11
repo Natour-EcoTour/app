@@ -13,7 +13,7 @@ import EmailInput from '@/src/components/EmailInput';
 import PasswordForm from '@/src/components/ConfirmPasswordInput';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 
-export default function Banana() {
+export default function Profile() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
   const [isEditable, setIsEditable] = useState(false);
 
@@ -95,42 +95,6 @@ export default function Banana() {
               </>
             )}
           />
-
-          {isEditable && (
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Text style={styles.label}>Senha</Text>
-                  <PasswordForm
-                    placeholder="Insira sua senha"
-                    password={value}
-                    onChangePassword={onChange}
-                  />
-                  {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
-                </>
-              )}
-            />
-          )}
-
-          {isEditable && (
-            <Controller
-              control={control}
-              name="confirmPassword"
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Text style={styles.label}>Confirmação de senha</Text>
-                  <PasswordForm
-                    placeholder="Confirme sua senha"
-                    password={value}
-                    onChangePassword={onChange}
-                  />
-                  {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
-                </>
-              )}
-            />
-          )}
 
           {isEditable && (
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>

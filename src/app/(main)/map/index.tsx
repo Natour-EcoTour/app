@@ -41,7 +41,7 @@ const markers = [
   },
 ];
 
-export default function App() {
+export default function Map() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
