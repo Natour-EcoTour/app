@@ -7,7 +7,7 @@ import { loginSchema } from '../validations/validationSchema';
 
 import PasswordInput from '../components/PasswordInput';
 import LoginButton from '../components/LoginButton';
-import LogedInModal from '../components/LogedInModal';
+import CustomModal from '../components/CustomModal';
 import EmailInput from '../components/EmailInput';
 
 export default function Index() {
@@ -28,6 +28,7 @@ export default function Index() {
   };
 
   return (
+
     <ImageBackground
       source={require('../../assets/images/background.png')}
       style={styles.backgroundImage}
@@ -42,7 +43,6 @@ export default function Index() {
             source={require('../../assets/images/icon.png')}
             style={{ width: 200, height: 200 }}
           />
-
           <Text style={styles.title}>Entre na sua conta</Text>
 
           <Controller
@@ -90,9 +90,12 @@ export default function Index() {
           </View>
 
           {isModalVisible && (
-            <LogedInModal
+            <CustomModal
               isVisible={isModalVisible}
               onClose={() => setIsModalVisible(false)}
+              route="./(main)/map"
+              title="Logado com sucesso!"
+              imagePath="check"
             />
           )}
         </View>

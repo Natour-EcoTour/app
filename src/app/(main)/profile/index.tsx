@@ -1,7 +1,6 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '@/src/validations/validationSchema';
@@ -10,9 +9,15 @@ import Fullnamelnput from "@/src/components/NameInput";
 import EmailInput from '@/src/components/EmailInput';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 
+import CustomModal from '@/src/components/CustomModal';
+import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
+
 export default function Profile() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
   const [isEditable, setIsEditable] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState<boolean>(false);
+  const [isSaveSuccessModalVisible, setIsSaveSuccessModalVisible] = useState<boolean>(false);
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -39,6 +44,12 @@ export default function Profile() {
 
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
+    setIsSaveSuccessModalVisible(true); // Mostra o modal de sucesso ao salvar
+  };
+
+  const handleConfirmDelete = () => {
+    setIsConfirmationVisible(false);
+    setIsModalVisible(true);
   };
 
   return (
@@ -113,12 +124,51 @@ export default function Profile() {
                 <Text style={styles.ChangePasswordbuttonText}>Alterar senha</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.Deletebutton} onPressIn={() => console.log('Conta apagada!')}>
+              <TouchableOpacity
+                style={styles.Deletebutton}
+                onPressIn={() => setIsConfirmationVisible(true)}
+              >
                 <Text style={styles.buttonText}>Apagar conta</Text>
               </TouchableOpacity>
             </>
           )}
         </View>
+
+        {/* Modal de confirmação */}
+        {isConfirmationVisible && (
+          <CustomConfirmationModal
+            isVisible={isConfirmationVisible}
+            onCancel={() => setIsConfirmationVisible(false)}
+            onConfirm={handleConfirmDelete}
+            title="Tem certeza que deseja apagar sua conta?"
+            imagePath="warning"
+          />
+        )}
+
+        {/* Modal de sucesso após apagar a conta */}
+        {isModalVisible && (
+          <CustomModal
+            isVisible={isModalVisible}
+            onClose={() => setIsModalVisible(false)}
+            route="../"
+            title="Conta apagada com sucesso!"
+            imagePath="check"
+          />
+        )}
+
+        {/* Modal de sucesso após salvar alterações */}
+        {isSaveSuccessModalVisible && (
+          <CustomModal
+          isVisible={isSaveSuccessModalVisible}
+          onClose={() => {
+            setIsSaveSuccessModalVisible(false);
+            setIsEditable(false);
+          }}
+          title="Alterações salvas com sucesso!"
+          imagePath="check"
+          route='../(main)/profile'
+        />
+        )}
       </ScrollView>
     </GestureHandlerRootView>
   );
@@ -209,6 +259,5 @@ const styles = StyleSheet.create({
   },
   infoText: {
     textAlign: 'center',
-
   }
 });

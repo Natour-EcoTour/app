@@ -12,6 +12,7 @@ import RegisterModal from '@/src/components/RegisterModal';
 import Fullnamelnput from "@/src/components/NameInput";
 import EmailInput from '@/src/components/EmailInput';
 import PasswordForm from '@/src/components/ConfirmPasswordInput';
+import CustomModal from '@/src/components/CustomModal';
 
 
 export default function RegisterScreen() {
@@ -195,9 +196,12 @@ export default function RegisterScreen() {
 
         </View>
         {isModalVisible && (
-          <RegisterModal
+          <CustomModal
             isVisible={isModalVisible}
             onClose={() => setIsModalVisible(false)}
+            route="../"
+            title="Cadastro realizado com sucesso!"
+            imagePath="check"
           />
         )}
       </ScrollView>
