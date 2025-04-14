@@ -6,32 +6,7 @@ export default function Settings() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Configurações</Text>
-
-      <SettingsButton
-        text='Pontos'
-        icon_type='pin'
-        route='../(points)/myPoints'
-      />
-
-      <SettingsButton
-        text='Termos de Uso'
-        icon_type='documents'
-        route="../(terms)/userTerms"
-      />
-
-      <SettingsButton
-        text='Política de Privacidade'
-        icon_type='document'
-        route="../(terms)/privacyPolicy"
-      />
-
-      <SettingsButton
-        text='Sair'
-        icon_type='exit'
-        route='../../'
-      />
-
+      <Text style={styles.title}>Meus Pontos</Text>
     </View>
   );
 }

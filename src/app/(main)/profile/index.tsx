@@ -150,7 +150,7 @@ export default function Profile() {
           <CustomModal
             isVisible={isModalVisible}
             onClose={() => setIsModalVisible(false)}
-            route="../"
+            route="../../"
             title="Conta apagada com sucesso!"
             imagePath="check"
           />
