@@ -87,7 +87,7 @@ export default function Map() {
         <View style={styles.searchWrapper}>
           <SearchPointInput
             onChange={(text) => setSearchText(text)}
-            value={searchText}
+            value={searchText}  
           />
         </View>
 
