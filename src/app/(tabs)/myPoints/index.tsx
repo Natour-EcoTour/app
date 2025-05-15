@@ -65,14 +65,13 @@ export default function MyPoints() {
       id: 6,
       pointName: 'Lagoa do Coração',
       pointStatus: true,
-      starTime: '07:30',
+      starTime: '07:30' ,
       closeTime: '17:45',
       views: 120,
       review: 4,
     },
   ];
 
-  // const points: Point[] = [];
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Meus Pontos</Text>
@@ -82,7 +81,7 @@ export default function MyPoints() {
           <Text style={styles.emptyText}>Nenhum ponto cadastrado</Text>
           <Text
             style={styles.link}
-            onPress={() => router.push('/(points)/addPoint')}
+            onPress={() => router.push('/(tabs)/addPoint')}
           >
             Clique aqui para cadastrar um novo ponto
           </Text>
@@ -91,6 +90,7 @@ export default function MyPoints() {
         points.map((point) => (
           <MypointsBox
             key={point.id}
+            id={point.id}
             pointName={point.pointName}
             pointStatus={point.pointStatus}
             starTime={point.starTime}

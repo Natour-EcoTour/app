@@ -11,7 +11,7 @@ export default function Settings() {
       <SettingsButton
         text='Pontos'
         icon_type='pin'
-        route='../(points)/myPoints'
+        route='../(tabs)/myPoints'
       />
 
       <SettingsButton

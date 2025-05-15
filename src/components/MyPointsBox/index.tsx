@@ -1,8 +1,10 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { View } from 'react-native';
+import { Link } from 'expo-router';
 
 interface MyPointsBoxProps {
+  id: number;
   pointName: string;
   pointStatus: boolean;
   starTime: string;
@@ -12,6 +14,7 @@ interface MyPointsBoxProps {
 }
 
 export default function MyPointsBox({
+  id,
   pointName,
   pointStatus,
   starTime,
@@ -22,7 +25,7 @@ export default function MyPointsBox({
   return (
     <View style={styles.box}>
       <View style={styles.teste}>
-        <Text>{pointName}</Text>
+        <Text style={styles.title}>{pointName}</Text>
 
         <View style={styles.statusContainer}>
           <View
@@ -42,7 +45,15 @@ export default function MyPointsBox({
       <Text>Avaliação: {review} ⭐</Text>
 
       <View style={styles.details}>
-        <Text style={styles.detailsText}>Ver detalhes</Text>
+        <Link
+          href={{
+            pathname: '/myPoints/details/[id]',
+            params: { id: String(id) }
+          }}
+          style={styles.detailsText}
+        >
+          Ver detalhes
+        </Link>
       </View>
     </View>
   );
@@ -69,6 +80,9 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
+  },
+  title: {
+    fontWeight: 'bold'
   },
   teste: {
     width: '100%',
