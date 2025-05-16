@@ -6,7 +6,6 @@ export default function Settings() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cadastrar Pontos</Text>
     </View>
   );
 }

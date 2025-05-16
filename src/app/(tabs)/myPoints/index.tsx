@@ -74,7 +74,6 @@ export default function MyPoints() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Meus Pontos</Text>
 
       {points.length === 0 ? (
         <View>
