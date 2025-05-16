@@ -62,7 +62,7 @@ export default function TimeInput() {
                     </Picker>
                 </View>
             </View>
-            
+
             {/* Abre  */}
             <Text>Abre às:</Text>
             <TouchableOpacity style={styles.timeButton} onPress={() => setShowStartPicker(true)}>

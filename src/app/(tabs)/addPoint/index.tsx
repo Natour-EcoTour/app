@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
 
 import NameInput from '../../../components/NameInput';
 import { Controller, useForm } from 'react-hook-form';
@@ -15,55 +15,77 @@ export default function Settings() {
     defaultValues: {
       name: '',
       description: '',
+      link: '',
     },
   });
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
 
-      {/* NOME DO PONTO */}
-      <Controller
-        control={control}
-        name="name"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <NameInput
-              label="Nome do ponto"
-              editable={true}
-              placeholder="Digite o nome do seu ponto"
-              onChange={onChange}
-              value={value}
-            />
-            {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
-          </>
-        )}
-      />
-      <Text>Midia</Text>
+      <View style={styles.container}>
 
-      {/* Descrição DO PONTO */}
-      <Controller
-        control={control}
-        name="description"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <DescriptionInput
-              label="Descrição do ponto"
-              editable={true}
-              placeholder="Digite a descrição do seu ponto"
-              onChange={onChange}
-              value={value}
-            />
-            {errors.description && <Text style={styles.error}>{errors.description.message as string}</Text>}
-          </>
-        )}
-      />
-      <TimeInput></TimeInput>
-      <Text>Horário</Text>
-      <Text>URL</Text>
+        {/* NOME DO PONTO */}
+        <Controller
+          control={control}
+          name="name"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <NameInput
+                label="Nome do ponto"
+                editable={true}
+                placeholder="Digite o nome do seu ponto"
+                onChange={onChange}
+                value={value}
+              />
+              {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+            </>
+          )}
+        />
+        <Text>Midia</Text>
 
-      <Text>Endereço</Text>
-      <Text>Coordenadas (se precisar)</Text>
-    </View>
+        {/* Descrição DO PONTO */}
+        <Controller
+          control={control}
+          name="description"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <DescriptionInput
+                label="Descrição do ponto"
+                editable={true}
+                placeholder="Digite a descrição do seu ponto"
+                onChange={onChange}
+                value={value}
+              />
+              {errors.description && <Text style={styles.error}>{errors.description.message as string}</Text>}
+            </>
+          )}
+        />
+        {/* horario */}
+        <Text>Horário de funcionamento</Text>
+        <TimeInput></TimeInput>
+
+        {/* URL */}
+        <Controller
+          control={control}
+          name="link"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <NameInput
+                label="Link do ponto (opcional)"
+                editable={true}
+                placeholder="Digite o link do seu ponto"
+                onChange={onChange}
+                value={value ?? ''}
+              />
+              {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+            </>
+          )}
+        />
+
+        <Text>Endereço</Text>
+        <Text>Coordenadas (se precisar)</Text>
+      </View>
+    </ScrollView>
   );
 }
 

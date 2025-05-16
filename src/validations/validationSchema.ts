@@ -75,6 +75,7 @@ export const registerPointSchema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório').min(3, 'Nome muito curto'),
   description: yup.string().required('Descrição é obrigatória'),
   //media: yup.string().required('Mídia é obrigatória'),
+  link: yup.string().url('URL inválida'),
   address: yup.string().required('Endereço é obrigatório'),
   //coordinates: yup.string().required('Coordenadas são obrigatórias'),
 });
