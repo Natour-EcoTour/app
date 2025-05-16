@@ -10,7 +10,7 @@ interface NameInputProps {
 }
 
 export default function FullnameInput({
-  label = 'Nome completo',
+  label,
   placeholder = 'Insira o nome',
   value,
   editable,

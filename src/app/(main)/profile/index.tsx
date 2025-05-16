@@ -82,6 +82,7 @@ export default function Profile() {
             render={({ field: { onChange, onBlur, value } }) => (
               <>
                 <Fullnamelnput
+                  label="Nome completo"
                   editable={isEditable}
                   placeholder="Digite o seu nome completo"
                   onChange={onChange}

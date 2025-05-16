@@ -70,3 +70,11 @@ export default { registerSchema, loginSchema };
 export const forgotPasswordSchema = yup.object().shape({
   email: yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
 });
+
+export const registerPointSchema = yup.object().shape({
+  name: yup.string().required('Nome é obrigatório').min(3, 'Nome muito curto'),
+  description: yup.string().required('Descrição é obrigatória'),
+  //media: yup.string().required('Mídia é obrigatória'),
+  address: yup.string().required('Endereço é obrigatório'),
+  //coordinates: yup.string().required('Coordenadas são obrigatórias'),
+});

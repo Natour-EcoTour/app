@@ -1,11 +1,68 @@
 import { Text, View, StyleSheet } from 'react-native';
 
-import SettingsButton from '../../../components/SettingsButton'
+import NameInput from '../../../components/NameInput';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { registerPointSchema } from '@/src/validations/validationSchema';
+import DescriptionInput from '@/src/components/DescriptionInput';
+
+import TimeInput from '@/src/components/TimeInput';
 
 export default function Settings() {
 
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(registerPointSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+    },
+  });
+
   return (
     <View style={styles.container}>
+
+      {/* NOME DO PONTO */}
+      <Controller
+        control={control}
+        name="name"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <>
+            <NameInput
+              label="Nome do ponto"
+              editable={true}
+              placeholder="Digite o nome do seu ponto"
+              onChange={onChange}
+              value={value}
+            />
+            {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+          </>
+        )}
+      />
+      <Text>Midia</Text>
+
+      {/* Descrição DO PONTO */}
+      <Controller
+        control={control}
+        name="description"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <>
+            <DescriptionInput
+              label="Descrição do ponto"
+              editable={true}
+              placeholder="Digite a descrição do seu ponto"
+              onChange={onChange}
+              value={value}
+            />
+            {errors.description && <Text style={styles.error}>{errors.description.message as string}</Text>}
+          </>
+        )}
+      />
+      <TimeInput></TimeInput>
+      <Text>Horário</Text>
+      <Text>URL</Text>
+
+      <Text>Endereço</Text>
+      <Text>Coordenadas (se precisar)</Text>
     </View>
   );
 }
