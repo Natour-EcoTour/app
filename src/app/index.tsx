@@ -78,7 +78,10 @@ export default function Index() {
             Esquecia minha senha
           </Text>
 
-          <LoginButton onPress={handleSubmit(onSubmit)} />
+          <LoginButton
+            text='Entrar'
+            onPress={handleSubmit(onSubmit)}
+          />
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
             <Text>

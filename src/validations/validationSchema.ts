@@ -74,8 +74,19 @@ export const forgotPasswordSchema = yup.object().shape({
 export const registerPointSchema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório').min(3, 'Nome muito curto'),
   description: yup.string().required('Descrição é obrigatória'),
-  //media: yup.string().required('Mídia é obrigatória'),
   link: yup.string().url('URL inválida'),
-  address: yup.string().required('Endereço é obrigatório'),
-  //coordinates: yup.string().required('Coordenadas são obrigatórias'),
+  time: yup.object().shape({
+    weekStart: yup.string().required('Dia da semana é obrigatório'),
+    weekEnd: yup.string().required('Dia da semana é obrigatório'),
+    timekStart: yup.string().required('Horário de início é obrigatório'),
+    timekEnd: yup.string().required('Horário de término é obrigatório'),
+  }),
+  address: yup.object().shape({
+    cep: yup.string().required('CEP é obrigatório'),
+    city: yup.string().required('Cidade é obrigatória'),
+    neighborhood: yup.string().required('Bairro é obrigatório'),
+    uf: yup.string().required('UF é obrigatória'),
+    latitude: yup.string().required('Latitude é obrigatória'),
+    longitude: yup.string().required('Longitude é obrigatória'),
+  }),
 });

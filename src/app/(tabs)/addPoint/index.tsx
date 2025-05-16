@@ -5,8 +5,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerPointSchema } from '@/src/validations/validationSchema';
 import DescriptionInput from '@/src/components/DescriptionInput';
-
+import AddressInput from '@/src/components/AddressInput';
 import TimeInput from '@/src/components/TimeInput';
+import RegisterButton from '@/src/components/LoginButton';
 
 export default function Settings() {
 
@@ -16,6 +17,20 @@ export default function Settings() {
       name: '',
       description: '',
       link: '',
+      address: {
+        cep: '',
+        city: '',
+        neighborhood: '',
+        uf: '',
+        latitude: '',
+        longitude: '',
+      },
+      time: {
+        weekStart: '',
+        weekEnd: '',
+        timekStart: '',
+        timekEnd: '',
+      },
     },
   });
 
@@ -83,7 +98,15 @@ export default function Settings() {
         />
 
         <Text>Endereço</Text>
-        <Text>Coordenadas (se precisar)</Text>
+        <AddressInput></AddressInput>
+
+        <RegisterButton
+          text='Cadastrar ponto'
+          onPress={handleSubmit((data) => {
+            console.log(data);
+          })}
+        ></RegisterButton>
+
       </View>
     </ScrollView>
   );

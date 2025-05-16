@@ -3,16 +3,17 @@ import React from 'react';
 
 interface LoginButtonProps {
     onPress: () => void;
+    text: string;
 }
 
-export default function RegisterButton({ onPress }: LoginButtonProps) {
+export default function RegisterButton({ onPress, text }: LoginButtonProps) {
 
     return (
         <TouchableOpacity
             style={styles.button}
             onPress={onPress}
         >
-            <Text style={styles.buttonText}>Entrar</Text>
+            <Text style={styles.buttonText}>{text}</Text>
         </TouchableOpacity>
     );
 }
