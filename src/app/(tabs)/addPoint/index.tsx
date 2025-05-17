@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 
 import NameInput from '../../../components/NameInput';
@@ -7,29 +9,31 @@ import { registerPointSchema } from '@/src/validations/validationSchema';
 import DescriptionInput from '@/src/components/DescriptionInput';
 import AddressInput from '@/src/components/AddressInput';
 import TimeInput from '@/src/components/TimeInput';
-import RegisterButton from '@/src/components/LoginButton';
+import RegisterPointButton from '@/src/components/RegisterPointButton';
+import CustomModal from '@/src/components/CustomModal';
 
-export default function Settings() {
+export default function AddPoint() {
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(registerPointSchema),
     defaultValues: {
-      name: '',
-      description: '',
-      link: '',
+      name: 'aaaa',
+      description: 'aaaa',
+      link: 'https://www.google.com',
       address: {
-        cep: '',
-        city: '',
-        neighborhood: '',
-        uf: '',
-        latitude: '',
-        longitude: '',
+        cep: 'aaaa',
+        city: 'aaaa',
+        neighborhood: 'aaaa',
+        uf: 'aaaa',
+        latitude: 'aaaa',
+        longitude: 'aaaa',
       },
       time: {
-        weekStart: '',
-        weekEnd: '',
-        timekStart: '',
-        timekEnd: '',
+        weekStart: 'Segunda-feira',
+        weekEnd: 'Segunda-feira',
+        timeStart: '1000',
+        timeEnd: '1000',
       },
     },
   });
@@ -77,7 +81,22 @@ export default function Settings() {
         />
         {/* horario */}
         <Text>Horário de funcionamento</Text>
-        <TimeInput></TimeInput>
+        <Controller
+          control={control}
+          name="time"
+          render={({ field: { onChange, value } }) => (
+            <TimeInput
+              onChange={onChange}
+              value={value}
+              errors={{
+                weekStart: errors?.time?.weekStart?.message,
+                weekEnd: errors?.time?.weekEnd?.message,
+                timeStart: errors?.time?.timeStart?.message,
+                timeEnd: errors?.time?.timeEnd?.message,
+              }}
+            />
+          )}
+        />
 
         {/* URL */}
         <Controller
@@ -92,20 +111,52 @@ export default function Settings() {
                 onChange={onChange}
                 value={value ?? ''}
               />
-              {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+              {errors.link && <Text style={styles.error}>{errors.link.message as string}</Text>}
             </>
           )}
         />
 
         <Text>Endereço</Text>
-        <AddressInput></AddressInput>
+        <Controller
+          control={control}
+          name="address"
+          render={({ field: { onChange, value } }) => (
+            <AddressInput
+              onChange={onChange}
+              value={{
+                ...value,
+                latitude: value.latitude ?? '',
+                longitude: value.longitude ?? '',
+              }}
+              errors={{
+                cep: errors?.address?.cep?.message,
+                city: errors?.address?.city?.message,
+                neighborhood: errors?.address?.neighborhood?.message,
+                uf: errors?.address?.uf?.message,
+                latitude: errors?.address?.latitude?.message,
+                longitude: errors?.address?.longitude?.message,
+              }}
+            />
+          )}
+        />
 
-        <RegisterButton
-          text='Cadastrar ponto'
+        <RegisterPointButton
+          text="Cadastrar ponto"
           onPress={handleSubmit((data) => {
-            console.log(data);
+            console.log('data', data);
+            setIsModalVisible(true);
           })}
-        ></RegisterButton>
+        />
+
+        {isModalVisible && (
+          <CustomModal
+            isVisible={isModalVisible}
+            onClose={() => setIsModalVisible(false)}
+            route="../myPoints"
+            title="Ponto cadastrado com sucesso!"
+            imagePath="check"
+          />
+        )}
 
       </View>
     </ScrollView>

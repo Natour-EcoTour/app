@@ -3,127 +3,164 @@ import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 
-export default function TimeInput() {
-    const [selectedDayStart, setSelectedDayStart] = useState('Segunda-feira');
-    const [selectedDayEnd, setSelectedDayEnd] = useState('Segunda-feira');
-    const days = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
+const days = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
 
-    const [startTime, setStartTime] = useState(new Date());
-    const [endTime, setEndTime] = useState(new Date());
-    const [showStartPicker, setShowStartPicker] = useState(false);
-    const [showEndPicker, setShowEndPicker] = useState(false);
+export default function TimeInput({
+  value,
+  onChange,
+  errors = {}
+}: {
+  value: {
+    weekStart: string,
+    weekEnd: string,
+    timeStart: string,
+    timeEnd: string
+  },
+  onChange: (val: any) => void,
+  errors?: {
+    weekStart?: string;
+    weekEnd?: string;
+    timeStart?: string;
+    timeEnd?: string;
+  }
+}) {
+  const [selectedDayStart, setSelectedDayStart] = useState(value.weekStart || 'Segunda-feira');
+  const [selectedDayEnd, setSelectedDayEnd] = useState(value.weekEnd || 'Segunda-feira');
+  const [startTime, setStartTime] = useState(value.timeStart ? new Date(value.timeStart) : new Date());
+  const [endTime, setEndTime] = useState(value.timeEnd ? new Date(value.timeEnd) : new Date());
 
-    const [startTimeSelected, setStartTimeSelected] = useState(false);
-    const [endTimeSelected, setEndTimeSelected] = useState(false);
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
+  const [startTimeSelected, setStartTimeSelected] = useState(!!value.timeStart);
+  const [endTimeSelected, setEndTimeSelected] = useState(!!value.timeEnd);
 
-    const onStartTimeChange = (event: any, date?: Date) => {
-        setShowStartPicker(Platform.OS === 'ios');
-        if (date) {
-            setStartTime(date);
-            setStartTimeSelected(true);
-        }
-    };
+  const updateParent = (changes: Partial<typeof value>) => {
+    onChange({ ...value, ...changes });
+  };
 
-    const onEndTimeChange = (event: any, date?: Date) => {
-        setShowEndPicker(Platform.OS === 'ios');
-        if (date) {
-            setEndTime(date);
-            setEndTimeSelected(true);
-        }
-    };
+  const onStartTimeChange = (event: any, date?: Date) => {
+    setShowStartPicker(Platform.OS === 'ios');
+    if (date) {
+      setStartTime(date);
+      setStartTimeSelected(true);
+      updateParent({ timeStart: date.toISOString() });
+    }
+  };
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.weekdayPicker}>
+  const onEndTimeChange = (event: any, date?: Date) => {
+    setShowEndPicker(Platform.OS === 'ios');
+    if (date) {
+      setEndTime(date);
+      setEndTimeSelected(true);
+      updateParent({ timeEnd: date.toISOString() });
+    }
+  };
 
-                {/* horario 1 */}
-                <View style={styles.dayPickerContainer}>
-                    <Text>De:</Text>
-                    <Picker
-                        selectedValue={selectedDayStart}
-                        onValueChange={(itemValue) => setSelectedDayStart(itemValue)}
-                    >
-                        {days.map((day) => (
-                            <Picker.Item label={day} value={day} key={day} />
-                        ))}
-                    </Picker>
-                </View>
+  const handleWeekStartChange = (val: string) => {
+    setSelectedDayStart(val);
+    updateParent({ weekStart: val });
+  };
 
-                {/* horario 2 */}
-                <View style={styles.dayPickerContainer}>
-                    <Text>Até:</Text>
-                    <Picker
-                        selectedValue={selectedDayEnd}
-                        onValueChange={(itemValue) => setSelectedDayEnd(itemValue)}
-                    >
-                        {days.map((day) => (
-                            <Picker.Item label={day} value={day} key={day} />
-                        ))}
-                    </Picker>
-                </View>
-            </View>
+  const handleWeekEndChange = (val: string) => {
+    setSelectedDayEnd(val);
+    updateParent({ weekEnd: val });
+  };
 
-            {/* Abre  */}
-            <Text>Abre às:</Text>
-            <TouchableOpacity style={styles.timeButton} onPress={() => setShowStartPicker(true)}>
-                <Text style={styles.buttonText}>
-                    {startTimeSelected ? startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Selecione um horário'}
-                </Text>
-            </TouchableOpacity>
-            {showStartPicker && (
-                <DateTimePicker
-                    value={startTime}
-                    mode="time"
-                    display="default"
-                    onChange={onStartTimeChange}
-                />
-            )}
-
-            {/* Fecha */}
-            <Text>Fecha às:</Text>
-            <TouchableOpacity style={styles.timeButton} onPress={() => setShowEndPicker(true)}>
-                <Text style={styles.buttonText}>
-                    {endTimeSelected ? endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Selecione um horário'}
-                </Text>
-            </TouchableOpacity>
-            {showEndPicker && (
-                <DateTimePicker
-                    value={endTime}
-                    mode="time"
-                    display="default"
-                    onChange={onEndTimeChange}
-                />
-            )}
+  return (
+    <View style={styles.container}>
+      <View style={styles.weekdayPicker}>
+        {/* Week start */}
+        <View style={styles.dayPickerContainer}>
+          <Text>De:</Text>
+          <Picker selectedValue={selectedDayStart} onValueChange={handleWeekStartChange}>
+            {days.map((day) => (
+              <Picker.Item label={day} value={day} key={day} />
+            ))}
+          </Picker>
+          {errors.weekStart && <Text style={styles.error}>{errors.weekStart}</Text>}
         </View>
-    );
+
+        {/* Week end */}
+        <View style={styles.dayPickerContainer}>
+          <Text>Até:</Text>
+          <Picker selectedValue={selectedDayEnd} onValueChange={handleWeekEndChange}>
+            {days.map((day) => (
+              <Picker.Item label={day} value={day} key={day} />
+            ))}
+          </Picker>
+          {errors.weekEnd && <Text style={styles.error}>{errors.weekEnd}</Text>}
+        </View>
+      </View>
+
+      {/* Time start */}
+      <Text>Abre às:</Text>
+      <TouchableOpacity style={styles.timeButton} onPress={() => setShowStartPicker(true)}>
+        <Text style={styles.buttonText}>
+          {startTimeSelected ? startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Selecione um horário'}
+        </Text>
+      </TouchableOpacity>
+      {showStartPicker && (
+        <DateTimePicker
+          value={startTime}
+          mode="time"
+          display="default"
+          onChange={onStartTimeChange}
+        />
+      )}
+      {errors.timeStart && <Text style={styles.error}>{errors.timeStart}</Text>}
+
+      {/* Time end */}
+      <Text>Fecha às:</Text>
+      <TouchableOpacity style={styles.timeButton} onPress={() => setShowEndPicker(true)}>
+        <Text style={styles.buttonText}>
+          {endTimeSelected ? endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Selecione um horário'}
+        </Text>
+      </TouchableOpacity>
+      {showEndPicker && (
+        <DateTimePicker
+          value={endTime}
+          mode="time"
+          display="default"
+          onChange={onEndTimeChange}
+        />
+      )}
+      {errors.timeEnd && <Text style={styles.error}>{errors.timeEnd}</Text>}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-        width: '100%',
-    },
-    weekdayPicker: {
-        flexDirection: 'column',
-        marginBottom: 20,
-    },
-    dayPickerContainer: {
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        paddingHorizontal: 5,
-        backgroundColor: '#f8f8f8',
-    },
-    timeButton: {
-        backgroundColor: '#00672e',
-        padding: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-    }
+  container: {
+    padding: 10,
+    width: '100%',
+  },
+  weekdayPicker: {
+    flexDirection: 'column',
+    marginBottom: 20,
+  },
+  dayPickerContainer: {
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    backgroundColor: '#f8f8f8',
+  },
+  timeButton: {
+    backgroundColor: '#00672e',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  error: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
+    marginTop: -5,
+  },
 });

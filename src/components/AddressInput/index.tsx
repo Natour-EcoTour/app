@@ -1,70 +1,127 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { Checkbox, TextInput } from 'react-native-paper';
 
-export default function AddressInput() {
-    const [isChecked, setIsChecked] = useState(false);
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
+export default function AddressInput({
+  value,
+  onChange,
+  errors = {}
+}: {
+  value: {
+    cep: string;
+    city: string;
+    neighborhood: string;
+    uf: string;
+    latitude: string;
+    longitude: string;
+  };
+  onChange: (val: any) => void;
+  errors?: {
+    cep?: string;
+    city?: string;
+    neighborhood?: string;
+    uf?: string;
+    latitude?: string;
+    longitude?: string;
+  };
+}) {
+  const [isChecked, setIsChecked] = useState(false);
 
-    const handlePress = () => {
-        setIsChecked(!isChecked);
-    };
+  const handleCoordinateChange = (text: string, field: 'latitude' | 'longitude') => {
+    const cleaned = text.replace(/[^0-9\.\-]/g, '');
+    onChange({ ...value, [field]: cleaned });
+  };
 
-    const handleCoordinateChange = (text: string, setter: (val: string) => void) => {
-        // Allow only numbers, dots, minus sign
-        const cleaned = text.replace(/[^0-9\.\-]/g, '');
-        setter(cleaned);
-    };
+  const handleTextChange = (field: keyof typeof value, text: string) => {
+    onChange({ ...value, [field]: text });
+  };
 
-    return (
-        <View style={styles.container}>
-            <Checkbox.Item
-                label="Cadastrar por coordenadas?"
-                status={isChecked ? 'checked' : 'unchecked'}
-                onPress={handlePress}
-                color="#00672e"
-                labelStyle={{ fontSize: 16 }}
-            />
+  return (
+    <View style={styles.container}>
+      <Checkbox.Item
+        label="Cadastrar por coordenadas?"
+        status={isChecked ? 'checked' : 'unchecked'}
+        onPress={() => setIsChecked(!isChecked)}
+        color="#00672e"
+        labelStyle={{ fontSize: 16 }}
+      />
 
-            {isChecked && (
-                <View>
-                    <TextInput
-                        label="Latitude"
-                        mode="outlined"
-                        style={styles.input}
-                        value={latitude}
-                        onChangeText={(text) => handleCoordinateChange(text, setLatitude)}
-                        keyboardType="numbers-and-punctuation"
-                    />
-                    <TextInput
-                        label="Longitude"
-                        mode="outlined"
-                        style={styles.input}
-                        value={longitude}
-                        onChangeText={(text) => handleCoordinateChange(text, setLongitude)}
-                        keyboardType="numbers-and-punctuation"
-                    />
-                </View>
-            )}
+      {isChecked && (
+        <>
+          <TextInput
+            label="Latitude"
+            mode="outlined"
+            style={styles.input}
+            value={value.latitude}
+            onChangeText={(text) => handleCoordinateChange(text, 'latitude')}
+            keyboardType="numbers-and-punctuation"
+          />
+          {isChecked && errors.latitude && <Text style={styles.error}>{errors.latitude}</Text>}
 
-            <TextInput label="CEP" mode="outlined" style={styles.input} />
-            <TextInput label="Cidade" mode="outlined" style={styles.input} />
-            <TextInput label="Bairro" mode="outlined" style={styles.input} />
-            <TextInput label="UF" mode="outlined" style={styles.input} />
-            <TextInput label="Complemento" mode="outlined" style={styles.input} />
-            <TextInput label="Número" mode="outlined" style={styles.input} />
-        </View>
-    );
+          <TextInput
+            label="Longitude"
+            mode="outlined"
+            style={styles.input}
+            value={value.longitude}
+            onChangeText={(text) => handleCoordinateChange(text, 'longitude')}
+            keyboardType="numbers-and-punctuation"
+          />
+          {isChecked && errors.longitude && <Text style={styles.error}>{errors.longitude}</Text>}
+        </>
+      )}
+
+      <TextInput
+        label="CEP"
+        mode="outlined"
+        style={styles.input}
+        value={value.cep}
+        onChangeText={(text) => handleTextChange('cep', text)}
+      />
+      {errors.cep && <Text style={styles.error}>{errors.cep}</Text>}
+
+      <TextInput
+        label="Cidade"
+        mode="outlined"
+        style={styles.input}
+        value={value.city}
+        onChangeText={(text) => handleTextChange('city', text)}
+      />
+      {errors.city && <Text style={styles.error}>{errors.city}</Text>}
+
+      <TextInput
+        label="Bairro"
+        mode="outlined"
+        style={styles.input}
+        value={value.neighborhood}
+        onChangeText={(text) => handleTextChange('neighborhood', text)}
+      />
+      {errors.neighborhood && <Text style={styles.error}>{errors.neighborhood}</Text>}
+
+      <TextInput
+        label="UF"
+        mode="outlined"
+        style={styles.input}
+        value={value.uf}
+        onChangeText={(text) => handleTextChange('uf', text)}
+      />
+      {errors.uf && <Text style={styles.error}>{errors.uf}</Text>}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 10,
-        width: '100%',
-    },
-    input: {
-        marginBottom: 10,
-        width: '100%',
-    },
+  container: {
+    padding: 10,
+    width: '100%',
+  },
+  input: {
+    marginBottom: 10,
+    width: '100%',
+  },
+  error: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
+    marginTop: -5,
+  },
 });

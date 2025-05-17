@@ -78,15 +78,15 @@ export const registerPointSchema = yup.object().shape({
   time: yup.object().shape({
     weekStart: yup.string().required('Dia da semana é obrigatório'),
     weekEnd: yup.string().required('Dia da semana é obrigatório'),
-    timekStart: yup.string().required('Horário de início é obrigatório'),
-    timekEnd: yup.string().required('Horário de término é obrigatório'),
+    timeStart: yup.string().required('Horário de início é obrigatório'),
+    timeEnd: yup.string().required('Horário de término é obrigatório'),
   }),
   address: yup.object().shape({
     cep: yup.string().required('CEP é obrigatório'),
     city: yup.string().required('Cidade é obrigatória'),
     neighborhood: yup.string().required('Bairro é obrigatório'),
     uf: yup.string().required('UF é obrigatória'),
-    latitude: yup.string().required('Latitude é obrigatória'),
-    longitude: yup.string().required('Longitude é obrigatória'),
+    latitude: yup.string().optional(),
+    longitude: yup.string().optional(),
   }),
 });
