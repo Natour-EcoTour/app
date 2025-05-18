@@ -85,6 +85,8 @@ export const registerPointSchema = yup.object().shape({
     cep: yup.string().required('CEP é obrigatório'),
     city: yup.string().required('Cidade é obrigatória'),
     neighborhood: yup.string().required('Bairro é obrigatório'),
+    number: yup.string().required('Número é obrigatório'),
+    street: yup.string().required('Rua é obrigatória'),
     uf: yup.string().required('UF é obrigatória'),
     latitude: yup.string().optional(),
     longitude: yup.string().optional(),

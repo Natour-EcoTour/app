@@ -1,33 +1,38 @@
 import React, { useState } from 'react';
 
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
-
-import NameInput from '../../../components/NameInput';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerPointSchema } from '@/src/validations/validationSchema';
+
+import NameInput from '../../../components/NameInput';
 import DescriptionInput from '@/src/components/DescriptionInput';
 import AddressInput from '@/src/components/AddressInput';
 import TimeInput from '@/src/components/TimeInput';
 import RegisterPointButton from '@/src/components/RegisterPointButton';
 import CustomModal from '@/src/components/CustomModal';
+import AddPointMidia from '@/src/components/AddPointMidia';
+
 
 export default function AddPoint() {
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
-  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(registerPointSchema),
     defaultValues: {
-      name: 'aaaa',
-      description: 'aaaa',
+      name: 'aaa',
+      description: 'aaa',
       link: 'https://www.google.com',
       address: {
-        cep: 'aaaa',
-        city: 'aaaa',
-        neighborhood: 'aaaa',
-        uf: 'aaaa',
-        latitude: 'aaaa',
-        longitude: 'aaaa',
+        cep: '03434455',
+        city: 'aaa',
+        neighborhood: 'aaa',
+        uf: 'aaa',
+        street: 'aaa',
+        number: 'aaa',
+        latitude: 'aaa',
+        longitude: 'aaa',
       },
       time: {
         weekStart: 'Segunda-feira',
@@ -40,14 +45,13 @@ export default function AddPoint() {
 
   return (
     <ScrollView>
-
       <View style={styles.container}>
 
-        {/* NOME DO PONTO */}
+        <Text style={styles.stepTitle}>Geral</Text>
         <Controller
           control={control}
           name="name"
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, value } }) => (
             <>
               <NameInput
                 label="Nome do ponto"
@@ -56,17 +60,15 @@ export default function AddPoint() {
                 onChange={onChange}
                 value={value}
               />
-              {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+              {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
             </>
           )}
         />
-        <Text>Midia</Text>
 
-        {/* Descrição DO PONTO */}
         <Controller
           control={control}
           name="description"
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, value } }) => (
             <>
               <DescriptionInput
                 label="Descrição do ponto"
@@ -75,12 +77,12 @@ export default function AddPoint() {
                 onChange={onChange}
                 value={value}
               />
-              {errors.description && <Text style={styles.error}>{errors.description.message as string}</Text>}
+              {errors.description && <Text style={styles.error}>{errors.description.message}</Text>}
             </>
           )}
         />
-        {/* horario */}
-        <Text>Horário de funcionamento</Text>
+
+        <Text style={styles.stepTitle}>Horário de funcionamento</Text>
         <Controller
           control={control}
           name="time"
@@ -98,11 +100,11 @@ export default function AddPoint() {
           )}
         />
 
-        {/* URL */}
+        <Text style={styles.stepTitle}>Website</Text>
         <Controller
           control={control}
           name="link"
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, value } }) => (
             <>
               <NameInput
                 label="Link do ponto (opcional)"
@@ -111,12 +113,12 @@ export default function AddPoint() {
                 onChange={onChange}
                 value={value ?? ''}
               />
-              {errors.link && <Text style={styles.error}>{errors.link.message as string}</Text>}
+              {errors.link && <Text style={styles.error}>{errors.link.message}</Text>}
             </>
           )}
         />
 
-        <Text>Endereço</Text>
+        <Text style={styles.stepTitle}>Endereço</Text>
         <Controller
           control={control}
           name="address"
@@ -133,6 +135,8 @@ export default function AddPoint() {
                 city: errors?.address?.city?.message,
                 neighborhood: errors?.address?.neighborhood?.message,
                 uf: errors?.address?.uf?.message,
+                street: errors?.address?.street?.message,
+                number: errors?.address?.number?.message,
                 latitude: errors?.address?.latitude?.message,
                 longitude: errors?.address?.longitude?.message,
               }}
@@ -140,9 +144,20 @@ export default function AddPoint() {
           )}
         />
 
+        <Text style={styles.stepTitle}>Midia</Text>
+        <AddPointMidia
+          selectedImages={selectedImages}
+          setSelectedImages={setSelectedImages}
+        />
+
         <RegisterPointButton
           text="Cadastrar ponto"
           onPress={handleSubmit((data) => {
+            if (selectedImages.length === 0) {
+              alert('Adicione pelo menos uma imagem antes de continuar.');
+              return;
+            }
+
             console.log('data', data);
             setIsModalVisible(true);
           })}
@@ -157,93 +172,28 @@ export default function AddPoint() {
             imagePath="check"
           />
         )}
-
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
   container: {
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 50,
   },
-  title: {
-    color: '#00672e',
+  stepTitle: {
     fontSize: 20,
-    marginBottom: 20,
     fontWeight: 'bold',
-  },
-  inputContainer: {
-    width: '100%',
-  },
-  label: {
-    color: '#000',
+    marginTop: 10,
     marginBottom: 5,
-    fontSize: 16,
-  },
-  input: {
-    backgroundColor: '#ffffff',
-    padding: 10,
-    fontSize: 16,
-    marginBottom: 15,
-    borderRadius: 4,
+    alignSelf: 'flex-start',
   },
   error: {
     color: 'red',
     fontSize: 14,
     marginBottom: 15,
   },
-  button: {
-    backgroundColor: '#00672e',
-    padding: 15,
-    alignItems: 'center',
-    borderRadius: 4,
-    marginTop: 10,
-    marginBottom: 20
-  },
-  Deletebutton: {
-    backgroundColor: '#fc0303',
-    width: '50%',
-    padding: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 4,
-  },
-  ChangePassbutton: {
-    padding: 15,
-    alignItems: 'center',
-    borderColor: '#00672e',
-    borderWidth: 1,
-    borderRadius: 4,
-    marginTop: 10,
-    marginBottom: 20
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  ChangePasswordbuttonText: {
-    color: '#00672e',
-    fontSize: 16,
-  },
-  link: {
-    color: '#00672e',
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
-  },
-  image: {
-    width: 200,
-    height: 200,
-    marginTop: 20,
-    marginBottom: 20,
-    borderRadius: 100,
-    resizeMode: 'contain',
-  }
 });

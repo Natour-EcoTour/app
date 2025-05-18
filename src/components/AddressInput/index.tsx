@@ -5,15 +5,17 @@ import { Checkbox, TextInput } from 'react-native-paper';
 export default function AddressInput({
   value,
   onChange,
-  errors = {}
+  errors = {},
 }: {
   value: {
     cep: string;
     city: string;
     neighborhood: string;
     uf: string;
-    latitude: string;
-    longitude: string;
+    latitude?: string;
+    longitude?: string;
+    number: string;
+    street: string;
   };
   onChange: (val: any) => void;
   errors?: {
@@ -23,17 +25,50 @@ export default function AddressInput({
     uf?: string;
     latitude?: string;
     longitude?: string;
+    number?: string;
+    street?: string;
   };
 }) {
   const [isChecked, setIsChecked] = useState(false);
+  const [isFetchingCep, setIsFetchingCep] = useState(false);
 
   const handleCoordinateChange = (text: string, field: 'latitude' | 'longitude') => {
-    const cleaned = text.replace(/[^0-9\.\-]/g, '');
+    const cleaned = text.replace(/[^0-9.\-]/g, '');
     onChange({ ...value, [field]: cleaned });
   };
 
   const handleTextChange = (field: keyof typeof value, text: string) => {
     onChange({ ...value, [field]: text });
+  };
+
+  const handleCepChange = async (text: string) => {
+    const cleanedCep = text.replace(/\D/g, '');
+    onChange({ ...value, cep: cleanedCep });
+
+    if (cleanedCep.length === 8) {
+      try {
+        setIsFetchingCep(true);
+        const response = await fetch(`https://viacep.com.br/ws/${cleanedCep}/json/`);
+        const data = await response.json();
+
+        if (!data.erro) {
+          onChange({
+            ...value,
+            cep: cleanedCep,
+            city: data.localidade || '',
+            neighborhood: data.bairro || '',
+            uf: data.uf || '',
+            street: data.logradouro || '',
+          });
+        } else {
+          alert('CEP não encontrado.');
+        }
+      } catch (error) {
+        alert('Erro ao buscar o CEP. Verifique sua conexão.');
+      } finally {
+        setIsFetchingCep(false);
+      }
+    }
   };
 
   return (
@@ -56,7 +91,7 @@ export default function AddressInput({
             onChangeText={(text) => handleCoordinateChange(text, 'latitude')}
             keyboardType="numbers-and-punctuation"
           />
-          {isChecked && errors.latitude && <Text style={styles.error}>{errors.latitude}</Text>}
+          {errors.latitude && <Text style={styles.error}>{errors.latitude}</Text>}
 
           <TextInput
             label="Longitude"
@@ -66,7 +101,7 @@ export default function AddressInput({
             onChangeText={(text) => handleCoordinateChange(text, 'longitude')}
             keyboardType="numbers-and-punctuation"
           />
-          {isChecked && errors.longitude && <Text style={styles.error}>{errors.longitude}</Text>}
+          {errors.longitude && <Text style={styles.error}>{errors.longitude}</Text>}
         </>
       )}
 
@@ -75,7 +110,9 @@ export default function AddressInput({
         mode="outlined"
         style={styles.input}
         value={value.cep}
-        onChangeText={(text) => handleTextChange('cep', text)}
+        onChangeText={handleCepChange}
+        keyboardType="numeric"
+        right={isFetchingCep ? <TextInput.Icon icon="loading" /> : undefined}
       />
       {errors.cep && <Text style={styles.error}>{errors.cep}</Text>}
 
@@ -103,8 +140,29 @@ export default function AddressInput({
         style={styles.input}
         value={value.uf}
         onChangeText={(text) => handleTextChange('uf', text)}
+        maxLength={2}
+        autoCapitalize="characters"
       />
       {errors.uf && <Text style={styles.error}>{errors.uf}</Text>}
+
+      <TextInput
+        label="Rua"
+        mode="outlined"
+        style={styles.input}
+        value={value.street}
+        onChangeText={(text) => handleTextChange('street', text)}
+      />
+      {errors.street && <Text style={styles.error}>{errors.street}</Text>}
+
+      <TextInput
+        label="Número"
+        mode="outlined"
+        style={styles.input}
+        value={value.number?.toString() || ''}
+        onChangeText={(text) => handleTextChange('number', text.replace(/\D/g, ''))}
+        keyboardType="numeric"
+      />
+      {errors.number && <Text style={styles.error}>{errors.number}</Text>}
     </View>
   );
 }
