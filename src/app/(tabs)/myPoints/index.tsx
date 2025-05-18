@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 import MypointsBox from '../../../components/MyPointsBox';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 // interface Point {
 //   id: number;
@@ -65,7 +66,7 @@ export default function MyPoints() {
       id: 6,
       pointName: 'Lagoa do Coração',
       pointStatus: true,
-      starTime: '07:30' ,
+      starTime: '07:30',
       closeTime: '17:45',
       views: 120,
       review: 4,
@@ -74,6 +75,12 @@ export default function MyPoints() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.analiseWrapper}>
+        <TouchableOpacity style={styles.analiseContainer}>
+          <Ionicons name={'time-sharp'} size={15} color={'darkgreen'} />
+          <Text style={styles.analise}>Ver pontos em análise</Text>
+        </TouchableOpacity>
+      </View>
 
       {points.length === 0 ? (
         <View>
@@ -128,5 +135,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
-  }
+  },
+  analiseWrapper: {
+    width: '100%',
+    alignItems: 'flex-end',
+    marginBottom: 20,
+  },
+  analiseContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    textAlign: 'right'
+  },
+  analise: {
+    fontSize: 15,
+    color: '#00672e',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+  },
 });
