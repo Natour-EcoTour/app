@@ -78,7 +78,7 @@ export default function MyPoints() {
       <View style={styles.analiseWrapper}>
         <TouchableOpacity style={styles.analiseContainer}>
           <Ionicons name={'time-sharp'} size={15} color={'darkgreen'} />
-          <Text style={styles.analise}>Ver pontos em análise</Text>
+          <Text style={styles.analise} onPress={() => router.push('/(pendingPoints)')}>Ver pontos em análise</Text>
         </TouchableOpacity>
       </View>
 
