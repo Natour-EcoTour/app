@@ -12,9 +12,11 @@ import TimeInput from '@/src/components/TimeInput';
 import RegisterPointButton from '@/src/components/RegisterPointButton';
 import CustomModal from '@/src/components/CustomModal';
 import AddPointMidia from '@/src/components/AddPointMidia';
+import { Picker } from '@react-native-picker/picker';
 
 
 export default function AddPoint() {
+  const [selectedLanguage, setSelectedLanguage] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
@@ -40,6 +42,7 @@ export default function AddPoint() {
         timeStart: '1000',
         timeEnd: '1000',
       },
+      type: 'Trilha',
     },
   });
 
@@ -97,6 +100,27 @@ export default function AddPoint() {
                 timeEnd: errors?.time?.timeEnd?.message,
               }}
             />
+          )}
+        />
+
+        <Text style={styles.stepTitle}>Tipo do ponto</Text>
+        <Controller
+          control={control}
+          name="type"
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.pickerWrapper}>
+              <Picker
+                selectedValue={value}
+                onValueChange={(itemValue) => onChange(itemValue)}
+                style={styles.picker}
+              >
+                <Picker.Item label="Trilha" value="trilha" />
+                <Picker.Item label="Cachoeira" value="cachoeira" />
+                <Picker.Item label="Parque" value="parque" />
+                <Picker.Item label="Sítio" value="sitio" />
+              </Picker>
+              {errors.type && <Text style={styles.error}>{errors.type.message}</Text>}
+            </View>
           )}
         />
 
@@ -195,5 +219,18 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 14,
     marginBottom: 15,
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    marginBottom: 15,
+    overflow: 'hidden',
+    width: '100%',
+    backgroundColor: '#fff',
+  },
+  picker: {
+    height: 50,
+    width: '100%',
   },
 });

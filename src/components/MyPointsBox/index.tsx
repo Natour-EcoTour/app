@@ -6,7 +6,7 @@ import { Link } from 'expo-router';
 interface MyPointsBoxProps {
   id: number;
   pointName: string;
-  pointStatus: boolean;
+  pointStatus: string;
   starTime: string;
   closeTime: string;
   views: number;
@@ -31,11 +31,15 @@ export default function MyPointsBox({
           <View
             style={[
               styles.statusBall,
-              { backgroundColor: pointStatus ? 'green' : 'red' }
+              { backgroundColor: pointStatus === 'Ativo' ? 'green' : pointStatus === 'Desativado' ? 'red' : 'yellow' }
             ]}
           />
           <Text style={styles.statusText}>
-            {pointStatus ? 'Ativo' : 'Desativado'}
+            {pointStatus === 'Ativo'
+              ? 'Ativo'
+              : pointStatus === 'Desativado'
+              ? 'Desativado'
+              : 'Em análise'}
           </Text>
         </View>
       </View>

@@ -91,4 +91,5 @@ export const registerPointSchema = yup.object().shape({
     latitude: yup.string().optional(),
     longitude: yup.string().optional(),
   }),
+  type: yup.string().required('Tipo do ponto é obrigatório'),
 });

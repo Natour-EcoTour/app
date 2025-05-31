@@ -19,8 +19,8 @@ export default function MyPoints() {
   const points = [
     {
       id: 1,
-      pointName: 'Parque dos Flamingos',
-      pointStatus: false,
+      pointName: 'a',
+      pointStatus: 'Ativo',
       starTime: '09:00',
       closeTime: '18:00',
       views: 350,
@@ -29,7 +29,7 @@ export default function MyPoints() {
     {
       id: 2,
       pointName: 'Parque dos Fabianos',
-      pointStatus: true,
+      pointStatus: 'Desativado',
       starTime: '10:00',
       closeTime: '11:00',
       views: 0,
@@ -38,7 +38,7 @@ export default function MyPoints() {
     {
       id: 3,
       pointName: 'Lagoa do Coração',
-      pointStatus: true,
+      pointStatus: 'Ativo',
       starTime: '07:30',
       closeTime: '17:45',
       views: 120,
@@ -47,7 +47,7 @@ export default function MyPoints() {
     {
       id: 4,
       pointName: 'Parque dos Flamingos',
-      pointStatus: false,
+      pointStatus: 'Desativado',
       starTime: '09:00',
       closeTime: '18:00',
       views: 350,
@@ -56,7 +56,7 @@ export default function MyPoints() {
     {
       id: 5,
       pointName: 'Parque dos Fabianos',
-      pointStatus: true,
+      pointStatus: 'Ativo',
       starTime: '10:00',
       closeTime: '11:00',
       views: 0,
@@ -65,7 +65,7 @@ export default function MyPoints() {
     {
       id: 6,
       pointName: 'Lagoa do Coração',
-      pointStatus: true,
+      pointStatus: 'Desativado',
       starTime: '07:30',
       closeTime: '17:45',
       views: 120,
