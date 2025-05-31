@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   arrowText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'gray',
+    color: 'black',
   },
   flatListContainer: {
     overflow: 'hidden',
@@ -120,6 +120,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginRight: 10,
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 10,
+    backgroundColor: 'lightgreen',
   },
   image: {
     width: CAROUSEL_WIDTH,
@@ -128,6 +132,9 @@ const styles = StyleSheet.create({
   indexContainer: {
     marginTop: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    marginBottom: 10,
   },
   indexText: {
     fontSize: 16,

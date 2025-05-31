@@ -18,7 +18,7 @@ export default function MyPointsLayout() {
               name="arrow-back"
               size={24}
               color="darkgreen"
-              onPress={() => router.back()}
+              onPress={() => router.push('/(main)/settings')}
             />
           </View>
         ),
