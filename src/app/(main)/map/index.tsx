@@ -13,7 +13,7 @@ import DescriptionContainer from '../../../components/DescriptionContainer';
 import TypeContainer from '../../../components/TypeContainer';
 import TimeContainer from '../../../components/TimeContainer';
 import AddressContainer from '../../../components/AddressContainer';
-
+import AddReview from '../../../components/AddReview';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ARROW_BUTTON_WIDTH = 40; // fixed width for each arrow button
@@ -152,6 +152,7 @@ export default function Map() {
                       setIsModalVisible(true);
                     }}
                   />
+                  
                   <Rating />
 
                   <Text style={styles.title}>Descrição</Text>
@@ -176,6 +177,8 @@ export default function Map() {
                     number={selectedMarker.number}
                     street={selectedMarker.street}
                   />
+
+                  <AddReview />
                   
                 </>
               ) : (
