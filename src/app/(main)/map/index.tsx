@@ -1,8 +1,9 @@
-import React, { useMemo, useRef, useState, useCallback } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
+import * as Location from 'expo-location';
+import MapView, { Marker, Region } from 'react-native-maps';
 import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import BottomSheet, { BottomSheetView, BottomSheetScrollView  } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 import ImageModal from '../../../components/ImageModal';
 import ImageCarousel from '../../../components/ImageCarousel';
@@ -79,6 +80,34 @@ export default function Map() {
 
   const [searchText, setSearchText] = useState('');
 
+  const [region, setRegion] = useState<Region | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      // Request permissions
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permissão de localização negada!');
+        return;
+      }
+      // Get user location
+      let { coords } = await Location.getCurrentPositionAsync({});
+      setRegion({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.05,   // adjust zoom as needed
+        longitudeDelta: 0.05,
+      });
+    })();
+  }, []);
+
+  if (!region) {
+    // Optional: Loading screen or null while fetching
+    return null;
+  }
+
+  console.log('Region:', region);
+
   const handleMarkerPress = (marker: any) => {
     setSelectedMarker(marker);
     setCurrentImageIndex(0);
@@ -93,13 +122,11 @@ export default function Map() {
           customMapStyle={customMapStyle}
           showsBuildings={false}
           showsCompass={false}
+          showsMyLocationButton={false}
+
           style={styles.map}
-          initialRegion={{
-            latitude: -23.550377,
-            longitude: -46.63394,
-            latitudeDelta: 6,
-            longitudeDelta: 6,
-          }}
+          initialRegion={region!}
+          showsUserLocation={true}
         >
           {markers.map((marker) => (
             <Marker
@@ -152,7 +179,7 @@ export default function Map() {
                       setIsModalVisible(true);
                     }}
                   />
-                  
+
                   <Rating />
 
                   <Text style={styles.title}>Descrição</Text>
@@ -179,7 +206,7 @@ export default function Map() {
                   />
 
                   <AddReview />
-                  
+
                 </>
               ) : (
                 <Text style={styles.title}>Selecione um ponto no mapa</Text>
