@@ -11,6 +11,7 @@ interface MyPointsBoxProps {
   closeTime: string;
   views: number;
   review: number;
+  screen: "myPoints" | "pendingPoints";
 }
 
 export default function MyPointsBox({
@@ -20,7 +21,8 @@ export default function MyPointsBox({
   starTime,
   closeTime,
   views,
-  review
+  review,
+  screen
 }: MyPointsBoxProps) {
   return (
     <View style={styles.box}>
@@ -51,7 +53,7 @@ export default function MyPointsBox({
       <View style={styles.details}>
         <Link
           href={{
-            pathname: '/myPoints/details/[id]',
+            pathname: `/${screen}/details/[id]`,
             params: { id: String(id) }
           }}
           style={styles.detailsText}

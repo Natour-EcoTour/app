@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
-import MypointsBox from '../../components/MyPointsBox';
+import MypointsBox from '../../../components/MyPointsBox';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -98,6 +98,7 @@ export default function PendingPoints() {
                         closeTime={point.closeTime}
                         views={point.views}
                         review={point.review}
+                        screen="pendingPoints"
                     />
                 ))
             )}

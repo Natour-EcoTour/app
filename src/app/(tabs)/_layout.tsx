@@ -6,6 +6,9 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        headerTitleStyle: {
+          color: 'darkgreen',
+        },
         tabBarInactiveTintColor: 'green',
         tabBarActiveTintColor: 'darkgreen',
         headerStyle: {
@@ -20,7 +23,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="addPoint"
+        name="addPoint/index"
         options={{
           title: 'Cadastrar Ponto',
           tabBarIcon: ({ color, focused }) => (
@@ -40,6 +43,20 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'person' : 'person-outline'}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="pendingPoints"
+        options={{
+          title: 'Pontos Pendentes',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'time' : 'time-outline'}
               size={24}
               color={color}
             />

@@ -27,15 +27,6 @@ export default function ImageModal({ isVisible, imageUri, onClose }: Props) {
       >
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Fechar"
-                onPress={handleClose}
-                color="#464C55"
-                accessibilityLabel="Fechar modal"
-              />
-            </View>
-
             <View style={styles.imageContainer}>
               {imageUri ? (
                 <Image
@@ -46,6 +37,15 @@ export default function ImageModal({ isVisible, imageUri, onClose }: Props) {
               ) : (
                 <Text style={styles.errorText}>Imagem não encontrada!</Text>
               )}
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <Button
+                color="darkgreen"
+                title="Fechar"
+                onPress={handleClose}
+                accessibilityLabel="Fechar modal"
+              />
             </View>
           </View>
         </View>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: SCREEN_WIDTH * 0.9,
     height: '50%',
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(255, 255, 255)',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'space-between',

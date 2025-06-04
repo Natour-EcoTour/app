@@ -77,8 +77,8 @@ export default function MyPoints() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.analiseWrapper}>
         <TouchableOpacity style={styles.analiseContainer}>
-          <Ionicons name={'time-sharp'} size={15} color={'darkgreen'} />
-          <Text style={styles.analise} onPress={() => router.push('/(pendingPoints)')}>Ver pontos em análise</Text>
+          <Ionicons name={'arrow-back'} size={20} color={'darkgreen'} />
+          <Text style={styles.analise} onPress={() => router.push('/(main)/settings')}>Voltar</Text>
         </TouchableOpacity>
       </View>
 
@@ -103,6 +103,7 @@ export default function MyPoints() {
             closeTime={point.closeTime}
             views={point.views}
             review={point.review}
+            screen="myPoints"
           />
         ))
       )}
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
   },
   analiseWrapper: {
     width: '100%',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     marginBottom: 20,
   },
   analiseContainer: {
@@ -147,9 +148,8 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   analise: {
-    fontSize: 15,
+    fontSize: 20,
     color: '#00672e',
     fontWeight: 'bold',
-    textDecorationLine: 'underline',
   },
 });
