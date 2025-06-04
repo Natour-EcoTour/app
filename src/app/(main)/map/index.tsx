@@ -1,5 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import * as Location from 'expo-location';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 import MapView, { Marker, Region } from 'react-native-maps';
 import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -82,31 +84,36 @@ export default function Map() {
 
   const [region, setRegion] = useState<Region | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      // Request permissions
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permissão de localização negada!');
-        return;
-      }
-      // Get user location
-      let { coords } = await Location.getCurrentPositionAsync({});
-      setRegion({
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        latitudeDelta: 0.05,   // adjust zoom as needed
-        longitudeDelta: 0.05,
-      });
-    })();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Permissão de localização negada!');
+          return;
+        }
+        let { coords } = await Location.getCurrentPositionAsync({});
+        if (isActive) {
+          setRegion({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          });
+        }
+      })();
+      // cleanup
+      return () => { isActive = false };
+    }, [])
+  );
 
   if (!region) {
     // Optional: Loading screen or null while fetching
     return null;
   }
 
-  console.log('Region:', region);
+  //console.log('Region:', region);
 
   const handleMarkerPress = (marker: any) => {
     setSelectedMarker(marker);
@@ -123,9 +130,8 @@ export default function Map() {
           showsBuildings={false}
           showsCompass={false}
           showsMyLocationButton={false}
-
           style={styles.map}
-          initialRegion={region!}
+          region={region!}
           showsUserLocation={true}
         >
           {markers.map((marker) => (

@@ -11,8 +11,11 @@ import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler
 
 import CustomModal from '@/src/components/CustomModal';
 import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function Profile() {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
   const [isEditable, setIsEditable] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -125,10 +128,19 @@ export default function Profile() {
                 <Text style={styles.ChangePasswordbuttonText}>Alterar senha</Text>
               </TouchableOpacity>
 
+              {/* <TouchableOpacity
+                style={styles.Exitbutton}
+                onPressIn={() => router.push('../../')}
+              >
+                <Ionicons name={'exit'} size={20} color={'darkgreen'} />
+                <Text style={styles.ChangePasswordbuttonText}>Sair</Text>
+              </TouchableOpacity> */}
+
               <TouchableOpacity
                 style={styles.Deletebutton}
                 onPressIn={() => setIsConfirmationVisible(true)}
               >
+                <Ionicons name={'trash-bin'} size={20} color={'white'} />
                 <Text style={styles.buttonText}>Apagar conta</Text>
               </TouchableOpacity>
             </>
@@ -160,15 +172,15 @@ export default function Profile() {
         {/* Modal de sucesso após salvar alterações */}
         {isSaveSuccessModalVisible && (
           <CustomModal
-          isVisible={isSaveSuccessModalVisible}
-          onClose={() => {
-            setIsSaveSuccessModalVisible(false);
-            setIsEditable(false);
-          }}
-          title="Alterações salvas com sucesso!"
-          imagePath="check"
-          route='../(main)/profile'
-        />
+            isVisible={isSaveSuccessModalVisible}
+            onClose={() => {
+              setIsSaveSuccessModalVisible(false);
+              setIsEditable(false);
+            }}
+            title="Alterações salvas com sucesso!"
+            imagePath="check"
+            route='../(main)/profile'
+          />
         )}
       </ScrollView>
     </GestureHandlerRootView>
@@ -226,6 +238,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     borderRadius: 4,
+    flexDirection: 'row',
+  },
+  Exitbutton: {
+    backgroundColor: 'rgba(22, 150, 0, 0.24)',
+    marginBottom: 10,
+    width: '50%',
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'darkgreen',
+    flexDirection: 'row',
   },
   ChangePassbutton: {
     padding: 15,
