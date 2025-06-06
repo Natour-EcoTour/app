@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     borderColor: 'darkgreen',
     borderWidth: 5,
-    borderStyle: 'dotted',
+    borderStyle: 'solid',
   },
   sheetHandle: {
     backgroundColor: 'darkgreen',

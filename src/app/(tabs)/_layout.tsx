@@ -42,7 +42,7 @@ export default function TabLayout() {
           title: 'Meus Pontos',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? 'person' : 'person-outline'}
+              name={focused ? 'pin' : 'pin-outline'}
               size={24}
               color={color}
             />

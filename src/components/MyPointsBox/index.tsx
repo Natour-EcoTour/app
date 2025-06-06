@@ -3,6 +3,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { Link } from 'expo-router';
 
+import StarRating from '../StarRating';
+import { Ionicons } from '@expo/vector-icons';
+
 interface MyPointsBoxProps {
   id: number;
   pointName: string;
@@ -40,17 +43,23 @@ export default function MyPointsBox({
             {pointStatus === 'Ativo'
               ? 'Ativo'
               : pointStatus === 'Desativado'
-              ? 'Desativado'
-              : 'Em análise'}
+                ? 'Desativado'
+                : 'Em análise'}
           </Text>
         </View>
       </View>
 
       <Text>Horário de funcionamento: {starTime} - {closeTime}</Text>
       <Text>Visualizações: {views}</Text>
-      <Text>Avaliação: {review} ⭐</Text>
 
-      <View style={styles.details}>
+      {pointStatus !== 'Em análise' && (
+        <>
+          {/* <Text>Avaliação: </Text> */}
+          <StarRating />
+        </>
+      )}
+
+      <View style={styles.rowActions}>
         <Link
           href={{
             pathname: `/${screen}/details/[id]`,
@@ -60,6 +69,16 @@ export default function MyPointsBox({
         >
           Ver detalhes
         </Link>
+
+        <View style={{ flexDirection: 'row', gap: 15 }}>
+          <TouchableOpacity onPress={() => console.log('Edit pressed')}>
+            <Ionicons name={'pencil'} size={25} color={'blue'} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => console.log('Delete pressed')}>
+            <Ionicons name={'trash-bin'} size={25} color={'red'} />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -98,12 +117,22 @@ const styles = StyleSheet.create({
   },
   details: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     width: '100%',
+  },
+  rowActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 10,
+  },
+  icon: {
+    marginLeft: 1,
   },
   detailsText: {
     color: '#00672e',
-    textDecorationLine: 'underline',
     fontWeight: 'bold',
+
   },
 });

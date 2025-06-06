@@ -21,7 +21,7 @@ export default function PendingPoints() {
         {
             id: 1,
             pointName: 'a',
-            pointStatus: 'pending',
+            pointStatus: 'Em análise',
             starTime: '09:00',
             closeTime: '18:00',
             views: 350,
@@ -30,7 +30,7 @@ export default function PendingPoints() {
         {
             id: 2,
             pointName: 'Parque dos Fabianos',
-            pointStatus: 'pending',
+            pointStatus: 'Em análise',
             starTime: '10:00',
             closeTime: '11:00',
             views: 0,
@@ -39,7 +39,7 @@ export default function PendingPoints() {
         {
             id: 3,
             pointName: 'Lagoa do Coração',
-            pointStatus: 'pending',
+            pointStatus: 'Em análise',
             starTime: '07:30',
             closeTime: '17:45',
             views: 120,
@@ -48,7 +48,7 @@ export default function PendingPoints() {
         {
             id: 4,
             pointName: 'Parque dos Flamingos',
-            pointStatus: 'pending',
+            pointStatus: 'Em análise',
             starTime: '09:00',
             closeTime: '18:00',
             views: 350,
@@ -57,7 +57,7 @@ export default function PendingPoints() {
         {
             id: 5,
             pointName: 'Parque dos Fabianos',
-            pointStatus: 'pending',
+            pointStatus: 'Em análise',
             starTime: '10:00',
             closeTime: '11:00',
             views: 0,
@@ -66,7 +66,7 @@ export default function PendingPoints() {
         {
             id: 6,
             pointName: 'Lagoa do Coração',
-            pointStatus: 'pending',
+            pointStatus: 'Em análise',
             starTime: '07:30',
             closeTime: '17:45',
             views: 120,
