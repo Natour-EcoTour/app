@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     borderRadius: 100,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     alignSelf: 'center',
   },
   infoText: {

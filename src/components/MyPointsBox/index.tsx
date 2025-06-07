@@ -1,10 +1,12 @@
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import React from 'react';
 import { View } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 import StarRating from '../StarRating';
-import { Ionicons } from '@expo/vector-icons';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface MyPointsBoxProps {
   id: number;
@@ -27,6 +29,14 @@ export default function MyPointsBox({
   review,
   screen
 }: MyPointsBoxProps) {
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const router = useRouter();
+
+  const handleDelete = () => {
+    console.log(`Deleting point with id ${id}`);
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.box}>
       <View style={styles.teste}>
@@ -49,37 +59,66 @@ export default function MyPointsBox({
         </View>
       </View>
 
-      <Text>Horário de funcionamento: {starTime} - {closeTime}</Text>
-      <Text>Visualizações: {views}</Text>
+      <View style={styles.viewsText}>
+        <Text>Horário de funcionamento: {starTime} - {closeTime}</Text>
+        <Text>Visualizações: {views}</Text>
+      </View>
 
       {pointStatus !== 'Em análise' && (
         <>
-          {/* <Text>Avaliação: </Text> */}
           <StarRating />
         </>
       )}
 
       <View style={styles.rowActions}>
-        <Link
-          href={{
-            pathname: `/${screen}/details/[id]`,
-            params: { id: String(id) }
-          }}
-          style={styles.detailsText}
-        >
-          Ver detalhes
-        </Link>
 
-        <View style={{ flexDirection: 'row', gap: 15 }}>
-          <TouchableOpacity onPress={() => console.log('Edit pressed')}>
-            <Ionicons name={'pencil'} size={25} color={'blue'} />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push(`/${screen}/details/${id}`)}>
+          <Text style={styles.detailsText}>Ver detalhes</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => console.log('Delete pressed')}>
-            <Ionicons name={'trash-bin'} size={25} color={'red'} />
-          </TouchableOpacity>
-        </View>
+        {pointStatus !== 'Em análise' && (
+          <>
+            <View style={styles.iconsContainer}>
+              <TouchableOpacity onPress={() => console.log('Edit pressed')}>
+                <Ionicons name={'pencil'} size={25} color={'blue'} />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginLeft: 12 }}>
+                <Ionicons name={'trash-bin'} size={25} color={'red'} />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+
       </View>
+
+      <Modal
+        transparent
+        visible={modalVisible}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.modalContent}>
+            <Ionicons name="trash-bin-sharp" size={60} color="red" />
+            <Text style={styles.modalTitle}>Deseja apagar "{pointName}"?</Text>
+            <Text style={styles.modalMessage}>
+              Este ponto será removido do mapa e não poderá mais ser acessado — nem mesmo por você.
+            </Text>
+            <Text style={styles.modalMessage}>Tem certeza que deseja continuar?</Text>
+
+            <View style={styles.buttonsRow}>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.cancelButton}>
+                <Text style={styles.buttonText}>Cancelar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+                <Text style={styles.buttonText}>Apagar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -107,18 +146,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   title: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 18,
   },
   teste: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  details: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    width: '100%',
   },
   rowActions: {
     flexDirection: 'row',
@@ -127,12 +162,66 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 10,
   },
-  icon: {
-    marginLeft: 1,
+  iconsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   detailsText: {
     color: '#00672e',
     fontWeight: 'bold',
-
+    fontSize: 16,
+    textDecorationLine: 'underline',
+  },
+  viewsText: {
+    marginBottom: 10,
+    padding: 10,
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width: SCREEN_WIDTH,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    width: '85%',
+    borderRadius: 12,
+    padding: 20,
+    alignItems: 'center',
+    gap: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#444',
+    textAlign: 'center',
+  },
+  buttonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#464C55',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
