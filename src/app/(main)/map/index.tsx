@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   },
   searchWrapper: {
     position: 'absolute',
-    top: 20,
+    top: 50,
     left: 0,
     right: 0,
     alignItems: 'center',

@@ -15,6 +15,8 @@ import PasswordForm from '@/src/components/ConfirmPasswordInput';
 import CustomModal from '@/src/components/CustomModal';
 
 
+
+
 export default function RegisterScreen() {
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -45,6 +47,7 @@ export default function RegisterScreen() {
   // };
 
   return (
+    
     <ImageBackground
       source={require('../../../../assets/images/background.png')}
       style={styles.backgroundImage}
