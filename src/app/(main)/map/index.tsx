@@ -218,8 +218,6 @@ export default function Map() {
                 <Text style={styles.title}>Selecione um ponto no mapa</Text>
               )}
 
-
-
             </BottomSheetView>
           </BottomSheetScrollView>
         </BottomSheet>

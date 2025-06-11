@@ -32,10 +32,9 @@ export default function AddPointMidia({ selectedImages, setSelectedImages }: Add
     }
 
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
-      selectionLimit: MAX_IMAGES,
     });
 
     if (!result.canceled) {

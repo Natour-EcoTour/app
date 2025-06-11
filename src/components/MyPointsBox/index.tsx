@@ -79,7 +79,10 @@ export default function MyPointsBox({
         {pointStatus !== 'Em análise' && (
           <>
             <View style={styles.iconsContainer}>
-              <TouchableOpacity onPress={() => console.log('Edit pressed')}>
+              <TouchableOpacity onPress={() => router.push({
+                pathname: "/myPoints/edit/[id]",
+                params: { id: String(id) }
+              })}>
                 <Ionicons name={'pencil'} size={25} color={'blue'} />
               </TouchableOpacity>
 

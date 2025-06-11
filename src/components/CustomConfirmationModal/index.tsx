@@ -1,4 +1,4 @@
-import { Modal, View, Text, Image, StyleSheet, Button, Dimensions } from 'react-native';
+import { Modal, View, Text, Image, StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native';
 import { PropsWithChildren } from 'react';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -36,10 +36,14 @@ export default function CustomConfirmationModal({
           </View>
           <View style={styles.buttonRow}>
             <View style={styles.buttonWrapper}>
-              <Button title="Cancelar" onPress={onCancel} color="#888" />
+              <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
+                <Text style={styles.buttonText}>Cancelar</Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.buttonWrapper}>
-              <Button title="Confirmar" onPress={onConfirm} color="#fc0303" />
+              <TouchableOpacity onPress={onConfirm} style={styles.deleteButton}>
+                <Text style={styles.buttonText}>Confirmar</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -68,8 +72,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
   title: {
     color: '#464C55',
@@ -92,5 +94,22 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     flex: 1,
     marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#464C55',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

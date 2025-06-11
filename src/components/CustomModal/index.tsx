@@ -1,4 +1,4 @@
-import { Modal, View, Text, Image, StyleSheet, Button, Dimensions } from 'react-native';
+import { Modal, View, Text, Image, StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native';
 import { PropsWithChildren } from 'react';
 import { useRouter, type RelativePathString } from 'expo-router';
 
@@ -38,7 +38,9 @@ export default function CustomModal({ isVisible, onClose, imagePath = 'icon', ti
               <Image source={imageMap[imagePath]} style={{ width: 200, height: 200 }} />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Fechar" onPress={handleClose} color="#464C55" />
+              <TouchableOpacity onPress={handleClose} style={styles.cancelButton}>
+                <Text style={styles.buttonText}>Fechar</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -88,5 +90,16 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     marginBottom: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#464C55',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
