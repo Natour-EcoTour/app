@@ -63,9 +63,9 @@ export default function RegisterScreen() {
               render={({ field: { onChange, onBlur, value } }) => (
                 <>
                   <Fullnamelnput
-                    label="Nome completo"
+                    label="Nome"
                     editable={true}
-                    placeholder="Digite o seu nome completo"
+                    placeholder="Digite o seu nome"
                     onChange={onChange}
                     value={value}
                   />
