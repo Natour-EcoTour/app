@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerPointSchema } from '@/src/validations/validationSchema';
@@ -13,9 +13,12 @@ import RegisterPointButton from '@/src/components/RegisterPointButton';
 import CustomModal from '@/src/components/CustomModal';
 import AddPointMidia from '@/src/components/AddPointMidia';
 import { Picker } from '@react-native-picker/picker';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 
 export default function AddPoint() {
+  const router = useRouter();
   const [selectedLanguage, setSelectedLanguage] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -49,6 +52,12 @@ export default function AddPoint() {
   return (
     <ScrollView>
       <View style={styles.container}>
+        <View style={styles.analiseWrapper}>
+          <TouchableOpacity style={styles.analiseContainer}>
+            <Ionicons name={'arrow-back'} size={20} color={'darkgreen'} />
+            <Text style={styles.analise} onPress={() => router.back()}>Voltar</Text>
+          </TouchableOpacity>
+        </View>
 
         <Text style={styles.stepTitle}>Geral</Text>
         <Controller
@@ -191,7 +200,7 @@ export default function AddPoint() {
           <CustomModal
             isVisible={isModalVisible}
             onClose={() => setIsModalVisible(false)}
-            route="../myPoints"
+            route="../../pendingPoints"
             title="Ponto cadastrado com sucesso!"
             imagePath="check"
           />
@@ -233,4 +242,19 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
   },
+  analiseWrapper: {
+    width: '100%',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  analiseContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    textAlign: 'right'
+  },
+  analise: {
+    fontSize: 20,
+    color: '#00672e',
+    fontWeight: 'bold',
+  }
 });
