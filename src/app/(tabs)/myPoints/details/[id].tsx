@@ -1,24 +1,26 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import ImageCarousel from '@/src/components/ImageCarousel';
 import ImageModal from '@/src/components/ImageModal';
 import DescriptionContainer from '@/src/components/DescriptionContainer';
 import TimeContainer from '@/src/components/TimeContainer';
 import AddressContainer from '@/src/components/AddressContainer';
+import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
 
 export default function PointDetail() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [isActiveModalVisible, setActiveModalVisible] = useState<boolean>(false);
+    const [pendingActive, setPendingActive] = useState<boolean | null>(null);
     const { id } = useLocalSearchParams();
-
 
     const points = [
         {
             id: 1,
             pointName: 'Parque zdos Flamingos',
-            pointStatus: false,
+            pointStatus: true,
             startWeekday: 'Segunda-feira',
             endWeekday: 'Domingo',
             startTime: '08:00',
@@ -36,7 +38,7 @@ export default function PointDetail() {
             neighborhood: 'Cabral',
             uf: 'PI',
             number: '1',
-            street: 'Rua Ghandi'
+            street: 'Rua Ghandi',
         },
         {
             id: 2,
@@ -97,6 +99,7 @@ export default function PointDetail() {
         );
     }
 
+    const [isActive, setIsActive] = useState(point.pointStatus);
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.analiseWrapper}>
@@ -104,6 +107,28 @@ export default function PointDetail() {
                     <Ionicons name={'arrow-back'} size={20} color={'darkgreen'} />
                     <Text style={styles.analise} onPress={() => router.back()}>Voltar</Text>
                 </TouchableOpacity>
+            </View>
+            <View style={styles.statusSwitchContainer}>
+                <Text>Status:</Text>
+                <Switch
+                    trackColor={{ false: "red", true: "green" }}
+                    thumbColor={"white"}
+                    onValueChange={(value) => {
+                        if (value) {
+                            // Activate immediately
+                            setIsActive(true);
+                        } else {
+                            // Ask for confirmation to deactivate
+                            setPendingActive(false);
+                            setActiveModalVisible(true);
+                        }
+                    }}
+                    value={isActive}
+                    style={styles.switch}
+                />
+            </View>
+            <View style={styles.statusContainer}>
+                <Text style={styles.statusText}>{isActive ? 'Ativo' : 'Desativado'}</Text>
             </View>
 
             <Text style={styles.title}>{point.pointName}</Text>
@@ -150,6 +175,23 @@ export default function PointDetail() {
                     imageUri={point?.images[currentImageIndex]?.image}
                 />
             )}
+
+            {isActiveModalVisible && (
+                <CustomConfirmationModal
+                    isVisible={isActiveModalVisible}
+                    onCancel={() => {
+                        setPendingActive(null);
+                        setActiveModalVisible(false);
+                    }}
+                    onConfirm={() => {
+                        setIsActive(false);
+                        setPendingActive(null);
+                        setActiveModalVisible(false);
+                    }}
+                    title="Deseja desativar esse ponto?"
+                    imagePath="warning"
+                />
+            )}
         </ScrollView>
     );
 }
@@ -184,6 +226,25 @@ const styles = StyleSheet.create({
     analise: {
         fontSize: 20,
         color: '#00672e',
+        fontWeight: 'bold',
+    },
+    switch: {
+        transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    },
+    statusSwitchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+
+    },
+    statusContainer: {
+        alignContent: 'flex-start',
+        width: '100%',
+        marginBottom: 20,
+    },
+    statusText: {
+        fontSize: 15,
         fontWeight: 'bold',
     },
 });
