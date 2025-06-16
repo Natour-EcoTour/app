@@ -17,6 +17,7 @@ import TypeContainer from '../../../components/TypeContainer';
 import TimeContainer from '../../../components/TimeContainer';
 import AddressContainer from '../../../components/AddressContainer';
 import AddReview from '../../../components/AddReview';
+import { useRouter } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ARROW_BUTTON_WIDTH = 40; // fixed width for each arrow button
@@ -72,6 +73,7 @@ const markers = [
 ];
 
 export default function Map() {
+  const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
@@ -90,7 +92,7 @@ export default function Map() {
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-          alert('Permissão de localização negada!');
+          router.push('../noPermission')
           return;
         }
         let { coords } = await Location.getCurrentPositionAsync({});
