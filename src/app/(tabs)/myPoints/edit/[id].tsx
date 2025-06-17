@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerPointSchema } from '@/src/validations/validationSchema';
+import Toast from 'react-native-toast-message';
 
 import NameInput from '../../../../components/NameInput';
 import DescriptionInput from '@/src/components/DescriptionInput';
@@ -177,7 +178,7 @@ export default function AddPoint() {
           )}
         />
 
-        <Text style={styles.stepTitle}>Midia</Text>
+        <Text style={styles.stepTitle}>Mídia</Text>
         <AddPointMidia
           selectedImages={selectedImages}
           setSelectedImages={setSelectedImages}
@@ -187,7 +188,11 @@ export default function AddPoint() {
           text="Editar ponto"
           onPress={handleSubmit((data) => {
             if (selectedImages.length === 0) {
-              alert('Adicione pelo menos uma imagem antes de continuar.');
+              Toast.show({
+                type: 'error',
+                text1: 'Erro no campo de mídia',
+                text2: 'Adicione pelo menos uma imagem antes de continuar.',
+              });
               return;
             }
 

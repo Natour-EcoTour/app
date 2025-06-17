@@ -11,6 +11,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MAX_IMAGES = 10;
@@ -27,7 +28,11 @@ export default function AddPointMidia({ selectedImages, setSelectedImages }: Add
 
   const pickImageAsync = async () => {
     if (selectedImages.length >= MAX_IMAGES) {
-      alert(`Você pode adicionar no máximo ${MAX_IMAGES} fotos.`);
+      Toast.show({
+        type: 'info',
+        text1: 'Limite de fotos atingido',
+        text2: `Você já selecionou o máximo de fotos permitidas (${MAX_IMAGES}).`,
+      });
       return;
     }
 

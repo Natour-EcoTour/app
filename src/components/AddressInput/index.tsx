@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Checkbox, TextInput } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 
 export default function AddressInput({
   value,
@@ -61,10 +62,18 @@ export default function AddressInput({
             street: data.logradouro || '',
           });
         } else {
-          alert('CEP não encontrado.');
+          Toast.show({
+            type: 'error',
+            text1: 'Erro no CEP',
+            text2: `CEP não encontrado ou inválido.`,
+          });
         }
       } catch (error) {
-        alert('Erro ao buscar o CEP. Verifique sua conexão.');
+        Toast.show({
+          type: 'error',
+          text1: 'Erro no CEP',
+          text2: `CEP não encontrado ou inválido.`,
+        });
       } finally {
         setIsFetchingCep(false);
       }

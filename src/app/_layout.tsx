@@ -4,6 +4,8 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 import * as NavigationBar from 'expo-navigation-bar';
 import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import Toast from 'react-native-toast-message';
+
 
 export default function RootLayout() {
   const insets = useSafeAreaInsets();
@@ -18,6 +20,7 @@ export default function RootLayout() {
         {/* Main app area */}
         <View style={[styles.content, { paddingBottom: insets.bottom }]}>
           <Slot />
+          <Toast />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
