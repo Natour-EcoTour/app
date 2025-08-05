@@ -20,8 +20,8 @@ export default function Index() {
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: 'eliza48@yahoo.com',
-      password: 'Aa12345678!',
+      email: 'vitorantunes2003@gmail.com',
+      password: 'senha',
     },
   }); 
 
