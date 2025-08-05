@@ -84,7 +84,15 @@ export default function Map() {
 
   const [searchText, setSearchText] = useState('');
 
-  const [region, setRegion] = useState<Region | null>(null);
+  const DEFAULT_REGION = {
+    latitude: -23.484787, // or your preferred default
+    longitude: -46.206867,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
+
+  const [region, setRegion] = useState<Region>(DEFAULT_REGION);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -104,18 +112,11 @@ export default function Map() {
             longitudeDelta: 0.05,
           });
         }
+        setLoading(false);
       })();
-      // cleanup
       return () => { isActive = false };
     }, [])
   );
-
-  if (!region) {
-    // Optional: Loading screen or null while fetching
-    return null;
-  }
-
-  //console.log('Region:', region);
 
   const handleMarkerPress = (marker: any) => {
     setSelectedMarker(marker);
@@ -170,57 +171,49 @@ export default function Map() {
           }}
           onClose={() => setCurrentImageIndex(0)}
         >
-          <BottomSheetScrollView>
-            <BottomSheetView style={styles.sheetContent}>
-              {selectedMarker ? (
-                <>
-                  <TypeContainer
-                    type={selectedMarker.type}
-                  />
+          <BottomSheetScrollView contentContainerStyle={{ alignItems: 'center', padding: 16 }}>
+            {selectedMarker ? (
+              <>
+                <TypeContainer type={selectedMarker.type} />
 
-                  <Text style={styles.title}>{selectedMarker.title}</Text>
-                  <ImageCarousel
-                    images={selectedMarker.images}
-                    currentIndex={currentImageIndex}
-                    setCurrentIndex={setCurrentImageIndex}
-                    onImagePress={(item) => {
-                      setIsModalVisible(true);
-                    }}
-                  />
+                <Text style={styles.title}>{selectedMarker.title}</Text>
+                <ImageCarousel
+                  images={selectedMarker.images}
+                  currentIndex={currentImageIndex}
+                  setCurrentIndex={setCurrentImageIndex}
+                  onImagePress={(item) => {
+                    setIsModalVisible(true);
+                  }}
+                />
 
-                  <Rating />
+                <Rating />
 
-                  <Text style={styles.title}>Descrição</Text>
-                  <DescriptionContainer
-                    description={selectedMarker.description}
-                  />
+                <Text style={styles.title}>Descrição</Text>
+                <DescriptionContainer description={selectedMarker.description} />
 
-                  <Text style={styles.title}>Horários</Text>
-                  <TimeContainer
-                    startWeekday={selectedMarker.startWeekday}
-                    endWeekday={selectedMarker.endWeekday}
-                    startTime={selectedMarker.startTime}
-                    endTime={selectedMarker.endTime}
-                  />
+                <Text style={styles.title}>Horários</Text>
+                <TimeContainer
+                  startWeekday={selectedMarker.startWeekday}
+                  endWeekday={selectedMarker.endWeekday}
+                  startTime={selectedMarker.startTime}
+                  endTime={selectedMarker.endTime}
+                />
 
-                  <Text style={styles.title}>Endereço</Text>
-                  <AddressContainer
-                    cep={selectedMarker.cep}
-                    city={selectedMarker.city}
-                    neighborhood={selectedMarker.neighborhood}
-                    uf={selectedMarker.uf}
-                    number={selectedMarker.number}
-                    street={selectedMarker.street}
-                  />
+                <Text style={styles.title}>Endereço</Text>
+                <AddressContainer
+                  cep={selectedMarker.cep}
+                  city={selectedMarker.city}
+                  neighborhood={selectedMarker.neighborhood}
+                  uf={selectedMarker.uf}
+                  number={selectedMarker.number}
+                  street={selectedMarker.street}
+                />
 
-                  <AddReview />
-
-                </>
-              ) : (
-                <Text style={styles.title}>Selecione um ponto no mapa</Text>
-              )}
-
-            </BottomSheetView>
+                <AddReview />
+              </>
+            ) : (
+              <Text style={styles.title}>Selecione um ponto no mapa</Text>
+            )}
           </BottomSheetScrollView>
         </BottomSheet>
       </View>
