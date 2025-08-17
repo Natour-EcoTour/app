@@ -1,37 +1,31 @@
 import { Text, View, StyleSheet } from 'react-native';
 
-import SettingsButton from '../../../components/SettingsButton'
+import SettingsButton from '@/components/SettingsButton';
 
 export default function Settings() {
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Configurações</Text>
 
       <SettingsButton
-        text='Pontos'
-        icon_type='pin'
-        route='../(tabs)/myPoints'
+        text="Pontos"
+        icon_type="pin"
+        route="../(tabs)/myPoints"
       />
 
       <SettingsButton
-        text='Termos de Uso'
-        icon_type='documents'
+        text="Termos de Uso"
+        icon_type="documents"
         route="../(terms)/userTerms"
       />
 
       <SettingsButton
-        text='Política de Privacidade'
-        icon_type='document'
+        text="Política de Privacidade"
+        icon_type="document"
         route="../(terms)/privacyPolicy"
       />
 
-      <SettingsButton
-        text='Sair'
-        icon_type='exit'
-        route='../../'
-      />
-
+      <SettingsButton text="Sair" icon_type="exit" route="../../" />
     </View>
   );
 }
@@ -78,7 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 4,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   Deletebutton: {
     backgroundColor: '#fc0303',
@@ -96,7 +90,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   buttonText: {
     color: '#fff',
@@ -118,5 +112,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 100,
     resizeMode: 'contain',
-  }
+  },
 });

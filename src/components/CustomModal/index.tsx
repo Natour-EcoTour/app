@@ -1,13 +1,22 @@
-import { Modal, View, Text, Image, StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import { PropsWithChildren } from 'react';
 import { useRouter, type RelativePathString } from 'expo-router';
+import { images } from '@/src/utils/assets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const imageMap: Record<string, any> = {
-  icon: require('../../../assets/images/icon.png'),
-  check: require('../../../assets/images/icon.png'),
-  warning: require('../../../assets/images/icon.png'),
+  icon: images.icon,
+  check: images.icon,
+  warning: images.icon,
 };
 
 type Props = PropsWithChildren<{
@@ -18,7 +27,13 @@ type Props = PropsWithChildren<{
   route: RelativePathString;
 }>;
 
-export default function CustomModal({ isVisible, onClose, imagePath = 'icon', title, route }: Props) {
+export default function CustomModal({
+  isVisible,
+  onClose,
+  imagePath = 'icon',
+  title,
+  route,
+}: Props) {
   const router = useRouter();
 
   const handleClose = () => {
@@ -35,10 +50,16 @@ export default function CustomModal({ isVisible, onClose, imagePath = 'icon', ti
               <Text style={styles.title}>{title}</Text>
             </View>
             <View style={styles.iconContainer}>
-              <Image source={imageMap[imagePath]} style={{ width: 200, height: 200 }} />
+              <Image
+                source={imageMap[imagePath]}
+                style={{ width: 200, height: 200 }}
+              />
             </View>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={handleClose} style={styles.cancelButton}>
+              <TouchableOpacity
+                onPress={handleClose}
+                style={styles.cancelButton}
+              >
                 <Text style={styles.buttonText}>Fechar</Text>
               </TouchableOpacity>
             </View>

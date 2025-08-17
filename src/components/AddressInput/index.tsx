@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Checkbox, TextInput } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
@@ -33,7 +33,10 @@ export default function AddressInput({
   const [isChecked, setIsChecked] = useState(false);
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
-  const handleCoordinateChange = (text: string, field: 'latitude' | 'longitude') => {
+  const handleCoordinateChange = (
+    text: string,
+    field: 'latitude' | 'longitude'
+  ) => {
     const cleaned = text.replace(/[^0-9.\-]/g, '');
     onChange({ ...value, [field]: cleaned });
   };
@@ -49,7 +52,9 @@ export default function AddressInput({
     if (cleanedCep.length === 8) {
       try {
         setIsFetchingCep(true);
-        const response = await fetch(`https://viacep.com.br/ws/${cleanedCep}/json/`);
+        const response = await fetch(
+          `https://viacep.com.br/ws/${cleanedCep}/json/`
+        );
         const data = await response.json();
 
         if (!data.erro) {
@@ -97,20 +102,24 @@ export default function AddressInput({
             mode="outlined"
             style={styles.input}
             value={value.latitude}
-            onChangeText={(text) => handleCoordinateChange(text, 'latitude')}
+            onChangeText={text => handleCoordinateChange(text, 'latitude')}
             keyboardType="numbers-and-punctuation"
           />
-          {errors.latitude && <Text style={styles.error}>{errors.latitude}</Text>}
+          {errors.latitude && (
+            <Text style={styles.error}>{errors.latitude}</Text>
+          )}
 
           <TextInput
             label="Longitude"
             mode="outlined"
             style={styles.input}
             value={value.longitude}
-            onChangeText={(text) => handleCoordinateChange(text, 'longitude')}
+            onChangeText={text => handleCoordinateChange(text, 'longitude')}
             keyboardType="numbers-and-punctuation"
           />
-          {errors.longitude && <Text style={styles.error}>{errors.longitude}</Text>}
+          {errors.longitude && (
+            <Text style={styles.error}>{errors.longitude}</Text>
+          )}
         </>
       )}
 
@@ -130,7 +139,7 @@ export default function AddressInput({
         mode="outlined"
         style={styles.input}
         value={value.city}
-        onChangeText={(text) => handleTextChange('city', text)}
+        onChangeText={text => handleTextChange('city', text)}
       />
       {errors.city && <Text style={styles.error}>{errors.city}</Text>}
 
@@ -139,16 +148,18 @@ export default function AddressInput({
         mode="outlined"
         style={styles.input}
         value={value.neighborhood}
-        onChangeText={(text) => handleTextChange('neighborhood', text)}
+        onChangeText={text => handleTextChange('neighborhood', text)}
       />
-      {errors.neighborhood && <Text style={styles.error}>{errors.neighborhood}</Text>}
+      {errors.neighborhood && (
+        <Text style={styles.error}>{errors.neighborhood}</Text>
+      )}
 
       <TextInput
         label="UF"
         mode="outlined"
         style={styles.input}
         value={value.uf}
-        onChangeText={(text) => handleTextChange('uf', text)}
+        onChangeText={text => handleTextChange('uf', text)}
         maxLength={2}
         autoCapitalize="characters"
       />
@@ -159,7 +170,7 @@ export default function AddressInput({
         mode="outlined"
         style={styles.input}
         value={value.street}
-        onChangeText={(text) => handleTextChange('street', text)}
+        onChangeText={text => handleTextChange('street', text)}
       />
       {errors.street && <Text style={styles.error}>{errors.street}</Text>}
 
@@ -168,7 +179,9 @@ export default function AddressInput({
         mode="outlined"
         style={styles.input}
         value={value.number?.toString() || ''}
-        onChangeText={(text) => handleTextChange('number', text.replace(/\D/g, ''))}
+        onChangeText={text =>
+          handleTextChange('number', text.replace(/\D/g, ''))
+        }
         keyboardType="numeric"
       />
       {errors.number && <Text style={styles.error}>{errors.number}</Text>}

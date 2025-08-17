@@ -1,12 +1,21 @@
-import { Modal, View, Text, Image, StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import { PropsWithChildren } from 'react';
+import { images } from '@/src/utils/assets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const imageMap: Record<string, any> = {
-  icon: require('../../../assets/images/icon.png'),
-  check: require('../../../assets/images/icon.png'),
-  warning: require('../../../assets/images/icon.png'),
+  icon: images.icon,
+  check: images.icon,
+  warning: images.icon,
 };
 
 type Props = PropsWithChildren<{
@@ -32,7 +41,10 @@ export default function CustomConfirmationModal({
             <Text style={styles.title}>{title}</Text>
           </View>
           <View style={styles.iconContainer}>
-            <Image source={imageMap[imagePath]} style={{ width: 150, height: 150 }} />
+            <Image
+              source={imageMap[imagePath]}
+              style={{ width: 150, height: 150 }}
+            />
           </View>
           <View style={styles.buttonRow}>
             <View style={styles.buttonWrapper}>

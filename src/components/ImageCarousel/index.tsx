@@ -1,9 +1,17 @@
 import React, { useRef, useCallback, useEffect } from 'react';
-import { View, FlatList, TouchableOpacity, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const ARROW_BUTTON_WIDTH = 40; // Fixed width for arrow buttons
-const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32; // Adjust width according to parent padding
+const ARROW_BUTTON_WIDTH = 40;
+const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32;
 
 type ImageItem = {
   id: string;
@@ -25,9 +33,11 @@ export default function ImageCarousel({
 }: ImageCarouselProps) {
   const flatListRef = useRef<FlatList>(null);
 
-  // Scroll to the correct index when currentIndex changes
   useEffect(() => {
-    flatListRef.current?.scrollToIndex({ index: currentIndex, animated: false });
+    flatListRef.current?.scrollToIndex({
+      index: currentIndex,
+      animated: false,
+    });
   }, [currentIndex]);
 
   const scrollToIndex = (index: number) => {
@@ -50,7 +60,11 @@ export default function ImageCarousel({
   const renderItem = ({ item }: { item: ImageItem }) => (
     <TouchableOpacity onPress={() => onImagePress && onImagePress(item)}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: item.image }} style={styles.image} resizeMode="center" />
+        <Image
+          source={{ uri: item.image }}
+          style={styles.image}
+          resizeMode="center"
+        />
       </View>
     </TouchableOpacity>
   );
@@ -72,7 +86,7 @@ export default function ImageCarousel({
             data={images}
             horizontal
             pagingEnabled
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             renderItem={renderItem}
             showsHorizontalScrollIndicator={false}
           />
@@ -116,7 +130,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: CAROUSEL_WIDTH,
-    height: 200, // Adjust as needed
+    height: 200,
     overflow: 'hidden',
     marginRight: 10,
     alignItems: 'center',

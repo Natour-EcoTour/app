@@ -1,33 +1,55 @@
 import React, { useState } from 'react';
-import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 
-const days = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
+const days = [
+  'Segunda-feira',
+  'Terça-feira',
+  'Quarta-feira',
+  'Quinta-feira',
+  'Sexta-feira',
+  'Sábado',
+  'Domingo',
+];
 
 export default function TimeInput({
   value,
   onChange,
-  errors = {}
+  errors = {},
 }: {
   value: {
-    weekStart: string,
-    weekEnd: string,
-    timeStart: string,
-    timeEnd: string
-  },
-  onChange: (val: any) => void,
+    weekStart: string;
+    weekEnd: string;
+    timeStart: string;
+    timeEnd: string;
+  };
+  onChange: (val: any) => void;
   errors?: {
     weekStart?: string;
     weekEnd?: string;
     timeStart?: string;
     timeEnd?: string;
-  }
+  };
 }) {
-  const [selectedDayStart, setSelectedDayStart] = useState(value.weekStart || 'Segunda-feira');
-  const [selectedDayEnd, setSelectedDayEnd] = useState(value.weekEnd || 'Segunda-feira');
-  const [startTime, setStartTime] = useState(value.timeStart ? new Date(value.timeStart) : new Date());
-  const [endTime, setEndTime] = useState(value.timeEnd ? new Date(value.timeEnd) : new Date());
+  const [selectedDayStart, setSelectedDayStart] = useState(
+    value.weekStart || 'Segunda-feira'
+  );
+  const [selectedDayEnd, setSelectedDayEnd] = useState(
+    value.weekEnd || 'Segunda-feira'
+  );
+  const [startTime, setStartTime] = useState(
+    value.timeStart ? new Date(value.timeStart) : new Date()
+  );
+  const [endTime, setEndTime] = useState(
+    value.timeEnd ? new Date(value.timeEnd) : new Date()
+  );
 
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
@@ -72,19 +94,27 @@ export default function TimeInput({
         {/* Week start */}
         <View style={styles.dayPickerContainer}>
           <Text>De:</Text>
-          <Picker selectedValue={selectedDayStart} onValueChange={handleWeekStartChange}>
-            {days.map((day) => (
+          <Picker
+            selectedValue={selectedDayStart}
+            onValueChange={handleWeekStartChange}
+          >
+            {days.map(day => (
               <Picker.Item label={day} value={day} key={day} />
             ))}
           </Picker>
-          {errors.weekStart && <Text style={styles.error}>{errors.weekStart}</Text>}
+          {errors.weekStart && (
+            <Text style={styles.error}>{errors.weekStart}</Text>
+          )}
         </View>
 
         {/* Week end */}
         <View style={styles.dayPickerContainer}>
           <Text>Até:</Text>
-          <Picker selectedValue={selectedDayEnd} onValueChange={handleWeekEndChange}>
-            {days.map((day) => (
+          <Picker
+            selectedValue={selectedDayEnd}
+            onValueChange={handleWeekEndChange}
+          >
+            {days.map(day => (
               <Picker.Item label={day} value={day} key={day} />
             ))}
           </Picker>
@@ -94,9 +124,17 @@ export default function TimeInput({
 
       {/* Time start */}
       <Text>Abre às:</Text>
-      <TouchableOpacity style={styles.timeButton} onPress={() => setShowStartPicker(true)}>
+      <TouchableOpacity
+        style={styles.timeButton}
+        onPress={() => setShowStartPicker(true)}
+      >
         <Text style={styles.buttonText}>
-          {startTimeSelected ? startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Selecione um horário'}
+          {startTimeSelected
+            ? startTime.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            : 'Selecione um horário'}
         </Text>
       </TouchableOpacity>
       {showStartPicker && (
@@ -111,9 +149,17 @@ export default function TimeInput({
 
       {/* Time end */}
       <Text>Fecha às:</Text>
-      <TouchableOpacity style={styles.timeButton} onPress={() => setShowEndPicker(true)}>
+      <TouchableOpacity
+        style={styles.timeButton}
+        onPress={() => setShowEndPicker(true)}
+      >
         <Text style={styles.buttonText}>
-          {endTimeSelected ? endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Selecione um horário'}
+          {endTimeSelected
+            ? endTime.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            : 'Selecione um horário'}
         </Text>
       </TouchableOpacity>
       {showEndPicker && (

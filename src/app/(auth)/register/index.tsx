@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import { useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import { router } from 'expo-router';
 
 import { Checkbox } from 'react-native-paper';
@@ -7,26 +14,27 @@ import { Checkbox } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '@/src/validations/validationSchema';
-//import RegisterModal from '@/src/components/RegisterModal';
 
-import Fullnamelnput from "@/src/components/NameInput";
+import Fullnamelnput from '@/src/components/NameInput';
 import EmailInput from '@/src/components/EmailInput';
 import PasswordForm from '@/src/components/ConfirmPasswordInput';
 import CustomModal from '@/src/components/CustomModal';
-
-
-
+import { images } from '@/src/utils/assets';
+import CodeModal from '@/src/components/CodeModal/CodeModal';
 
 export default function RegisterScreen() {
-
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       name: 'Vitor Antunes Ferreira',
       email: 'vitinho@gmail.com',
-      // cpf: '45999669839',
       password: 'Aa12345678!',
       confirmPassword: 'Aa12345678!',
       termsAccept: true,
@@ -38,22 +46,18 @@ export default function RegisterScreen() {
     setIsModalVisible(true);
   };
 
-  // const formatCpf = (cpf: string) => {
-  //   cpf = cpf.replace(/\D/g, '');
-  //   if (cpf.length > 3) cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
-  //   if (cpf.length > 6) cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-  //   if (cpf.length > 9) cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
-  //   return cpf;
-  // };
+
 
   return (
-    
     <ImageBackground
-      source={require('../../../../assets/images/background.png')}
+      source={images.background}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
-      <ScrollView contentContainerStyle={styles.scrollContentContainer} style={styles.scrollView}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContentContainer}
+        style={styles.scrollView}
+      >
         <View style={styles.container}>
           <Text style={styles.title}>Cadastro</Text>
           <View style={styles.inputContainer}>
@@ -69,7 +73,11 @@ export default function RegisterScreen() {
                     onChange={onChange}
                     value={value}
                   />
-                  {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+                  {errors.name && (
+                    <Text style={styles.error}>
+                      {errors.name.message as string}
+                    </Text>
+                  )}
                 </>
               )}
             />
@@ -85,30 +93,14 @@ export default function RegisterScreen() {
                     onChange={onChange}
                     value={value}
                   />
-                  {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
+                  {errors.email && (
+                    <Text style={styles.error}>
+                      {errors.email.message as string}
+                    </Text>
+                  )}
                 </>
               )}
             />
-
-            {/* <Controller
-            control={control}
-            name="cpf"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <Text style={styles.label}>CPF</Text>
-                <TextInput
-                  placeholder="Insira seu CPF"
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={(text) => onChange(formatCpf(text))}
-                  value={value}
-                  keyboardType="numeric"
-                  maxLength={14}
-                />
-                {errors.cpf && <Text style={styles.error}>{errors.cpf.message as string}</Text>}
-              </>
-            )}
-          /> */}
 
             <Controller
               control={control}
@@ -121,7 +113,11 @@ export default function RegisterScreen() {
                     password={value}
                     onChangePassword={onChange}
                   />
-                  {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
+                  {errors.password && (
+                    <Text style={styles.error}>
+                      {errors.password.message as string}
+                    </Text>
+                  )}
                 </>
               )}
             />
@@ -137,35 +133,22 @@ export default function RegisterScreen() {
                     password={value}
                     onChangePassword={onChange}
                   />
-                  {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
+                  {errors.confirmPassword && (
+                    <Text style={styles.error}>
+                      {errors.confirmPassword.message as string}
+                    </Text>
+                  )}
                 </>
               )}
             />
 
-            {/* <Controller
-            control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <Text style={styles.label}>Confirmação de senha</Text>
-                <TextInput
-                  placeholder="Repita a sua senha"
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                  autoCapitalize="none"
-                />
-                {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
-              </>
-            )}
-          /> */}
-
             <Controller
               control={control}
               name="termsAccept"
-              render={({ field: { value, onChange }, fieldState: { error } }) => (
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
                 <>
                   <View style={styles.termsContainer}>
                     <Checkbox
@@ -173,7 +156,9 @@ export default function RegisterScreen() {
                       onPress={() => onChange(!value)}
                       color="#00672e"
                     />
-                    <Text style={{ fontSize: 13 }}>Declaro que li e aceito os </Text>
+                    <Text style={{ fontSize: 13 }}>
+                      Declaro que li e aceito os{' '}
+                    </Text>
                     <Text
                       style={[styles.termsText, { fontSize: 13 }]}
                       onPress={() => router.push('/(terms)/userTerms')}
@@ -186,26 +171,38 @@ export default function RegisterScreen() {
               )}
             />
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSubmit(onSubmit)}
+            >
               <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-            <Text>Já tem uma conta?{' '}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 20,
+            }}
+          >
+            <Text>Já tem uma conta? </Text>
             <Text style={styles.link} onPress={() => router.push('/')}>
               Entrar
             </Text>
           </View>
-
         </View>
         {isModalVisible && (
-          <CustomModal
+          <CodeModal
             isVisible={isModalVisible}
             onClose={() => setIsModalVisible(false)}
             route="../"
-            title="Cadastro realizado com sucesso!"
-            imagePath="check"
+            title="Confirme seu Email"
+            subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
+            onCodeSubmit={async (code) => {
+              console.log('Código recebido:', code);
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            }}
           />
         )}
       </ScrollView>
@@ -237,7 +234,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    fontSize: 15
+    fontSize: 15,
   },
   termsText: {
     color: '#00672e',
@@ -284,5 +281,5 @@ const styles = StyleSheet.create({
     color: '#00672e',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
-  }
+  },
 });

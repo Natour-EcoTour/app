@@ -5,22 +5,28 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '@/src/validations/validationSchema';
 
-import Fullnamelnput from "@/src/components/NameInput";
+import Fullnamelnput from '@/src/components/NameInput';
 import EmailInput from '@/src/components/EmailInput';
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from 'react-native-gesture-handler';
 
 import CustomModal from '@/src/components/CustomModal';
 import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { images } from '@/src/utils/assets';
 
 export default function Profile() {
-  const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(
+    undefined
+  );
   const [isEditable, setIsEditable] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [isConfirmationVisible, setIsConfirmationVisible] = useState<boolean>(false);
-  const [isSaveSuccessModalVisible, setIsSaveSuccessModalVisible] = useState<boolean>(false);
+  const [isConfirmationVisible, setIsConfirmationVisible] =
+    useState<boolean>(false);
+  const [isSaveSuccessModalVisible, setIsSaveSuccessModalVisible] =
+    useState<boolean>(false);
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -34,7 +40,12 @@ export default function Profile() {
     }
   };
 
-  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       name: 'Vitor Antunes Ferreira',
@@ -47,7 +58,7 @@ export default function Profile() {
 
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
-    setIsSaveSuccessModalVisible(true); // Mostra o modal de sucesso ao salvar
+    setIsSaveSuccessModalVisible(true);
   };
 
   const handleConfirmDelete = () => {
@@ -63,17 +74,17 @@ export default function Profile() {
       >
         <Text style={styles.title}>Perfil</Text>
 
-        {isEditable && <Text style={styles.infoText}>Você pode alterar a sua foto de perfil clicando na imagem abaixo</Text>}
+        {isEditable && (
+          <Text style={styles.infoText}>
+            Você pode alterar a sua foto de perfil clicando na imagem abaixo
+          </Text>
+        )}
         <TouchableOpacity
           onPress={isEditable ? pickImageAsync : undefined}
           disabled={!isEditable}
         >
           <Image
-            source={
-              selectedImage
-                ? { uri: selectedImage }
-                : require('../../../../assets/images/no_pfp.jpg')
-            }
+            source={selectedImage ? { uri: selectedImage } : images.noPfp}
             style={styles.image}
           />
         </TouchableOpacity>
@@ -91,7 +102,11 @@ export default function Profile() {
                   onChange={onChange}
                   value={value}
                 />
-                {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
+                {errors.name && (
+                  <Text style={styles.error}>
+                    {errors.name.message as string}
+                  </Text>
+                )}
               </>
             )}
           />
@@ -107,34 +122,43 @@ export default function Profile() {
                   onChange={onChange}
                   value={value}
                 />
-                {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
+                {errors.email && (
+                  <Text style={styles.error}>
+                    {errors.email.message as string}
+                  </Text>
+                )}
               </>
             )}
           />
 
           {isEditable && (
-            <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSubmit(onSubmit)}
+            >
               <Text style={styles.buttonText}>Salvar alterações</Text>
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity style={styles.button} onPress={() => setIsEditable(prev => !prev)}>
-            <Text style={styles.buttonText}>{isEditable ? 'Cancelar' : 'Editar perfil'}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setIsEditable(prev => !prev)}
+          >
+            <Text style={styles.buttonText}>
+              {isEditable ? 'Cancelar' : 'Editar perfil'}
+            </Text>
           </TouchableOpacity>
 
           {!isEditable && (
             <>
-              <TouchableOpacity style={styles.ChangePassbutton} onPress={() => console.log('Trocar senha!')}>
-                <Text style={styles.ChangePasswordbuttonText}>Alterar senha</Text>
-              </TouchableOpacity>
-
-              {/* <TouchableOpacity
-                style={styles.Exitbutton}
-                onPressIn={() => router.push('../../')}
+              <TouchableOpacity
+                style={styles.ChangePassbutton}
+                onPress={() => console.log('Trocar senha!')}
               >
-                <Ionicons name={'exit'} size={20} color={'darkgreen'} />
-                <Text style={styles.ChangePasswordbuttonText}>Sair</Text>
-              </TouchableOpacity> */}
+                <Text style={styles.ChangePasswordbuttonText}>
+                  Alterar senha
+                </Text>
+              </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.Deletebutton}
@@ -147,7 +171,6 @@ export default function Profile() {
           )}
         </View>
 
-        {/* Modal de confirmação */}
         {isConfirmationVisible && (
           <CustomConfirmationModal
             isVisible={isConfirmationVisible}
@@ -158,7 +181,6 @@ export default function Profile() {
           />
         )}
 
-        {/* Modal de sucesso após apagar a conta */}
         {isModalVisible && (
           <CustomModal
             isVisible={isModalVisible}
@@ -169,7 +191,6 @@ export default function Profile() {
           />
         )}
 
-        {/* Modal de sucesso após salvar alterações */}
         {isSaveSuccessModalVisible && (
           <CustomModal
             isVisible={isSaveSuccessModalVisible}
@@ -179,7 +200,7 @@ export default function Profile() {
             }}
             title="Alterações salvas com sucesso!"
             imagePath="check"
-            route='../(main)/profile'
+            route="../(main)/profile"
           />
         )}
       </ScrollView>
@@ -228,7 +249,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 4,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   Deletebutton: {
     backgroundColor: '#fc0303',
@@ -260,7 +281,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   buttonText: {
     color: '#fff',
@@ -286,5 +307,5 @@ const styles = StyleSheet.create({
   },
   infoText: {
     textAlign: 'center',
-  }
+  },
 });

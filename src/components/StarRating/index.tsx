@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function Rating() {
-
   return (
     <View style={styles.container}>
       <FontAwesome6 name="star" size={24} color="green" solid />
@@ -23,5 +22,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 5,
-  }
+  },
 });

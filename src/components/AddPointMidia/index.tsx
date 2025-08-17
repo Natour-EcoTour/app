@@ -21,9 +21,13 @@ interface AddPointMidiaProps {
   setSelectedImages: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function AddPointMidia({ selectedImages, setSelectedImages }: AddPointMidiaProps) {
+export default function AddPointMidia({
+  selectedImages,
+  setSelectedImages,
+}: AddPointMidiaProps) {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [isImageModalVisible, setIsImageModalVisible] = useState<boolean>(false);
+  const [isImageModalVisible, setIsImageModalVisible] =
+    useState<boolean>(false);
   const [previewImageUri, setPreviewImageUri] = useState<string | null>(null);
 
   const pickImageAsync = async () => {
@@ -56,7 +60,11 @@ export default function AddPointMidia({ selectedImages, setSelectedImages }: Add
     <View style={{ width: '100%' }}>
       <TouchableOpacity onPress={() => setIsModalVisible(true)}>
         <View style={styles.infoContainer}>
-          <Ionicons name="information-circle-sharp" size={20} color="darkgreen" />
+          <Ionicons
+            name="information-circle-sharp"
+            size={20}
+            color="darkgreen"
+          />
           <Text style={styles.infoText}>Informações sobre as fotos</Text>
         </View>
       </TouchableOpacity>
@@ -76,10 +84,12 @@ export default function AddPointMidia({ selectedImages, setSelectedImages }: Add
         <View style={styles.gridContainer}>
           {selectedImages.map((uri, index) => (
             <View key={index} style={styles.imageWrapper}>
-              <TouchableOpacity onPress={() => {
-                setIsImageModalVisible(true);
-                setPreviewImageUri(uri);
-              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsImageModalVisible(true);
+                  setPreviewImageUri(uri);
+                }}
+              >
                 <Image source={{ uri }} style={styles.image} />
               </TouchableOpacity>
               <TouchableOpacity
@@ -107,17 +117,38 @@ export default function AddPointMidia({ selectedImages, setSelectedImages }: Add
           <View style={styles.overlay}>
             <View style={styles.modalContent}>
               <View style={styles.titleContainer}>
-                <Ionicons name="images" size={28} color="#464C55" style={{ marginBottom: 5 }} />
+                <Ionicons
+                  name="images"
+                  size={28}
+                  color="#464C55"
+                  style={{ marginBottom: 5 }}
+                />
                 <Text style={styles.title}>Regras para as fotos</Text>
               </View>
-              <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-                <Text style={styles.info}>- Você pode selecionar até 10 fotos.</Text>
-                <Text style={styles.info}>- Imagens nos formatos JPG ou PNG são aceitas.</Text>
-                <Text style={styles.info}>- As fotos devem ser tiradas no local do ponto.</Text>
-                <Text style={styles.info}>- Evite fotos borradas, com baixa iluminação ou irrelevantes.</Text>
-                <Text style={styles.info}>- Fotos inadequadas podem causar a reprovação do cadastro.</Text>
+              <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                showsVerticalScrollIndicator={false}
+              >
+                <Text style={styles.info}>
+                  - Você pode selecionar até 10 fotos.
+                </Text>
+                <Text style={styles.info}>
+                  - Imagens nos formatos JPG ou PNG são aceitas.
+                </Text>
+                <Text style={styles.info}>
+                  - As fotos devem ser tiradas no local do ponto.
+                </Text>
+                <Text style={styles.info}>
+                  - Evite fotos borradas, com baixa iluminação ou irrelevantes.
+                </Text>
+                <Text style={styles.info}>
+                  - Fotos inadequadas podem causar a reprovação do cadastro.
+                </Text>
               </ScrollView>
-              <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleClose}
+              >
                 <Text style={styles.closeButtonText}>Fechar</Text>
               </TouchableOpacity>
             </View>
@@ -136,14 +167,19 @@ export default function AddPointMidia({ selectedImages, setSelectedImages }: Add
           }}
         >
           <View style={styles.overlay}>
-            <View style={[styles.modalContent, { width: '95%', height: '70%' }]}>
+            <View
+              style={[styles.modalContent, { width: '95%', height: '70%' }]}
+            >
               <Image
                 source={{ uri: previewImageUri }}
                 resizeMode="contain"
                 style={{ width: '100%', height: '100%', borderRadius: 10 }}
               />
               <TouchableOpacity
-                style={[styles.closeButton, { position: 'absolute', bottom: 20 }]}
+                style={[
+                  styles.closeButton,
+                  { position: 'absolute', bottom: 20 },
+                ]}
                 onPress={() => {
                   setIsImageModalVisible(false);
                   setPreviewImageUri(null);

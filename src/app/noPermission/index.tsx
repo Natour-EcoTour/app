@@ -1,13 +1,22 @@
-import React from 'react';
-import { Text, View, StyleSheet, ImageBackground, TouchableOpacity, Image, Linking } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+  Linking,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
+import { images } from '@/src/utils/assets';
 
 export default function NoPermission() {
-  const router = useRouter()
+  const router = useRouter();
 
   const handlePermissionRequest = async () => {
-    const { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
+    const { status, canAskAgain } =
+      await Location.requestForegroundPermissionsAsync();
 
     if (status === 'granted') {
       router.push('./(main)/map');
@@ -18,25 +27,30 @@ export default function NoPermission() {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/background.png')}
+      source={images.background}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
       <View style={styles.container}>
         <Text style={styles.title}>Permissão de localização</Text>
         <Text style={{ textAlign: 'center', fontSize: 16, color: '#333' }}>
-          O <Text style={{ fontWeight: 'bold' }}>Natour</Text> precisa que você permita o acesso à sua localização para que possamos exibir a tela de mapas.
-          Assim, você poderá encontrar novos pontos turísticos ecológicos próximos a você ou até mesmo cadastrar os seus próprios!
+          O <Text style={{ fontWeight: 'bold' }}>Natour</Text> precisa que você
+          permita o acesso à sua localização para que possamos exibir a tela de
+          mapas. Assim, você poderá encontrar novos pontos turísticos ecológicos
+          próximos a você ou até mesmo cadastrar os seus próprios!
         </Text>
 
         <Image
           style={{ width: 310, height: 310 }}
-          resizeMode='contain'
-          source={require('../../../assets/images/noPermission.png')}
+          resizeMode="contain"
+          source={images.noPermission}
         />
 
         <View style={styles.permissionsContainer}>
-          <TouchableOpacity style={styles.permissionsButton1} onPress={handlePermissionRequest}>
+          <TouchableOpacity
+            style={styles.permissionsButton1}
+            onPress={handlePermissionRequest}
+          >
             <Text style={styles.permissionText1}>Permitir</Text>
           </TouchableOpacity>
 
@@ -47,7 +61,7 @@ export default function NoPermission() {
             <Text style={styles.permissionText2}>Sair</Text>
           </TouchableOpacity>
         </View>
-      </ View>
+      </View>
     </ImageBackground>
   );
 }
@@ -101,5 +115,5 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
-  }
+  },
 });

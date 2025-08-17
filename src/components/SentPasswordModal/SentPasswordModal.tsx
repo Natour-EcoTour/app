@@ -1,14 +1,18 @@
 import { Modal, View, Text, Image, StyleSheet, Button } from 'react-native';
 import { PropsWithChildren } from 'react';
 import { useRouter } from 'expo-router';
-
+import { images } from '@/src/utils/assets';
 
 type Props = PropsWithChildren<{
   isVisible: boolean;
   onClose: () => void;
 }>;
 
-export default function SentPasswordModal({ isVisible, children, onClose }: Props) {
+export default function SentPasswordModal({
+  isVisible,
+  children,
+  onClose,
+}: Props) {
   const router = useRouter();
 
   const handleClose = () => {
@@ -24,7 +28,7 @@ export default function SentPasswordModal({ isVisible, children, onClose }: Prop
             <Text style={styles.title}>Senha enviada!</Text>
           </View>
           <View style={styles.iconContainer}>
-            <Image source={require('../../../assets/images/icon.png')} style={{ width: 200, height: 200 }} />
+            <Image source={images.icon} style={{ width: 200, height: 200 }} />
           </View>
           <View style={styles.buttonContainer}>
             <Button title="Fechar" onPress={handleClose} color="#464C55" />
