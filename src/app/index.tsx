@@ -23,6 +23,7 @@ import LoginButton from '@/components/LoginButton';
 import CustomModal from '@/components/CustomModal';
 import EmailInput from '@/components/EmailInput';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Checkbox } from 'react-native-paper';
 
 interface LoginFormData {
   email: string;
@@ -32,6 +33,7 @@ interface LoginFormData {
 export default function Index() {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [checked, setChecked] = useState(false);
   const insets = useSafeAreaInsets();
   const keyboardOffset = Platform.select({
     ios: insets.top + 16,
@@ -119,12 +121,23 @@ export default function Index() {
               )}
             />
 
-            <Text
-              style={styles.noAccountText}
-              onPress={() => router.push('/(auth)/forgotPassword')}
-            >
-              Esqueci a minha senha
-            </Text>
+            <View style={styles.actions}>
+              <Checkbox
+                status={checked ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setChecked(!checked);
+                }}
+                color="#00672e"
+              />
+              <Text>Manter conectado</Text>
+
+              <Text
+                style={[styles.noAccountText, { marginLeft: 50 }]}
+                onPress={() => router.push('/(auth)/forgotPassword')}
+              >
+                Redefinir senha
+              </Text>
+            </View>
 
             <LoginButton text="Entrar" onPress={handleSubmit(onSubmit)} />
 
@@ -174,10 +187,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   containerBox: {
-    padding: 50,
+    padding: 45,
     width: '100%',
     alignItems: 'center',
   },
@@ -187,7 +199,7 @@ const styles = StyleSheet.create({
     marginTop: 35,
     marginBottom: 5,
     fontWeight: 'bold',
-    color: '#00672E',
+    color: '#00672e',
   },
   error: {
     color: 'red',
@@ -196,7 +208,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   noAccountText: {
-    color: 'green',
+    color: '#00672e',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
   },
@@ -204,5 +216,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
