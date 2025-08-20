@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Text,
   View,
@@ -7,7 +7,8 @@ import {
   ScrollView,
   ImageBackground,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
 import { Checkbox } from 'react-native-paper';
 
@@ -17,8 +18,8 @@ import { registerSchema } from '@/src/validations/validationSchema';
 
 import Fullnamelnput from '@/src/components/NameInput';
 import EmailInput from '@/src/components/EmailInput';
-import PasswordForm from '@/src/components/ConfirmPasswordInput';
-import CustomModal from '@/src/components/CustomModal';
+import PasswordInput from '@/src/components/PasswordInput';
+import SafeKeyboardAvoidingView from '@/src/components/SafeKeyboardAvoidingView';
 import { images } from '@/src/utils/assets';
 import CodeModal from '@/src/components/CodeModal/CodeModal';
 
@@ -29,24 +30,63 @@ export default function RegisterScreen() {
     control,
     handleSubmit,
     setValue,
+    getValues,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(registerSchema),
-    defaultValues: {
-      name: 'Vitor Antunes Ferreira',
-      email: 'vitinho@gmail.com',
-      password: 'Aa12345678!',
-      confirmPassword: 'Aa12345678!',
-      termsAccept: true,
-    },
+
   });
 
-  const onSubmit = (data: any) => {
+  const saveFormData = useCallback(async () => {
+    try {
+      const currentValues = getValues();
+      await SecureStore.setItemAsync('registerFormData', JSON.stringify(currentValues));
+    } catch (error) {
+      console.error('Error saving form data:', error);
+    }
+  }, [getValues]);
+
+  const loadFormData = useCallback(async () => {
+    try {
+      const savedData = await SecureStore.getItemAsync('registerFormData');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        Object.keys(parsedData).forEach((key) => {
+          setValue(key as any, parsedData[key]);
+        });
+      }
+    } catch (error) {
+      console.error('Error loading form data:', error);
+    }
+  }, [setValue]);
+
+  useEffect(() => {
+    loadFormData();
+  }, [loadFormData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        saveFormData();
+      };
+    }, [saveFormData])
+  );
+
+  const onSubmit = async (data: any) => {
     console.log('Form data:', data);
     setIsModalVisible(true);
   };
 
-
+  const clearFormData = async () => {
+    try {
+      await SecureStore.deleteItemAsync('registerFormData');
+      reset();
+      console.log('Form data cleared successfully');
+    } catch (error) {
+      console.error('Error clearing form data:', error);
+    }
+  };
 
   return (
     <ImageBackground
@@ -54,158 +94,184 @@ export default function RegisterScreen() {
       style={styles.backgroundImage}
       resizeMode="cover"
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollContentContainer}
-        style={styles.scrollView}
-      >
-        <View style={styles.container}>
-          <Text style={styles.title}>Cadastro</Text>
-          <View style={styles.inputContainer}>
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <>
-                  <Fullnamelnput
-                    label="Nome"
-                    editable={true}
-                    placeholder="Digite o seu nome"
-                    onChange={onChange}
-                    value={value}
-                  />
-                  {errors.name && (
-                    <Text style={styles.error}>
-                      {errors.name.message as string}
-                    </Text>
-                  )}
-                </>
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <>
-                  <EmailInput
-                    editable={true}
-                    placeholder="Digite seu e-mail"
-                    onChange={onChange}
-                    value={value}
-                  />
-                  {errors.email && (
-                    <Text style={styles.error}>
-                      {errors.email.message as string}
-                    </Text>
-                  )}
-                </>
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Text style={styles.label}>Senha</Text>
-                  <PasswordForm
-                    placeholder="Insira sua senha"
-                    password={value}
-                    onChangePassword={onChange}
-                  />
-                  {errors.password && (
-                    <Text style={styles.error}>
-                      {errors.password.message as string}
-                    </Text>
-                  )}
-                </>
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="confirmPassword"
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Text style={styles.label}>Confirmação de senha</Text>
-                  <PasswordForm
-                    placeholder="Confirme sua senha"
-                    password={value}
-                    onChangePassword={onChange}
-                  />
-                  {errors.confirmPassword && (
-                    <Text style={styles.error}>
-                      {errors.confirmPassword.message as string}
-                    </Text>
-                  )}
-                </>
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="termsAccept"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <>
-                  <View style={styles.termsContainer}>
-                    <Checkbox
-                      status={value ? 'checked' : 'unchecked'}
-                      onPress={() => onChange(!value)}
-                      color="#00672e"
+      <SafeKeyboardAvoidingView>
+        <ScrollView
+          contentContainerStyle={styles.scrollContentContainer}
+          style={styles.scrollView}
+        >
+          <View style={styles.container}>
+            <Text style={styles.title}>Cadastro</Text>
+            <View style={styles.inputContainer}>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Fullnamelnput
+                      label="Nome"
+                      editable={true}
+                      placeholder="Digite o seu nome"
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                      value={value}
                     />
-                    <Text style={{ fontSize: 13 }}>
-                      Declaro que li e aceito os{' '}
-                    </Text>
-                    <Text
-                      style={[styles.termsText, { fontSize: 13 }]}
-                      onPress={() => router.push('/(terms)/userTerms')}
-                    >
-                      termos de uso
-                    </Text>
-                  </View>
-                  {error && <Text style={styles.error}>{error.message}</Text>}
-                </>
-              )}
-            />
+                    {errors.name && (
+                      <Text style={styles.error}>
+                        {errors.name.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleSubmit(onSubmit)}
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <EmailInput
+                      editable={true}
+                      placeholder="Digite seu e-mail"
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                      value={value}
+                    />
+                    {errors.email && (
+                      <Text style={styles.error}>
+                        {errors.email.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <PasswordInput
+                      label="Senha"
+                      placeholder="Insira sua senha"
+                      value={value || ''}
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                    />
+                    {errors.password && (
+                      <Text style={styles.error}>
+                        {errors.password.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="confirmPassword"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <PasswordInput
+                      label="Confirmação de senha"
+                      placeholder="Confirme sua senha"
+                      value={value || ''}
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                    />
+                    {errors.confirmPassword && (
+                      <Text style={styles.error}>
+                        {errors.confirmPassword.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="termsAccept"
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <View style={styles.termsContainer}>
+                      <Checkbox
+                        status={value ? 'checked' : 'unchecked'}
+                        onPress={() => {
+                          const newValue = !value;
+                          onChange(newValue);
+                          saveFormData();
+                        }}
+                        color="#00672e"
+                      />
+                      <Text style={{ fontSize: 13 }}>
+                        Declaro que li e aceito os{' '}
+                      </Text>
+                      <Text
+                        style={[styles.termsText, { fontSize: 13 }]}
+                        onPress={() => router.push('/(terms)/userTerms')}
+                      >
+                        termos de uso
+                      </Text>
+                      <Text>{' e as '}</Text>
+                      <Text
+                        style={[styles.termsText, { fontSize: 13 }]}
+                        onPress={() => router.push('/(terms)/privacyPolicy')}
+                      >
+                        política de privacidade
+                      </Text>
+                    </View>
+                    {error && <Text style={styles.error}>{error.message}</Text>}
+                  </>
+                )}
+              />
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleSubmit(onSubmit)}
+              >
+                <Text style={styles.buttonText}>Cadastrar</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 20,
+              }}
             >
-              <Text style={styles.buttonText}>Cadastrar</Text>
-            </TouchableOpacity>
+              <Text>Já tem uma conta? </Text>
+              <Text style={styles.link} onPress={() => router.push('/')}>
+                Entrar
+              </Text>
+            </View>
           </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 20,
-            }}
-          >
-            <Text>Já tem uma conta? </Text>
-            <Text style={styles.link} onPress={() => router.push('/')}>
-              Entrar
-            </Text>
-          </View>
-        </View>
-        {isModalVisible && (
-          <CodeModal
-            isVisible={isModalVisible}
-            onClose={() => setIsModalVisible(false)}
-            route="../"
-            title="Confirme seu Email"
-            subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
-            onCodeSubmit={async (code) => {
-              console.log('Código recebido:', code);
-              await new Promise(resolve => setTimeout(resolve, 1000));
-            }}
-          />
-        )}
-      </ScrollView>
+          {isModalVisible && (
+            <CodeModal
+              isVisible={isModalVisible}
+              onClose={() => setIsModalVisible(false)}
+              route="../"
+              title="Confirme seu Email"
+              subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
+              onCodeSubmit={async (code) => {
+                console.log('Código recebido:', code);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                await clearFormData();
+              }}
+            />
+          )}
+        </ScrollView>
+      </SafeKeyboardAvoidingView>
     </ImageBackground>
   );
 }
@@ -226,15 +292,16 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   container: {
-    padding: 50,
+    padding: 20,
     width: '100%',
     alignItems: 'center',
   },
   termsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    fontSize: 15,
+    width: '100%',
+    flexWrap: 'wrap',
+    marginBottom: 20,
   },
   termsText: {
     color: '#00672e',
