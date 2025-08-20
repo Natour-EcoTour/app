@@ -7,9 +7,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { forgotPasswordSchema } from '@/src/validations/validationSchema';
 
-import SentPasswordModal from '@/src/components/SentPasswordModal/SentPasswordModal';
 import EmailInput from '@/src/components/EmailInput';
 import { images } from '@/src/utils/assets';
+import CustomModal from '@/src/components/CustomModal';
 
 export default function forgotPassword() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -42,11 +42,11 @@ export default function forgotPassword() {
       >
         <Text style={styles.title}>Esqueceu sua senha?</Text>
 
-        <Text style={styles.text}>Digite o e-mail cadastrado na Natour.</Text>
         <Text style={styles.text}>
+          Digite o e-mail cadastrado na Natour.
+          {'\n'}
           Enviaremos um link para redefinir sua senha.
         </Text>
-
         <Controller
           control={control}
           name="email"
@@ -67,9 +67,11 @@ export default function forgotPassword() {
           <Text style={styles.buttonText}>Enviar</Text>
         </TouchableOpacity>
         {isModalVisible && (
-          <SentPasswordModal
+          <CustomModal
             isVisible={isModalVisible}
             onClose={() => setIsModalVisible(false)}
+            title="E-mail enviado!"
+            route='../'
           />
         )}
 
@@ -98,6 +100,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
+    height: '100%',
     alignItems: 'center',
   },
   field: {
@@ -108,15 +111,15 @@ const styles = StyleSheet.create({
     marginTop: 35,
     marginBottom: 5,
     fontWeight: 'bold',
-    color: '#00672E',
+    color: '#00672e',
   },
   text: {
-    color: '#00672e',
     fontSize: 15,
-    marginBottom: 5,
+    marginBottom: 25,
+    textAlign: 'center',
   },
   link: {
-    color: 'green',
+    color: '#00672e',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
     marginTop: 20,
