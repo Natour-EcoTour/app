@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { loginSchema } from '@/validations/validationSchema';
+import { loginSchema } from '@/src/validations/loginSchema';
 import { images } from '@/utils/assets';
 
 import { loginUser } from '@/services/authService';

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerPointSchema } from '@/src/validations/validationSchema';
+import { registerPointSchema } from '@/src/validations/pointSchema';
 import Toast from 'react-native-toast-message';
 
 import NameInput from '@/components/NameInput';

@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { forgotPasswordSchema } from '@/src/validations/validationSchema';
+import { forgotPasswordSchema } from '@/src/validations/forgotPasswordSchema';
 
 import EmailInput from '@/src/components/EmailInput';
 import { images } from '@/src/utils/assets';

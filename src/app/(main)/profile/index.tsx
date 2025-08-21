@@ -1,9 +1,9 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FieldValues } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerSchema } from '@/src/validations/validationSchema';
+import { registerSchema } from '@/src/validations/registerSchema';
 
 import Fullnamelnput from '@/src/components/NameInput';
 import EmailInput from '@/src/components/EmailInput';
@@ -16,8 +16,18 @@ import CustomModal from '@/src/components/CustomModal';
 import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
 import { Ionicons } from '@expo/vector-icons';
 import { images } from '@/src/utils/assets';
+import { useRouter } from 'expo-router';
+
+type ProfileFormData = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  termsAccept: boolean;
+};
 
 export default function Profile() {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
@@ -45,7 +55,7 @@ export default function Profile() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<ProfileFormData>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       name: 'Vitor Antunes Ferreira',
@@ -54,7 +64,7 @@ export default function Profile() {
       confirmPassword: 'Aa12345678!',
       termsAccept: true,
     },
-  });
+  }) as any;
 
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
@@ -153,7 +163,7 @@ export default function Profile() {
             <>
               <TouchableOpacity
                 style={styles.ChangePassbutton}
-                onPress={() => console.log('Trocar senha!')}
+                onPress={() => router.push('./profile/changePassword')}
               >
                 <Text style={styles.ChangePasswordbuttonText}>
                   Alterar senha

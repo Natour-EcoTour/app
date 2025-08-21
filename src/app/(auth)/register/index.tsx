@@ -14,7 +14,7 @@ import { Checkbox } from 'react-native-paper';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerSchema } from '@/src/validations/validationSchema';
+import { registerSchema } from '@/src/validations/registerSchema';
 
 import Fullnamelnput from '@/src/components/NameInput';
 import EmailInput from '@/src/components/EmailInput';
