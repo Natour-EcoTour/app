@@ -7,8 +7,32 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { images } from '@/src/utils/assets';
+import { useEffect, useState } from 'react';
+import { getTerms } from '@/services/terms/termsService';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function PrivacyPolicy() {
+  const [terms, setTerms] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTerms = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const termsData = await getTerms(2);
+        setTerms(termsData.content || '');
+      } catch (err) {
+        setError('Erro ao carregar a política de privacidade');
+        console.error('Error fetching policy:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTerms();
+  }, []);
   return (
     <ImageBackground
       source={images.background}
@@ -20,35 +44,18 @@ export default function PrivacyPolicy() {
 
         <View style={styles.textBox}>
           <ScrollView showsVerticalScrollIndicator={true}>
-            <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              tincidunt, nunc vel malesuada placerat, neque velit tincidunt
-              justo, vitae varius nulla lorem eget neque. Ut eget purus a justo
-              gravida scelerisque. Mauris malesuada, libero vel varius
-              tincidunt, magna augue faucibus turpis, ut cursus velit felis in
-              arcu. Integer dictum nisl et magna porttitor, a interdum lorem
-              interdum. Aenean vel orci eu velit tristique malesuada.
-              {'\n\n'}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-              posuere cubilia curae; Donec quis nibh sed libero volutpat
-              eleifend. Morbi non mauris eget purus vulputate consequat.
-              Suspendisse potenti. Proin sit amet sem nec justo pharetra
-              vehicula vel eu dolor.
-              {'\n\n'}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              tincidunt, nunc vel malesuada placerat, neque velit tincidunt
-              justo, vitae varius nulla lorem eget neque. Ut eget purus a justo
-              gravida scelerisque. Mauris malesuada, libero vel varius
-              tincidunt, magna augue faucibus turpis, ut cursus velit felis in
-              arcu. Integer dictum nisl et magna porttitor, a interdum lorem
-              interdum. Aenean vel orci eu velit tristique malesuada.
-              {'\n\n'}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-              posuere cubilia curae; Donec quis nibh sed libero volutpat
-              eleifend. Morbi non mauris eget purus vulputate consequat.
-              Suspendisse potenti. Proin sit amet sem nec justo pharetra
-              vehicula vel eu dolor.
-            </Text>
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#00672e" />
+                <Text style={styles.loadingText}>Carregando política...</Text>
+              </View>
+            ) : error ? (
+              <Text style={styles.errorText}>{error}</Text>
+            ) : (
+              <Text style={styles.text}>
+                {terms || 'Política de privacidade não disponíveis no momento.'}
+              </Text>
+            )}
           </ScrollView>
         </View>
         <Text style={styles.link} onPress={() => router.back()}>
@@ -98,5 +105,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textDecorationLine: 'underline',
     fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    color: '#00672e',
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  errorText: {
+    color: '#d32f2f',
+    fontSize: 16,
+    textAlign: 'center',
+    padding: 20,
   },
 });
