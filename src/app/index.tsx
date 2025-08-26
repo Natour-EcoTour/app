@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, set } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/src/validations/loginSchema';
 import { images } from '@/utils/assets';
@@ -28,12 +28,14 @@ import { Checkbox } from 'react-native-paper';
 interface LoginFormData {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 export default function Index() {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const insets = useSafeAreaInsets();
   const keyboardOffset = Platform.select({
     ios: insets.top + 16,
@@ -48,20 +50,24 @@ export default function Index() {
     resolver: yupResolver(loginSchema),
     defaultValues: {
       email: 'vitorantunes2003@gmail.com',
-      password: 'senha',
+      password: 'Aa12345678!',
+      rememberMe: false,
     },
   });
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const { access, refresh } = await loginUser(data.email, data.password);
+      setIsLoading(true);
+
+      const { access, refresh } = await loginUser(data.email, data.password, data.rememberMe);
 
       await SecureStore.setItemAsync('access', access);
       await SecureStore.setItemAsync('refresh', refresh);
 
-      console.log('User logged in successfully:', access);
+      // console.log('User logged in successfully:', access);
       setIsModalVisible(true);
     } catch (error) {
+      setIsLoading(false);
       console.error('Error logging in:', error);
     }
   };
@@ -120,12 +126,16 @@ export default function Index() {
             />
 
             <View style={styles.actions}>
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  setChecked(!checked);
-                }}
-                color="#00672e"
+              <Controller
+                control={control}
+                name="rememberMe"
+                render={({ field: { onChange, value } }) => (
+                  <Checkbox
+                    status={value ? 'checked' : 'unchecked'}
+                    onPress={() => onChange(!value)}
+                    color="#00672e"
+                  />
+                )}
               />
               <Text>Manter conectado</Text>
 
@@ -137,7 +147,11 @@ export default function Index() {
               </Text>
             </View>
 
-            <LoginButton text="Entrar" onPress={handleSubmit(onSubmit)} />
+            <LoginButton
+              text="Entrar"
+              onPress={handleSubmit(onSubmit)}
+              isLoading={isLoading}
+            />
 
             <View style={styles.accountRow}>
               <Text>Não tem uma conta? </Text>

@@ -9,20 +9,38 @@ type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 interface LoginButtonProps {
   text: string;
   icon_type: IoniconName;
-  route: RelativePathString;
+  route?: RelativePathString;
+  onPress?: () => void | Promise<void>;
 }
 
 export default function SettingsButton({
   text,
   icon_type,
   route,
+  onPress,
 }: LoginButtonProps) {
   const router = useRouter();
 
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else if (route) {
+      router.push(route);
+    }
+  };
+
   return (
-    <TouchableOpacity style={styles.button} onPress={() => router.push(route)}>
-      <Ionicons name={icon_type} size={24} color="white" style={styles.icon} />
-      <Text style={styles.buttonText}>{text}</Text>
+    <TouchableOpacity style={styles.button} onPress={handlePress}>
+      <Ionicons
+        name={icon_type} size={24}
+        color="white"
+        style={styles.icon}
+      />
+
+      <Text
+        style={styles.buttonText}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 }

@@ -1,15 +1,18 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
 
 interface LoginButtonProps {
   onPress: () => void;
   text: string;
+  isLoading?: boolean;
 }
 
-export default function RegisterButton({ onPress, text }: LoginButtonProps) {
+export default function RegisterButton({ onPress, text, isLoading }: LoginButtonProps) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.buttonText}>{text}</Text>
+    <TouchableOpacity style={styles.button} onPress={onPress} disabled={isLoading}>
+      <Text
+        style={styles.buttonText}>
+        {isLoading ? 'Carregando...' : text}
+      </Text>
     </TouchableOpacity>
   );
 }

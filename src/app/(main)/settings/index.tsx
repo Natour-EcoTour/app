@@ -1,8 +1,25 @@
 import { Text, View, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
 import SettingsButton from '@/components/SettingsButton';
 
 export default function Settings() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await SecureStore.deleteItemAsync('access');
+      await SecureStore.deleteItemAsync('refresh');
+      
+      console.log('User logged out successfully');
+      
+      router.replace('/');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Configurações</Text>
@@ -25,7 +42,11 @@ export default function Settings() {
         route="../(terms)/privacyPolicy"
       />
 
-      <SettingsButton text="Sair" icon_type="exit" route="../../" />
+      <SettingsButton
+        text="Sair"
+        icon_type="exit"
+        onPress={handleLogout}
+      />
     </View>
   );
 }
