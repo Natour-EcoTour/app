@@ -10,9 +10,13 @@ import { forgotPasswordSchema } from '@/src/validations/forgotPasswordSchema';
 import EmailInput from '@/src/components/EmailInput';
 import { images } from '@/src/utils/assets';
 import CustomModal from '@/src/components/CustomModal';
+import { sendForgotPasswordCode } from '@/services/auth/sendForgotPassword';
 
+// TODO modal to verify the code!!!
 export default function forgotPassword() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     control,
@@ -21,12 +25,14 @@ export default function forgotPassword() {
   } = useForm({
     resolver: yupResolver(forgotPasswordSchema),
     defaultValues: {
-      email: 'a@a.com',
+      email: 'vitorantunes2003@gmail.com',
     },
   });
 
   const onSubmit = (data: any) => {
-    console.log('Form data:', data);
+    setIsLoading(true);
+    console.log('Form data:', data.email);
+    sendForgotPasswordCode(data.email);
     setIsModalVisible(true);
   };
 
@@ -64,7 +70,9 @@ export default function forgotPassword() {
           )}
         />
         <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-          <Text style={styles.buttonText}>Enviar</Text>
+          <Text style={styles.buttonText}>
+            {isLoading ? 'Enviando...' : 'Enviar'}
+          </Text>
         </TouchableOpacity>
         {isModalVisible && (
           <CustomModal
