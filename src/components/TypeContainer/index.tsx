@@ -5,8 +5,7 @@ interface TypeProps {
   type: string;
 }
 
-export default function TypeContainer( { type }: TypeProps ) {
-
+export default function TypeContainer({ type }: TypeProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.type}>{type}</Text>
@@ -29,5 +28,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     textAlign: 'center',
-  }
+  },
 });

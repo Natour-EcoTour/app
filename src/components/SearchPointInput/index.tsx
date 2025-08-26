@@ -31,11 +31,11 @@ export default function SearchPointInput({
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: 'transparent',
-    elevation: 15, // For Android shadow
-    shadowColor: '#000', // iOS shadow color
-    shadowOffset: { width: 0, height: 2 }, // iOS shadow offset
-    shadowOpacity: 0.25, // iOS shadow opacity
-    shadowRadius: 3.84, // iOS shadow radius
+    elevation: 15, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   input: {
     borderColor: 'rgba(0, 0, 0, 0.31)',

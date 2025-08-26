@@ -1,23 +1,27 @@
-import { Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground } from 'react-native';
 
 import { useState } from 'react';
 import { router } from 'expo-router';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { forgotPasswordSchema } from '@/src/validations/validationSchema';
+import { forgotPasswordSchema } from '@/src/validations/forgotPasswordSchema';
 
-import SentPasswordModal from '@/src/components/SentPasswordModal/SentPasswordModal';
 import EmailInput from '@/src/components/EmailInput';
+import { images } from '@/src/utils/assets';
+import CustomModal from '@/src/components/CustomModal';
 
 export default function forgotPassword() {
-
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(forgotPasswordSchema),
     defaultValues: {
-      email: 'a@a.com'
+      email: 'a@a.com',
     },
   });
 
@@ -27,52 +31,66 @@ export default function forgotPassword() {
   };
 
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollContentContainer}
+    <ImageBackground
+      source={images.background}
+      style={styles.backgroundImage}
+      resizeMode="cover"
     >
-      <Text style={styles.title}>Esqueceu sua senha?</Text>
-
-      <Text style={styles.text}>Digite o e-mail cadastrado na Natour.</Text>
-      <Text style={styles.text}>Enviaremos um link para redefinir sua senha.</Text>
-
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <EmailInput
-              editable={true}
-              value={value}
-              onChange={onChange}
-            />
-            {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
-          </>
-        )}
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit(onSubmit)}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContentContainer}
       >
-        <Text style={styles.buttonText}>Enviar</Text>
-      </TouchableOpacity>
-      {isModalVisible && (
-        <SentPasswordModal
-          isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
+        <Text style={styles.title}>Esqueceu sua senha?</Text>
+
+        <Text style={styles.text}>
+          Digite o e-mail cadastrado na Natour.
+          {'\n'}
+          Enviaremos um link para redefinir sua senha.
+        </Text>
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.field}>
+              <EmailInput
+                editable
+                value={value}
+                onChange={(text: string) => onChange(text)}
+              />
+              {errors.email && (
+                <Text style={styles.error}>{errors.email.message}</Text>
+              )}
+            </View>
+          )}
         />
-      )}
+        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+          <Text style={styles.buttonText}>Enviar</Text>
+        </TouchableOpacity>
+        {isModalVisible && (
+          <CustomModal
+            isVisible={isModalVisible}
+            onClose={() => setIsModalVisible(false)}
+            title="E-mail enviado!"
+            route='../'
+          />
+        )}
 
-      <Text style={styles.link} onPress={() => router.push('/')}>Voltar para o login</Text>
-
-    </ScrollView>
+        <Text style={styles.link} onPress={() => router.push('/')}>
+          Voltar para o login
+        </Text>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   scrollView: {
     flex: 1,
-    backgroundColor: '#25292e',
   },
   scrollContentContainer: {
     flexGrow: 1,
@@ -82,22 +100,29 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
+    height: '100%',
     alignItems: 'center',
   },
+  field: {
+    width: '100%'
+  },
   title: {
-    color: '#fff',
-    fontSize: 20,
-    marginBottom: 20,
+    fontSize: 17,
+    marginTop: 35,
+    marginBottom: 5,
+    fontWeight: 'bold',
+    color: '#00672e',
   },
   text: {
-    color: '#fff',
     fontSize: 15,
-    marginBottom: 5,
+    marginBottom: 25,
+    textAlign: 'center',
   },
   link: {
-    color: '#04d361',
-    marginTop: 20,
+    color: '#00672e',
     textDecorationLine: 'underline',
+    fontWeight: 'bold',
+    marginTop: 20,
   },
   inputContainer: {
     width: '100%',
@@ -118,22 +143,18 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 14,
     marginBottom: 15,
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
   },
   button: {
-    backgroundColor: '#04d361',
+    backgroundColor: '#00672e',
     padding: 15,
+    width: 350,
     alignItems: 'center',
-    borderRadius: 4,
-    width: '100%',
+    borderRadius: 10,
+    marginTop: 20,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-  },
-  noAccountText: {
-    color: '#fff',
-    marginTop: 20,
-    textDecorationLine: 'underline',
-  },
+  }
 });

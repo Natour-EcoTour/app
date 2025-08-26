@@ -1,10 +1,16 @@
-import { Text, StyleSheet, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Dimensions,
+} from 'react-native';
 import React from 'react';
 import { View } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
-import StarRating from '../StarRating';
+import StarRating from '@/components/StarRating';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -16,7 +22,7 @@ interface MyPointsBoxProps {
   closeTime: string;
   views: number;
   review: number;
-  screen: "myPoints" | "pendingPoints";
+  screen: 'myPoints' | 'pendingPoints';
 }
 
 export default function MyPointsBox({
@@ -27,7 +33,7 @@ export default function MyPointsBox({
   closeTime,
   views,
   review,
-  screen
+  screen,
 }: MyPointsBoxProps) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const router = useRouter();
@@ -46,7 +52,14 @@ export default function MyPointsBox({
           <View
             style={[
               styles.statusBall,
-              { backgroundColor: pointStatus === 'Ativo' ? 'green' : pointStatus === 'Desativado' ? 'red' : 'yellow' }
+              {
+                backgroundColor:
+                  pointStatus === 'Ativo'
+                    ? 'green'
+                    : pointStatus === 'Desativado'
+                      ? 'red'
+                      : 'yellow',
+              },
             ]}
           />
           <Text style={styles.statusText}>
@@ -60,7 +73,9 @@ export default function MyPointsBox({
       </View>
 
       <View style={styles.viewsText}>
-        <Text>Horário de funcionamento: {starTime} - {closeTime}</Text>
+        <Text>
+          Horário de funcionamento: {starTime} - {closeTime}
+        </Text>
         <Text>Visualizações: {views}</Text>
       </View>
 
@@ -71,28 +86,35 @@ export default function MyPointsBox({
       )}
 
       <View style={styles.rowActions}>
-
-        <TouchableOpacity onPress={() => router.push(`/${screen}/details/${id}`)}>
+        <TouchableOpacity
+          onPress={() => router.push(`/${screen}/details/${id}`)}
+        >
           <Text style={styles.detailsText}>Ver detalhes</Text>
         </TouchableOpacity>
 
         {pointStatus !== 'Em análise' && (
           <>
             <View style={styles.iconsContainer}>
-              <TouchableOpacity onPress={() => router.push({
-                pathname: "/myPoints/edit/[id]",
-                params: { id: String(id) }
-              })}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/myPoints/edit/[id]',
+                    params: { id: String(id) },
+                  })
+                }
+              >
                 <Ionicons name={'pencil'} size={25} color={'blue'} />
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginLeft: 12 }}>
+              <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={{ marginLeft: 12 }}
+              >
                 <Ionicons name={'trash-bin'} size={25} color={'red'} />
               </TouchableOpacity>
             </View>
           </>
         )}
-
       </View>
 
       <Modal
@@ -106,16 +128,25 @@ export default function MyPointsBox({
             <Ionicons name="trash-bin-sharp" size={60} color="red" />
             <Text style={styles.modalTitle}>Deseja apagar "{pointName}"?</Text>
             <Text style={styles.modalMessage}>
-              Este ponto será removido do mapa e não poderá mais ser acessado — nem mesmo por você.
+              Este ponto será removido do mapa e não poderá mais ser acessado —
+              nem mesmo por você.
             </Text>
-            <Text style={styles.modalMessage}>Tem certeza que deseja continuar?</Text>
+            <Text style={styles.modalMessage}>
+              Tem certeza que deseja continuar?
+            </Text>
 
             <View style={styles.buttonsRow}>
-              <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.cancelButton}>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.cancelButton}
+              >
                 <Text style={styles.buttonText}>Cancelar</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+              <TouchableOpacity
+                onPress={handleDelete}
+                style={styles.deleteButton}
+              >
                 <Text style={styles.buttonText}>Apagar</Text>
               </TouchableOpacity>
             </View>

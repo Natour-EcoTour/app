@@ -1,11 +1,17 @@
-import React from 'react';
-import { Text, View, StyleSheet, ImageBackground, ScrollView } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  ScrollView,
+} from 'react-native';
 import { router } from 'expo-router';
+import { images } from '@/src/utils/assets';
 
 export default function UserTerms() {
   return (
     <ImageBackground
-      source={require('../../../../assets/images/background.png')}
+      source={images.background}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -15,27 +21,39 @@ export default function UserTerms() {
         <View style={styles.textBox}>
           <ScrollView showsVerticalScrollIndicator={true}>
             <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat,
-              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque.
-              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu.
-              Integer dictum nisl et magna porttitor, a interdum lorem interdum. Aenean vel orci eu velit tristique malesuada.
-              {"\n\n"}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
-              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat.
-              Suspendisse potenti. Proin sit amet sem nec justo pharetra vehicula vel eu dolor.
-              {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat,
-              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque.
-              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu.
-              Integer dictum nisl et magna porttitor, a interdum lorem interdum. Aenean vel orci eu velit tristique malesuada.
-              {"\n\n"}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
-              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat.
-              Suspendisse potenti. Proin sit amet sem nec justo pharetra vehicula vel eu dolor.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+              tincidunt, nunc vel malesuada placerat, neque velit tincidunt
+              justo, vitae varius nulla lorem eget neque. Ut eget purus a justo
+              gravida scelerisque. Mauris malesuada, libero vel varius
+              tincidunt, magna augue faucibus turpis, ut cursus velit felis in
+              arcu. Integer dictum nisl et magna porttitor, a interdum lorem
+              interdum. Aenean vel orci eu velit tristique malesuada.
+              {'\n\n'}
+              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+              posuere cubilia curae; Donec quis nibh sed libero volutpat
+              eleifend. Morbi non mauris eget purus vulputate consequat.
+              Suspendisse potenti. Proin sit amet sem nec justo pharetra
+              vehicula vel eu dolor.
+              {'\n\n'}
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+              tincidunt, nunc vel malesuada placerat, neque velit tincidunt
+              justo, vitae varius nulla lorem eget neque. Ut eget purus a justo
+              gravida scelerisque. Mauris malesuada, libero vel varius
+              tincidunt, magna augue faucibus turpis, ut cursus velit felis in
+              arcu. Integer dictum nisl et magna porttitor, a interdum lorem
+              interdum. Aenean vel orci eu velit tristique malesuada.
+              {'\n\n'}
+              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+              posuere cubilia curae; Donec quis nibh sed libero volutpat
+              eleifend. Morbi non mauris eget purus vulputate consequat.
+              Suspendisse potenti. Proin sit amet sem nec justo pharetra
+              vehicula vel eu dolor.
             </Text>
           </ScrollView>
         </View>
-        <Text style={styles.link} onPress={() => router.back()}>Voltar</Text>
+        <Text style={styles.link} onPress={() => router.back()}>
+          Voltar
+        </Text>
       </View>
     </ImageBackground>
   );
@@ -80,5 +98,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textDecorationLine: 'underline',
     fontWeight: 'bold',
-  }
+  },
 });

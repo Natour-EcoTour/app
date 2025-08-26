@@ -1,4 +1,3 @@
-import React from 'react';
 import { TextInput, StyleSheet, View } from 'react-native';
 
 interface PasswordFormProps {
@@ -7,7 +6,11 @@ interface PasswordFormProps {
   onChangePassword: (text: string) => void;
 }
 
-export default function PasswordForm({ password, placeholder, onChangePassword }: PasswordFormProps) {
+export default function PasswordForm({
+  password,
+  placeholder,
+  onChangePassword,
+}: PasswordFormProps) {
   return (
     <View style={styles.container}>
       <TextInput

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerPointSchema } from '@/src/validations/validationSchema';
+import { registerPointSchema } from '@/src/validations/pointSchema';
 import Toast from 'react-native-toast-message';
 
-import NameInput from '../../../components/NameInput';
+import NameInput from '@/components/NameInput';
 import DescriptionInput from '@/src/components/DescriptionInput';
 import AddressInput from '@/src/components/AddressInput';
 import TimeInput from '@/src/components/TimeInput';
@@ -15,12 +15,15 @@ import CustomModal from '@/src/components/CustomModal';
 import AddPointMidia from '@/src/components/AddPointMidia';
 import { Picker } from '@react-native-picker/picker';
 
-
 export default function AddPoint() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(registerPointSchema),
     defaultValues: {
       name: 'aaa',
@@ -62,7 +65,9 @@ export default function AddPoint() {
                 onChange={onChange}
                 value={value}
               />
-              {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
+              {errors.name && (
+                <Text style={styles.error}>{errors.name.message}</Text>
+              )}
             </>
           )}
         />
@@ -79,7 +84,9 @@ export default function AddPoint() {
                 onChange={onChange}
                 value={value}
               />
-              {errors.description && <Text style={styles.error}>{errors.description.message}</Text>}
+              {errors.description && (
+                <Text style={styles.error}>{errors.description.message}</Text>
+              )}
             </>
           )}
         />
@@ -110,7 +117,7 @@ export default function AddPoint() {
             <View style={styles.pickerWrapper}>
               <Picker
                 selectedValue={value}
-                onValueChange={(itemValue) => onChange(itemValue)}
+                onValueChange={itemValue => onChange(itemValue)}
                 style={styles.picker}
               >
                 <Picker.Item label="Trilha" value="trilha" />
@@ -118,7 +125,9 @@ export default function AddPoint() {
                 <Picker.Item label="Parque" value="parque" />
                 <Picker.Item label="Sítio" value="sitio" />
               </Picker>
-              {errors.type && <Text style={styles.error}>{errors.type.message}</Text>}
+              {errors.type && (
+                <Text style={styles.error}>{errors.type.message}</Text>
+              )}
             </View>
           )}
         />
@@ -136,7 +145,9 @@ export default function AddPoint() {
                 onChange={onChange}
                 value={value ?? ''}
               />
-              {errors.link && <Text style={styles.error}>{errors.link.message}</Text>}
+              {errors.link && (
+                <Text style={styles.error}>{errors.link.message}</Text>
+              )}
             </>
           )}
         />
@@ -175,7 +186,7 @@ export default function AddPoint() {
 
         <RegisterPointButton
           text="Cadastrar ponto"
-          onPress={handleSubmit((data) => {
+          onPress={handleSubmit(data => {
             if (selectedImages.length === 0) {
               Toast.show({
                 type: 'error',

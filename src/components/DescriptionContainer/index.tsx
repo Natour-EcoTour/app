@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 interface DescriptionProps {
   description: string;
 }
 
-export default function DescriptionContainer( { description }: DescriptionProps ) {
-
+export default function DescriptionContainer({
+  description,
+}: DescriptionProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.description}>{description}</Text>
@@ -28,5 +28,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     textAlign: 'center',
-  }
+  },
 });

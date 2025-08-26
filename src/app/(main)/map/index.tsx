@@ -1,27 +1,26 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import MapView, { Marker, Region } from 'react-native-maps';
 import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import BottomSheet, { BottomSheetView, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
 
-import ImageModal from '../../../components/ImageModal';
-import ImageCarousel from '../../../components/ImageCarousel';
-import SearchPointInput from '../../../components/SearchPointInput';
-import customMapStyle from '../../../utils/map_style';
-import Rating from '../../../components/StarRating';
-import DescriptionContainer from '../../../components/DescriptionContainer';
-import TypeContainer from '../../../components/TypeContainer';
-import TimeContainer from '../../../components/TimeContainer';
-import AddressContainer from '../../../components/AddressContainer';
-import AddReview from '../../../components/AddReview';
+import ImageModal from '@/components/ImageModal';
+import ImageCarousel from '@/components/ImageCarousel';
+import SearchPointInput from '@/components/SearchPointInput';
+import customMapStyle from '@/utils/map_style';
+import Rating from '@/components/StarRating';
+import DescriptionContainer from '@/components/DescriptionContainer';
+import TypeContainer from '@/components/TypeContainer';
+import TimeContainer from '@/components/TimeContainer';
+import AddressContainer from '@/components/AddressContainer';
+import AddReview from '@/components/AddReview';
 import { useRouter } from 'expo-router';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const ARROW_BUTTON_WIDTH = 40; // fixed width for each arrow button
-const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32; // subtract arrow widths and container padding
+import { points } from '@/src/utils/assets';
 
 const markers = [
   {
@@ -29,46 +28,69 @@ const markers = [
     type: 'Trilha',
     title: 'Pico do urubu',
     coordinate: { latitude: -23.484787, longitude: -46.206867 },
-    icon: require('../../../../assets/points/trail_ico.png'),
+    icon: points.trail,
     images: [
-      { id: '1', image: 'https://cdn.7tv.app/emote/01HSQ3J6Q000008KXKYN01Z0CG/4x.webp' },
-      { id: '2', image: 'https://cdn.7tv.app/emote/01JR1QRQASW0P80QPTZAAB2SD6/4x.webp' },
-      { id: '3', image: 'https://cdn.7tv.app/emote/01HMFS4B8G000EC6MR9CQX9SEJ/4x.webp' },
+      {
+        id: '1',
+        image: 'https://cdn.7tv.app/emote/01HSQ3J6Q000008KXKYN01Z0CG/4x.webp',
+      },
+      {
+        id: '2',
+        image: 'https://cdn.7tv.app/emote/01JR1QRQASW0P80QPTZAAB2SD6/4x.webp',
+      },
+      {
+        id: '3',
+        image: 'https://cdn.7tv.app/emote/01HMFS4B8G000EC6MR9CQX9SEJ/4x.webp',
+      },
     ],
-    description: 'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
-    startWeekday: "Segunda",
-    endWeekday: "Domingo",
-    startTime: "08:00",
-    endTime: "18:00",
+    description:
+      'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
+    startWeekday: 'Segunda',
+    endWeekday: 'Domingo',
+    startTime: '08:00',
+    endTime: '18:00',
     cep: '64000-680',
     city: 'Teresina',
     neighborhood: 'Cabral',
     uf: 'PI',
     number: '1',
-    street: 'Rua Ghandi'
+    street: 'Rua Ghandi',
   },
   {
     id: 2,
     type: 'Sitio',
     title: 'Sítio do Seu Joaquim',
     coordinate: { latitude: -23.474011, longitude: -46.216179 },
-    icon: require('../../../../assets/points/house_ico.png'),
+    icon: points.house,
     images: [
-      { id: '1', image: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg' },
-      { id: '2', image: 'https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=600&quality=80' },
-      { id: '3', image: 'https://upload.wikimedia.org/wikipedia/commons/c/c8/Altja_j%C3%B5gi_Lahemaal.jpg' },
+      {
+        id: '1',
+        image:
+          'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg',
+      },
+      {
+        id: '2',
+        image:
+          'https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=600&quality=80',
+      },
+      {
+        id: '3',
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/c/c8/Altja_j%C3%B5gi_Lahemaal.jpg',
+      },
     ],
-    description: 'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
-    startWeekday: "Segunda",
-    endWeekday: "Domingo",
-    startTime: "08:00",
-    endTime: "18:00",
+    description:
+      'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
+    startWeekday: 'Segunda',
+    endWeekday: 'Domingo',
+    startTime: '08:00',
+    endTime: '18:00',
     cep: '64000-680',
     city: 'Teresina',
     neighborhood: 'Cabral',
     uf: 'PI',
     number: '1',
-    street: 'Rua Ghandi'
+    street: 'Rua Ghandi',
   },
 ];
 

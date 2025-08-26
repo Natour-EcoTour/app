@@ -44,6 +44,13 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="profile/changePassword/index"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

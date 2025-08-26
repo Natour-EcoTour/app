@@ -1,7 +1,12 @@
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 
-import MypointsBox from '../../../components/MyPointsBox';
+import MypointsBox from '@/components/MyPointsBox';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -78,7 +83,12 @@ export default function MyPoints() {
       <View style={styles.analiseWrapper}>
         <TouchableOpacity style={styles.analiseContainer}>
           <Ionicons name={'arrow-back'} size={20} color={'darkgreen'} />
-          <Text style={styles.analise} onPress={() => router.push('/(main)/settings')}>Voltar</Text>
+          <Text
+            style={styles.analise}
+            onPress={() => router.push('/(main)/settings')}
+          >
+            Voltar
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -93,7 +103,7 @@ export default function MyPoints() {
           </Text>
         </View>
       ) : (
-        points.map((point) => (
+        points.map(point => (
           <MypointsBox
             key={point.id}
             id={point.id}
@@ -145,7 +155,7 @@ const styles = StyleSheet.create({
   analiseContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    textAlign: 'right'
+    textAlign: 'right',
   },
   analise: {
     fontSize: 20,

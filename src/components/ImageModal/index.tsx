@@ -1,4 +1,12 @@
-import { Modal, View, Text, Image, StyleSheet, Button, Dimensions } from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Button,
+  Dimensions,
+} from 'react-native';
 import { PropsWithChildren } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
@@ -20,11 +28,7 @@ export default function ImageModal({ isVisible, imageUri, onClose }: Props) {
 
   return (
     <View>
-      <Modal
-        animationType="fade"
-        visible={isVisible}
-        transparent={true}
-      >
+      <Modal animationType="fade" visible={isVisible} transparent={true}>
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
             <View style={styles.imageContainer}>

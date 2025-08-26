@@ -30,7 +30,7 @@ export default function CpfInput({
         keyboardType="numeric"
         style={styles.input}
         value={value}
-        onChangeText={(text) => onChange(formatCpf(text))}
+        onChangeText={text => onChange(formatCpf(text))}
         maxLength={14}
       />
     </View>
