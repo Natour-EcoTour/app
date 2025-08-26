@@ -1,18 +1,21 @@
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
-export const baseURL = 'http://192.168.0.1:8000/';
+export const baseURL = 'https://api.natour.com.br/';
 
 export const loginUser = async (email: string, password: string) => {
-  try {
-    console.log(baseURL, 'CUUU');
-    const response = await axios.post(`${baseURL}users/login`, {
-      email,
-      password,
-    });
-    console.log('Login response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error logging in:', error);
-    throw error;
-  }
-};
+    try {
+        const response = await axios.post(`${baseURL}users/login/`, {
+            email,
+            password,
+        });
+        return response.data;
+    } catch (error: any) {
+        const apiError = error?.response?.data?.error || 'Ocorreu um erro. Tente novamente.';
+        Toast.show({
+            type: 'error',
+            text1: apiError,
+        });
+        throw error;
+    }
+}

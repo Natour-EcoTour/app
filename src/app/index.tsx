@@ -82,8 +82,6 @@ export default function Index() {
           style={styles.scrollView}
         >
           <View style={styles.containerBox}>
-            {/*remover isso aqui*/}
-            <Text onPress={() => router.push('/(main)/map')}>ir para outra tela</Text>
 
             <Image source={images.icon} style={styles.iconImage} />
             <Text style={styles.title}>Entre na sua conta</Text>
