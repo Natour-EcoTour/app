@@ -22,10 +22,21 @@ import PasswordInput from '@/src/components/PasswordInput';
 import SafeKeyboardAvoidingView from '@/src/components/SafeKeyboardAvoidingView';
 import { images } from '@/src/utils/assets';
 import CodeModal from '@/src/components/CodeModal/CodeModal';
+import { sendVerificationCode } from '@/services/singUp/sendVerificationCode';
+import { verifyCodeAndRegister } from '@/services/singUp/verifyCodeAndRegister';
+import { createAccount } from '@/services/singUp/createAccountService';
+
+interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  termsAccept: boolean;
+}
 
 export default function RegisterScreen() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     control,
     handleSubmit,
@@ -73,11 +84,6 @@ export default function RegisterScreen() {
     }, [saveFormData])
   );
 
-  const onSubmit = async (data: any) => {
-    console.log('Form data:', data);
-    setIsModalVisible(true);
-  };
-
   const clearFormData = async () => {
     try {
       await SecureStore.deleteItemAsync('registerFormData');
@@ -85,6 +91,20 @@ export default function RegisterScreen() {
       console.log('Form data cleared successfully');
     } catch (error) {
       console.error('Error clearing form data:', error);
+    }
+  };
+
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      setIsLoading(true);
+
+      await sendVerificationCode(data.name, data.email, data.password);
+
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error('Error sending verification code:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -239,7 +259,10 @@ export default function RegisterScreen() {
                 style={styles.button}
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text style={styles.buttonText}>Cadastrar</Text>
+                <Text
+                  style={styles.buttonText}>
+                  {isLoading ? 'Carregando...' : 'Cadastrar'}
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -265,8 +288,24 @@ export default function RegisterScreen() {
               subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
               onCodeSubmit={async (code) => {
                 console.log('Código recebido:', code);
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                await clearFormData();
+                const formData = getValues();
+
+                try {
+                  await verifyCodeAndRegister(formData.email, code);
+
+                  await createAccount(
+                    formData.name,
+                    formData.email,
+                    formData.password
+                  );
+
+                  await clearFormData();
+
+
+                } catch (error) {
+                  console.error('Registration error:', error);
+                  throw error;
+                }
               }}
             />
           )}

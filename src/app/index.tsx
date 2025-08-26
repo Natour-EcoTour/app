@@ -15,7 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/src/validations/loginSchema';
 import { images } from '@/utils/assets';
 
-import { loginUser } from '@/services/authService';
+import { loginUser } from '@/services/auth/authService';
 import * as SecureStore from 'expo-secure-store';
 
 import PasswordInput from '@/components/PasswordInput';

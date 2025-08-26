@@ -36,16 +36,6 @@ export default function CodeModal({
     const [isLoading, setIsLoading] = useState(false);
 
     const handleValidateCode = async () => {
-        if (code.length !== 6) {
-            Toast.show({
-                type: 'error',
-                text1: 'Erro',
-                text2: 'Por favor, digite um código de 6 dígitos',
-                position: 'top',
-            });
-            return;
-        }
-
         setIsLoading(true);
 
         try {
@@ -65,12 +55,7 @@ export default function CodeModal({
                 router.push(route);
             });
         } catch (error) {
-            Toast.show({
-                type: 'error',
-                text1: 'Erro',
-                text2: 'Código inválido. Tente novamente.',
-                position: 'top',
-            });
+            console.log('Error validating code:', error);
         } finally {
             setIsLoading(false);
         }
@@ -97,10 +82,10 @@ export default function CodeModal({
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.input}
-                                placeholder="000000"
+                                placeholder="00000"
                                 value={code}
                                 onChangeText={setCode}
-                                maxLength={6}
+                                maxLength={5}
                                 textAlign="center"
                                 placeholderTextColor="#999"
                                 autoFocus={true}
@@ -112,7 +97,7 @@ export default function CodeModal({
                         <TouchableOpacity
                             onPress={handleValidateCode}
                             style={[styles.validateButton, isLoading && styles.validateButtonDisabled]}
-                            disabled={isLoading || code.length !== 6}
+                            disabled={isLoading || code.length !== 5}
                         >
                             <Text style={styles.validateButtonText}>
                                 {isLoading ? 'Validando...' : 'Validar Código'}
