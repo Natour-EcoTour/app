@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { useForm, Controller, FieldValues } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerSchema } from '@/src/validations/registerSchema';
+import { profileSchema } from '@/src/validations/profileSchema';
 import Toast from 'react-native-toast-message';
 
 import Fullnamelnput from '@/src/components/NameInput';
@@ -20,16 +20,18 @@ import { images } from '@/src/utils/assets';
 import { useRouter } from 'expo-router';
 import { myInfo } from '@/services/user/myInfoService';
 import { deleteUser } from '@/services/user/deleteUserService';
+import { updateUser } from '@/services/user/updateUserService';
+import { uploadPhoto, updatePhoto } from '@/services/photos/photoService';
+import { displayValidationErrors, getExactError } from '@/src/utils/errorHandling';
+import { getPhotoId } from '@/services/photos/photoIdService';
 
 type ProfileFormData = {
   name: string;
   email: string;
-  password: string;
-  confirmPassword: string;
-  termsAccept: boolean;
 };
 
 type UserInfo = {
+  id: number;
   email: string;
   photo: string | null;
   username: string;
@@ -56,13 +58,14 @@ export default function Profile() {
     setValue,
     formState: { errors },
   } = useForm<ProfileFormData>({
-    resolver: yupResolver(registerSchema),
+    resolver: yupResolver(profileSchema),
     defaultValues: {
       name: '',
       email: '',
     }
   }) as any;
 
+  // IMAGE PICKER
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -75,12 +78,12 @@ export default function Profile() {
     }
   };
 
+  // CARREGA INFORMAÇÕES
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         setIsLoading(true);
         const userInfo = await myInfo();
-        console.log('User info:', userInfo);
 
         setUserInfo(userInfo);
 
@@ -89,6 +92,7 @@ export default function Profile() {
 
         if (userInfo.photo) {
           setSelectedImage(userInfo.photo);
+        } else {
         }
 
       } catch (error) {
@@ -101,19 +105,85 @@ export default function Profile() {
     fetchUserInfo();
   }, [setValue]);
 
-  const onSubmit = (data: any) => {
-    console.log('Form data:', data);
-    setIsSaveSuccessModalVisible(true);
+  // EDITAR NOME E FOTO
+  const onSubmit = async (data: any) => {
+    try {
+      setIsLoading(true);
+
+      // Update user name
+      await updateUser(data.name);
+
+      // Handle photo upload if a new image was selected
+      if (selectedImage && selectedImage !== userInfo?.photo) {
+        await handleImage();
+      }
+
+      setIsSaveSuccessModalVisible(true);
+      setIsEditable(false);
+
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+
+      // Enhanced error logging for debugging
+      if (error.response) {
+        console.error('Error response status:', error.response.status);
+        console.error('Error response data:', error.response.data);
+        console.error('Error response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
+
+      // Log the exact error structure for debugging
+      if (error.isValidationError && error.data) {
+        displayValidationErrors(error.data, 'Erro ao atualizar perfil');
+
+      } else if (error.isNetworkError) {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro de conexão',
+          text2: 'Verifique sua conexão com a internet',
+        });
+      } else if (error.isUnauthorized) {
+        Toast.show({
+          type: 'error',
+          text1: 'Sessão expirada',
+          text2: 'Faça login novamente',
+        });
+      } else {
+        const errorMessage = error.response?.data?.message ||
+          error.response?.data?.error ||
+          error.message ||
+          'Erro desconhecido';
+
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao atualizar perfil',
+          text2: `Status: ${error.response?.status || 'N/A'} - ${errorMessage}`,
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // GUARDAR INFOS PRE EDIÇÃO
+  const handleEditToggle = () => {
+    if (isEditable && userInfo) {
+      setValue('name', userInfo.username || '');
+      setValue('email', userInfo.email || '');
+    }
+    setIsEditable(prev => !prev);
+  };
+
+  // APAGAR CONTA
   const handleConfirmDelete = async () => {
     setIsConfirmationVisible(false);
     setIsLoading(true);
 
     try {
-      console.log('deletando')
       await deleteUser();
-      console.log('deletado')
       setIsModalVisible(true);
       router.replace('/');
     } catch (error: any) {
@@ -129,6 +199,46 @@ export default function Profile() {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // IMAGE HANDLING
+  const handleImage = async () => {
+    if (!selectedImage || !userInfo) {
+      throw new Error('Nenhuma imagem selecionada ou informações do usuário não carregadas');
+    }
+
+    try {
+      if (userInfo.photo) {
+        const photoData = await getPhotoId(userInfo.id);
+        let photoId;
+
+        if (Array.isArray(photoData)) {
+          if (photoData.length > 0) {
+            photoId = photoData[0].id;
+          } else {
+            throw new Error('No photos found for user');
+          }
+        } else if (photoData && photoData.id) {
+          photoId = photoData.id;
+        } else if (photoData && typeof photoData === 'number') {
+          photoId = photoData;
+        } else {
+          console.error('Unexpected photo data format:', photoData);
+          throw new Error('Could not find photo ID in response');
+        }
+
+        console.log('Updating existing photo with ID:', photoId);
+        await updatePhoto('users', userInfo.id, photoId, selectedImage);
+      } else {
+        console.log('Uploading new photo...');
+        await uploadPhoto('users', userInfo.id, selectedImage);
+      }
+      const updatedUserInfo = await myInfo();
+      setUserInfo(updatedUserInfo);
+    } catch (error) {
+      console.error('Photo upload/update failed:', error);
+      throw error;
     }
   };
 
@@ -173,9 +283,9 @@ export default function Profile() {
             render={({ field: { onChange, onBlur, value } }) => (
               <>
                 <Fullnamelnput
-                  label="Nome completo"
+                  label="Nome"
                   editable={isEditable}
-                  placeholder="Digite o seu nome completo"
+                  placeholder="Digite o seu nome"
                   onChange={onChange}
                   value={value}
                 />
@@ -219,7 +329,7 @@ export default function Profile() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setIsEditable(prev => !prev)}
+            onPress={handleEditToggle}
           >
             <Text style={styles.buttonText}>
               {isEditable ? 'Cancelar' : 'Editar perfil'}
@@ -255,16 +365,6 @@ export default function Profile() {
             onConfirm={handleConfirmDelete}
             title="Tem certeza que deseja apagar sua conta?"
             imagePath="warning"
-          />
-        )}
-
-        {isModalVisible && (
-          <CustomModal
-            isVisible={isModalVisible}
-            onClose={() => setIsModalVisible(false)}
-            route="../../"
-            title="Conta apagada com sucesso!"
-            imagePath="check"
           />
         )}
 

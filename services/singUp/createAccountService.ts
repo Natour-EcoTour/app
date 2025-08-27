@@ -1,5 +1,5 @@
 import axios from "axios";
-import Toast from "react-native-toast-message";
+import { handleApiError } from '@/src/utils/errorHandling';
 
 export const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -12,12 +12,8 @@ export const createAccount = async (username: string, email: string, password: s
         });
         return response.data;
     } catch (error: any) {
-        const apiError = error?.response?.data?.error;
-        console.error('Create account error:', error);
-        Toast.show({
-            type: "error",
-            text1: apiError,
-        });
-        throw error;
+        const apiError = handleApiError(error);
+        console.error('Create account error:', apiError);
+        throw apiError;
     }
 }
