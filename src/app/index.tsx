@@ -64,7 +64,8 @@ export default function Index() {
       await SecureStore.setItemAsync('access', access);
       await SecureStore.setItemAsync('refresh', refresh);
 
-      // console.log('User logged in successfully:', access);
+      setIsLoading(false);
+
       setIsModalVisible(true);
     } catch (error) {
       setIsLoading(false);

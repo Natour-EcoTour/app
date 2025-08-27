@@ -1,9 +1,10 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { useForm, Controller, FieldValues } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '@/src/validations/registerSchema';
+import Toast from 'react-native-toast-message';
 
 import Fullnamelnput from '@/src/components/NameInput';
 import EmailInput from '@/src/components/EmailInput';
@@ -17,6 +18,8 @@ import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
 import { Ionicons } from '@expo/vector-icons';
 import { images } from '@/src/utils/assets';
 import { useRouter } from 'expo-router';
+import { myInfo } from '@/services/user/myInfoService';
+import { deleteUser } from '@/services/user/deleteUserService';
 
 type ProfileFormData = {
   name: string;
@@ -24,6 +27,12 @@ type ProfileFormData = {
   password: string;
   confirmPassword: string;
   termsAccept: boolean;
+};
+
+type UserInfo = {
+  email: string;
+  photo: string | null;
+  username: string;
 };
 
 export default function Profile() {
@@ -38,6 +47,22 @@ export default function Profile() {
   const [isSaveSuccessModalVisible, setIsSaveSuccessModalVisible] =
     useState<boolean>(false);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<ProfileFormData>({
+    resolver: yupResolver(registerSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+    }
+  }) as any;
+
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -50,39 +75,73 @@ export default function Profile() {
     }
   };
 
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<ProfileFormData>({
-    resolver: yupResolver(registerSchema),
-    defaultValues: {
-      name: 'Vitor Antunes Ferreira',
-      email: 'vitinho@gmail.com',
-      password: 'Aa12345678!',
-      confirmPassword: 'Aa12345678!',
-      termsAccept: true,
-    },
-  }) as any;
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        setIsLoading(true);
+        const userInfo = await myInfo();
+        console.log('User info:', userInfo);
+
+        setUserInfo(userInfo);
+
+        setValue('name', userInfo.username || '');
+        setValue('email', userInfo.email || '');
+
+        if (userInfo.photo) {
+          setSelectedImage(userInfo.photo);
+        }
+
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, [setValue]);
 
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
     setIsSaveSuccessModalVisible(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     setIsConfirmationVisible(false);
-    setIsModalVisible(true);
+    console.log('Deleting user...');
+
+    try {
+      await deleteUser();
+      console.log('User deleted successfully');
+      router.push('/');
+
+    } catch (error: any) {
+      console.log('Error deleting user:', error);
+
+      if (error.isNetworkError || error.isUnauthorized) {
+        router.push('/');
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao deletar conta',
+          text2: 'Tente novamente mais tarde',
+        });
+      }
+    }
   };
 
   return (
     <GestureHandlerRootView>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.container}
       >
         <Text style={styles.title}>Perfil</Text>
+
+        {isLoading && (
+          <Text style={styles.loadingText}>Carregando informações...</Text>
+        )}
 
         {isEditable && (
           <Text style={styles.infoText}>
@@ -94,7 +153,13 @@ export default function Profile() {
           disabled={!isEditable}
         >
           <Image
-            source={selectedImage ? { uri: selectedImage } : images.noPfp}
+            source={
+              selectedImage
+                ? { uri: selectedImage }
+                : userInfo?.photo
+                  ? { uri: userInfo.photo }
+                  : images.noPfp
+            }
             style={styles.image}
           />
         </TouchableOpacity>
@@ -317,5 +382,11 @@ const styles = StyleSheet.create({
   },
   infoText: {
     textAlign: 'center',
+  },
+  loadingText: {
+    color: '#000000ff',
+    textAlign: 'center',
+    marginBottom: 20,
+    fontSize: 15,
   },
 });

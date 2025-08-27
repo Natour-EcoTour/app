@@ -10,7 +10,7 @@ import {
 import { router, useFocusEffect } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 
-import { Checkbox } from 'react-native-paper';
+import { ActivityIndicator, Checkbox } from 'react-native-paper';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -259,6 +259,11 @@ export default function RegisterScreen() {
                 style={styles.button}
                 onPress={handleSubmit(onSubmit)}
               >
+                {isLoading &&
+                  <ActivityIndicator
+                    size="small"
+                    color="#ffffffff"
+                  />}
                 <Text
                   style={styles.buttonText}>
                   {isLoading ? 'Carregando...' : 'Cadastrar'}
