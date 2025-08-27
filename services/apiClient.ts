@@ -10,20 +10,20 @@ export const apiClient = axios.create({
 
 
 apiClient.interceptors.request.use(
-    async (config) => {
-        const accessToken = await SecureStore.getItemAsync('access');
-
-        if (accessToken) {
-            config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-
-        config.headers['Content-Type'] = 'application/json';
-
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+  async (config) => {
+    const accessToken = await SecureStore.getItemAsync('access');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
+
+    // Set Content-Type only if you are actually sending a body
+    if (config.data !== undefined && !config.headers['Content-Type']) {
+      config.headers['Content-Type'] = 'application/json';
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
 apiClient.interceptors.response.use(

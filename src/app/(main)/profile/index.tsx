@@ -108,18 +108,18 @@ export default function Profile() {
 
   const handleConfirmDelete = async () => {
     setIsConfirmationVisible(false);
-    console.log('Deleting user...');
+    setIsLoading(true);
 
     try {
+      console.log('deletando')
       await deleteUser();
-      console.log('User deleted successfully');
-      router.push('/');
-
+      console.log('deletado')
+      setIsModalVisible(true);
+      router.replace('/');
     } catch (error: any) {
-      console.log('Error deleting user:', error);
-
       if (error.isNetworkError || error.isUnauthorized) {
-        router.push('/');
+        router.replace('/');
+        console.log('erro de network')
       } else {
         Toast.show({
           type: 'error',
@@ -127,6 +127,8 @@ export default function Profile() {
           text2: 'Tente novamente mais tarde',
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
