@@ -7,78 +7,30 @@ import {
 
 import MypointsBox from '@/components/MyPointsBox';
 import { router } from 'expo-router';
-
-// interface Point {
-//   id: number;
-//   pointName: string;
-//   pointStatus: boolean;
-//   starTime: string;
-//   closeTime: string;
-//   views: number;
-//   review: number;
-// }
+import { useEffect, useState } from 'react';
+import { getMyPoints } from '@/services/points/getMyPointsService';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function PendingPoints() {
-  const points = [
-    {
-      id: 1,
-      pointName: 'a',
-      pointStatus: 'Em análise',
-      starTime: '09:00',
-      closeTime: '18:00',
-      views: 350,
-      review: 5,
-    },
-    {
-      id: 2,
-      pointName: 'Parque dos Fabianos',
-      pointStatus: 'Em análise',
-      starTime: '10:00',
-      closeTime: '11:00',
-      views: 0,
-      review: 0,
-    },
-    {
-      id: 3,
-      pointName: 'Lagoa do Coração',
-      pointStatus: 'Em análise',
-      starTime: '07:30',
-      closeTime: '17:45',
-      views: 120,
-      review: 4,
-    },
-    {
-      id: 4,
-      pointName: 'Parque dos Flamingos',
-      pointStatus: 'Em análise',
-      starTime: '09:00',
-      closeTime: '18:00',
-      views: 350,
-      review: 5,
-    },
-    {
-      id: 5,
-      pointName: 'Parque dos Fabianos',
-      pointStatus: 'Em análise',
-      starTime: '10:00',
-      closeTime: '11:00',
-      views: 0,
-      review: 0,
-    },
-    {
-      id: 6,
-      pointName: 'Lagoa do Coração',
-      pointStatus: 'Em análise',
-      starTime: '07:30',
-      closeTime: '17:45',
-      views: 120,
-      review: 4,
-    },
-  ];
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [points, setPoints] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPoints = async () => {
+      setIsLoading(true);
+      const data = await getMyPoints({ status: 'null' });
+      setPoints(data?.points || []);
+      setIsLoading(false);
+    };
+
+    fetchPoints();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {points.length === 0 ? (
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#00672e" />
+      ) : points.length === 0 ? (
         <View>
           <Text style={styles.emptyText}>Nenhum ponto cadastrado</Text>
           <Text
@@ -93,12 +45,12 @@ export default function PendingPoints() {
           <MypointsBox
             key={point.id}
             id={point.id}
-            pointName={point.pointName}
-            pointStatus={point.pointStatus}
-            starTime={point.starTime}
-            closeTime={point.closeTime}
+            pointName={point.name}
+            pointStatus={'null'}
+            starTime={point.open_time}
+            closeTime={point.close_time}
             views={point.views}
-            review={point.review}
+            rating={point.avg_rating}
             screen="pendingPoints"
           />
         ))

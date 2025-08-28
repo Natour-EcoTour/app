@@ -31,6 +31,7 @@ interface LoginFormData {
   rememberMe: boolean;
 }
 
+// TODO SE O USER JA TIVER TOKEN ELE DEVE IR DIRETO PARA A TELA DO MAPA
 export default function Index() {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
