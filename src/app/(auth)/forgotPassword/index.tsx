@@ -29,10 +29,10 @@ export default function forgotPassword() {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     setIsLoading(true);
     console.log('Form data:', data.email);
-    sendForgotPasswordCode(data.email);
+    await sendForgotPasswordCode(data.email);
     setIsModalVisible(true);
   };
 

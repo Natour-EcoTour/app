@@ -1,36 +1,49 @@
+import { changeUserPassword } from '@/services/user/changePasswordService';
 import CustomModal from '@/src/components/CustomModal';
 import PasswordInput from '@/src/components/PasswordInput';
 import { images } from '@/src/utils/assets';
+import { displayValidationErrors } from '@/src/utils/errorHandling';
 import { newPasswordSchema } from '@/src/validations/newPasswordSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
-import { Controller, useForm, FieldValues } from 'react-hook-form';
+import { use, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { View, StyleSheet, Text, ImageBackground, Alert, TouchableOpacity } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 interface FormData {
     currentPassword: string;
     newPassword: string;
-    confirmPassword?: string;
+    confirmPassword: string;
 }
 
 export default function changePassword() {
     const [modalVisible, setModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const {
         control,
         handleSubmit,
         formState: { errors },
     } = useForm<FormData>({
-        resolver: yupResolver(newPasswordSchema),
-        defaultValues: {
-            currentPassword: '',
-            newPassword: '',
-            confirmPassword: '',
-        }
+        resolver: yupResolver(newPasswordSchema)
     });
 
-    const onSubmit = (data: FormData) => {
+    const onSubmit = async (data: FormData) => {
         console.log('Password change data:', data);
-        setModalVisible(true);
+        try {
+            setIsLoading(true);
+            await changeUserPassword(
+                data.currentPassword,
+                data.newPassword,
+                data.confirmPassword
+            );
+            setModalVisible(true);
+            setIsLoading(false);
+        } catch (error: any) {
+            if (error.isValidationError && error.data) {
+                displayValidationErrors(error.data, 'Erro ao alterar senha');
+            }
+        }
     };
 
     return (
@@ -104,7 +117,16 @@ export default function changePassword() {
                     style={styles.submitButton}
                     onPress={handleSubmit(onSubmit as any)}
                 >
-                    <Text style={styles.submitButtonText}>Alterar Senha</Text>
+                    {isLoading &&
+                        <ActivityIndicator
+                            size="small"
+                            color="#ffffffff"
+                            style={{ marginRight: 8 }}
+                        />
+                    }
+                    <Text style={styles.submitButtonText}>
+                        {isLoading ? 'Carregando...' : 'Alterar Senha'}
+                    </Text>
                 </TouchableOpacity>
 
                 <CustomModal

@@ -9,5 +9,5 @@ export const newPasswordSchema = yup.object().shape({
             /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
             'A senha deve ter pelo menos:\n8 caracteres\n1 letra maiúscula\n1 caractere especial'
         ),
-    confirmPassword: yup.string().oneOf([yup.ref('newPassword')], 'As senhas devem corresponder'),
+    confirmPassword: yup.string().oneOf([yup.ref('newPassword')], 'As senhas devem corresponder').required(),
 });
