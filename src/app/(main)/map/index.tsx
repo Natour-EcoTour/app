@@ -1,9 +1,9 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import MapView, { Marker, Region } from 'react-native-maps';
-import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Dimensions, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, {
   BottomSheetScrollView,
@@ -21,84 +21,18 @@ import AddressContainer from '@/components/AddressContainer';
 import AddReview from '@/components/AddReview';
 import { useRouter } from 'expo-router';
 import { points } from '@/src/utils/assets';
+import { mapPoints } from '@/services/map/mapPoints';
+import { mapPointDetails } from '@/services/map/mapPointDetailsService';
+import { addView } from '@/services/map/addViewService';
 
-const markers = [
-  {
-    id: 1,
-    type: 'Trilha',
-    title: 'Pico do urubu',
-    coordinate: { latitude: -23.484787, longitude: -46.206867 },
-    icon: points.trail,
-    images: [
-      {
-        id: '1',
-        image: 'https://cdn.7tv.app/emote/01HSQ3J6Q000008KXKYN01Z0CG/4x.webp',
-      },
-      {
-        id: '2',
-        image: 'https://cdn.7tv.app/emote/01JR1QRQASW0P80QPTZAAB2SD6/4x.webp',
-      },
-      {
-        id: '3',
-        image: 'https://cdn.7tv.app/emote/01HMFS4B8G000EC6MR9CQX9SEJ/4x.webp',
-      },
-    ],
-    description:
-      'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
-    startWeekday: 'Segunda',
-    endWeekday: 'Domingo',
-    startTime: '08:00',
-    endTime: '18:00',
-    cep: '64000-680',
-    city: 'Teresina',
-    neighborhood: 'Cabral',
-    uf: 'PI',
-    number: '1',
-    street: 'Rua Ghandi',
-  },
-  {
-    id: 2,
-    type: 'Sitio',
-    title: 'Sítio do Seu Joaquim',
-    coordinate: { latitude: -23.474011, longitude: -46.216179 },
-    icon: points.house,
-    images: [
-      {
-        id: '1',
-        image:
-          'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg',
-      },
-      {
-        id: '2',
-        image:
-          'https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=600&quality=80',
-      },
-      {
-        id: '3',
-        image:
-          'https://upload.wikimedia.org/wikipedia/commons/c/c8/Altja_j%C3%B5gi_Lahemaal.jpg',
-      },
-    ],
-    description:
-      'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
-    startWeekday: 'Segunda',
-    endWeekday: 'Domingo',
-    startTime: '08:00',
-    endTime: '18:00',
-    cep: '64000-680',
-    city: 'Teresina',
-    neighborhood: 'Cabral',
-    uf: 'PI',
-    number: '1',
-    street: 'Rua Ghandi',
-  },
-];
 
 export default function Map() {
   const router = useRouter();
+  const [markers, setMarkers] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const flatListRef = useRef<FlatList>(null);
@@ -107,7 +41,7 @@ export default function Map() {
   const [searchText, setSearchText] = useState('');
 
   const DEFAULT_REGION = {
-    latitude: -23.484787, // or your preferred default
+    latitude: -23.484787,
     longitude: -46.206867,
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
@@ -115,6 +49,43 @@ export default function Map() {
 
   const [region, setRegion] = useState<Region>(DEFAULT_REGION);
   const [loading, setLoading] = useState(true);
+
+  const getIconForPointType = (pointType: string) => {
+    const iconMap: { [key: string]: any } = {
+      'water_fall': points.waterfall,
+      'park': points.park,
+      'house': points.house,
+      'shop': points.shop,
+      'trail': points.trail,
+    };
+    return iconMap[pointType] || points.marker;
+  };
+
+  const fetchPoints = async () => {
+    setLoading(true);
+    const data = await mapPoints();
+
+    const transformedMarkers = data?.map((point: any) => ({
+      id: point.id,
+      coordinate: {
+        latitude: point.latitude,
+        longitude: point.longitude,
+      },
+      title: point.name,
+      type: point.point_type,
+      icon: getIconForPointType(point.point_type),
+      city: point.city,
+      neighborhood: point.neighborhood,
+      state: point.state,
+    })) || [];
+
+    setMarkers(transformedMarkers);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPoints();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -140,12 +111,46 @@ export default function Map() {
     }, [])
   );
 
-  const handleMarkerPress = (marker: any) => {
+  const handleMarkerPress = async (marker: any) => {
+
     setSelectedMarker(marker);
     setCurrentImageIndex(0);
+    setLoadingDetails(true);
     bottomSheetRef.current?.snapToIndex(1);
     flatListRef.current?.scrollToIndex({ index: 0, animated: false });
-  }
+
+    try {
+      const detailedData = await mapPointDetails(marker.id);
+
+      const detailedMarker = {
+        ...marker,
+        description: detailedData.description || 'Sem descrição disponível',
+        rating: detailedData.avg_rating || 0,
+        views: detailedData.views || 0,
+        isActive: detailedData.is_active,
+        link: detailedData.link,
+        cep: detailedData.zip_code,
+        uf: detailedData.state,
+        number: detailedData.number,
+        street: detailedData.street,
+        images: detailedData.photos?.map((url: string, index: number) => ({
+          id: `${marker.id}-${index}`,
+          image: url
+        })) || [],
+        startWeekday: 'Segunda', // TODO MUDAR AQUI PARA PEGAR OS DIAS DA SEMANA CORRETOS
+        endWeekday: 'Domingo',
+        startTime: detailedData.open_time?.slice(0, 5),
+        endTime: detailedData.close_time?.slice(0, 5),
+      };
+
+      setSelectedMarker(detailedMarker);
+      await addView(marker.id);
+    } catch (error) {
+      console.error('Error fetching point details:', error);
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -197,41 +202,50 @@ export default function Map() {
             {selectedMarker ? (
               <>
                 <TypeContainer type={selectedMarker.type} />
-
                 <Text style={styles.title}>{selectedMarker.title}</Text>
-                <ImageCarousel
-                  images={selectedMarker.images}
-                  currentIndex={currentImageIndex}
-                  setCurrentIndex={setCurrentImageIndex}
-                  onImagePress={(item) => {
-                    setIsModalVisible(true);
-                  }}
-                />
 
-                <Rating />
+                {loadingDetails ? (
+                  <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#00672e" />
+                    <Text style={styles.loadingText}>Carregando detalhes...</Text>
+                  </View>
+                ) : (
+                  <>
+                    <ImageCarousel
+                      images={selectedMarker.images}
+                      currentIndex={currentImageIndex}
+                      setCurrentIndex={setCurrentImageIndex}
+                      onImagePress={(item) => {
+                        setIsModalVisible(true);
+                      }}
+                    />
 
-                <Text style={styles.title}>Descrição</Text>
-                <DescriptionContainer description={selectedMarker.description} />
+                    <Rating rating={selectedMarker.rating || 0} />
 
-                <Text style={styles.title}>Horários</Text>
-                <TimeContainer
-                  startWeekday={selectedMarker.startWeekday}
-                  endWeekday={selectedMarker.endWeekday}
-                  startTime={selectedMarker.startTime}
-                  endTime={selectedMarker.endTime}
-                />
+                    <Text style={styles.title}>Descrição</Text>
+                    <DescriptionContainer description={selectedMarker.description} />
 
-                <Text style={styles.title}>Endereço</Text>
-                <AddressContainer
-                  cep={selectedMarker.cep}
-                  city={selectedMarker.city}
-                  neighborhood={selectedMarker.neighborhood}
-                  uf={selectedMarker.uf}
-                  number={selectedMarker.number}
-                  street={selectedMarker.street}
-                />
+                    <Text style={styles.title}>Horários</Text>
+                    <TimeContainer
+                      startWeekday={selectedMarker.startWeekday}
+                      endWeekday={selectedMarker.endWeekday}
+                      startTime={selectedMarker.startTime}
+                      endTime={selectedMarker.endTime}
+                    />
 
-                <AddReview />
+                    <Text style={styles.title}>Endereço</Text>
+                    <AddressContainer
+                      cep={selectedMarker.cep}
+                      city={selectedMarker.city}
+                      neighborhood={selectedMarker.neighborhood}
+                      uf={selectedMarker.uf}
+                      number={selectedMarker.number}
+                      street={selectedMarker.street}
+                    />
+
+                    <AddReview />
+                  </>
+                )}
               </>
             ) : (
               <Text style={styles.title}>Selecione um ponto no mapa</Text>
@@ -289,5 +303,15 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     alignSelf: 'center',
     marginVertical: 10,
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
   },
 });

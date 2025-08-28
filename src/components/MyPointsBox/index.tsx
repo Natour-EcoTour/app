@@ -5,7 +5,7 @@ import {
   Modal,
   Dimensions,
 } from 'react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

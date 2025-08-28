@@ -262,7 +262,7 @@ export default function RegisterScreen() {
                 {isLoading &&
                   <ActivityIndicator
                     size="small"
-                    color="#ffffffff"
+                    color="#00672e"
                   />}
                 <Text
                   style={styles.buttonText}>

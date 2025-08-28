@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import {
   Text,

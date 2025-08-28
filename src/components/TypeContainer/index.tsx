@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 interface TypeProps {
   type: string;
 }
 
+const getTranslatedType = (type: string): string => {
+  const typeTranslations: { [key: string]: string } = {
+    'trail': 'Trilha',
+    'water_fall': 'Cachoeira',
+    'park': 'Parque',
+    'farm': 'Fazenda',
+    'other': 'Outro',
+    'house': 'Casa',
+    'shop': 'Loja',
+  };
+  
+  return typeTranslations[type] || type;
+};
+
 export default function TypeContainer({ type }: TypeProps) {
+  const translatedType = getTranslatedType(type);
+  
   return (
     <View style={styles.container}>
-      <Text style={styles.type}>{type}</Text>
+      <Text style={styles.type}>{translatedType}</Text>
     </View>
   );
 }

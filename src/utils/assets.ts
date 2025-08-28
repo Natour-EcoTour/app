@@ -20,15 +20,11 @@ export const icons = {
 
 export const points = {
   house: require('@/assets/points/house_ico.png'),
-  houseSvg: require('@/assets/points/house_ico.svg'),
   marker: require('@/assets/points/marker_ico.png'),
-  markerSvg: require('@/assets/points/marker.svg'),
   park: require('@/assets/points/park_ico.png'),
-  parkSvg: require('@/assets/points/park_ico.svg'),
   shop: require('@/assets/points/shop_ico.png'),
-  shopSvg: require('@/assets/points/shop_ico.svg'),
   trail: require('@/assets/points/trail_ico.png'),
-  trailSvg: require('@/assets/points/trail_ico.svg'),
+  waterfall: require('@/assets/points/waterfall_ico.png'),
 };
 
 export const fonts = {

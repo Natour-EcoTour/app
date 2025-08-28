@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 interface TimeProps {
@@ -20,7 +19,7 @@ export default function TimeContainer({
         {startWeekday} - {endWeekday}
       </Text>
       <Text>
-        {startTime} - {endTime}
+        {startTime?.slice(0, 5) || ''} - {endTime?.slice(0, 5) || ''}
       </Text>
     </View>
   );
