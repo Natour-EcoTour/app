@@ -46,9 +46,9 @@ export default function MyPoints() {
             Voltar
           </Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Meus Pontos: {points.length}</Text>
-      </View>
 
+      </View>
+      <Text style={styles.title}>Meus Pontos: {points.length}</Text>
       {isLoading ? (
         <ActivityIndicator size="large" color="#00672e" />
       ) : points.length === 0 ? (
@@ -67,7 +67,7 @@ export default function MyPoints() {
             key={point.id}
             id={point.id}
             pointName={point.name}
-            pointStatus={'true'}
+            pointStatus={point.is_active ? 'true' : 'false'}
             starTime={point.open_time}
             closeTime={point.close_time}
             views={point.views}
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#00672e',
     fontSize: 20,
+    marginTop: 20,
     marginBottom: 20,
     fontWeight: 'bold',
     textAlign: 'center',

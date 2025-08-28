@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -9,133 +9,91 @@ import {
   TouchableOpacity,
   Switch,
 } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import ImageCarousel from '@/src/components/ImageCarousel';
 import ImageModal from '@/src/components/ImageModal';
 import DescriptionContainer from '@/src/components/DescriptionContainer';
 import TimeContainer from '@/src/components/TimeContainer';
 import AddressContainer from '@/src/components/AddressContainer';
 import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
+import { pointDetails } from '@/services/points/pointDetailsService';
+import { changePointStatus } from '@/services/points/changePointStatusService';
 
 export default function PointDetail() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isChangingStatus, setIsChangingStatus] = useState<boolean>(false);
+  const [point, setPoint] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isActiveModalVisible, setActiveModalVisible] =
     useState<boolean>(false);
   const [pendingActive, setPendingActive] = useState<boolean | null>(null);
+  const [isActive, setIsActive] = useState<boolean>(false);
   const { id } = useLocalSearchParams();
 
-  const points = [
-    {
-      id: 1,
-      pointName: 'Parque zdos Flamingos',
-      pointStatus: true,
-      startWeekday: 'Segunda-feira',
-      endWeekday: 'Domingo',
-      startTime: '08:00',
-      endTime: '18:00',
-      views: 350,
-      review: 5,
-      images: [
-        {
-          id: '1',
-          image:
-            'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg',
-        },
-        {
-          id: '2',
-          image:
-            'https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=600&quality=80',
-        },
-        {
-          id: '3',
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/c/c8/Altja_j%C3%B5gi_Lahemaal.jpg',
-        },
-      ],
-      description:
-        'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
-      cep: '64000-680',
-      city: 'Teresina',
-      neighborhood: 'Cabral',
-      uf: 'PI',
-      number: '1',
-      street: 'Rua Ghandi',
-    },
-    {
-      id: 2,
-      pointName: 'Parque dos Fabianos',
-      pointStatus: true,
-      startWeekday: 'Segunda-feira',
-      endWeekday: 'Domingo',
-      startTime: '08:00',
-      endTime: '18:00',
-      views: 0,
-      review: 0,
-      images: [
-        {
-          id: '1',
-          image:
-            'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg',
-        },
-        {
-          id: '2',
-          image:
-            'https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=600&quality=80',
-        },
-        {
-          id: '3',
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/c/c8/Altja_j%C3%B5gi_Lahemaal.jpg',
-        },
-      ],
-      description:
-        'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
-      cep: '64000-680',
-      city: 'Teresina',
-      neighborhood: 'Cabral',
-      uf: 'PI',
-      number: '1',
-      street: 'Rua Ghandi',
-    },
-    {
-      id: 3,
-      pointName: 'Lagoa do Coração',
-      pointStatus: true,
-      startWeekday: 'Segunda-feira',
-      endWeekday: 'Domingo',
-      startTime: '08:00',
-      endTime: '18:00',
-      views: 120,
-      review: 4,
-      images: [
-        {
-          id: '1',
-          image:
-            'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg',
-        },
-        {
-          id: '2',
-          image:
-            'https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=600&quality=80',
-        },
-        {
-          id: '3',
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/c/c8/Altja_j%C3%B5gi_Lahemaal.jpg',
-        },
-      ],
-      description:
-        'Uma trilha desafiadora com vistas incríveis do pico do urubu. Ideal para caminhadas e observação da natureza.',
-      cep: '64000-680',
-      city: 'Teresina',
-      neighborhood: 'Cabral',
-      uf: 'PI',
-      number: '1',
-      street: 'Rua Ghandi',
-    },
-  ];
+  const fetchPoints = async () => {
+    setIsLoading(true);
+    const data = await pointDetails(Number(id));
 
-  const point = points.find(p => p.id === Number(id));
+    if (data && data.photos) {
+      data.images = data.photos.map((photo: string, index: number) => ({
+        id: String(index + 1),
+        image: photo,
+      }));
+    } else {
+      data.images = [];
+    }
+
+    setPoint(data);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPoints();
+  }, []);
+
+  useEffect(() => {
+    if (point) {
+      setIsActive(point?.is_active || false);
+    }
+  }, [point]);
+
+  const handleStatusChange = async (value: boolean) => {
+    if (isChangingStatus) {
+      return;
+    }
+
+    if (value) {
+      try {
+        setIsChangingStatus(true);
+        const result = await changePointStatus(Number(id));
+
+        if (result) {
+          setPoint((prevPoint: any) => ({ ...prevPoint, is_active: result.is_active }));
+        }
+
+      } catch (error) {
+        console.error('Error activating point:', error);
+      } finally {
+        setIsChangingStatus(false);
+      }
+    } else {
+      setPendingActive(false);
+      setActiveModalVisible(true);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator
+          size="large"
+          color="#00672e"
+        />
+        <Text style={styles.title}>Carregando...</Text>
+      </View>
+    );
+  }
 
   if (!point) {
     return (
@@ -144,8 +102,6 @@ export default function PointDetail() {
       </View>
     );
   }
-
-  const [isActive, setIsActive] = useState(point.pointStatus);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.analiseWrapper}>
@@ -161,12 +117,12 @@ export default function PointDetail() {
         <Switch
           trackColor={{ false: 'red', true: 'green' }}
           thumbColor={'white'}
+          disabled={isChangingStatus}
           onValueChange={value => {
             if (value) {
-              setIsActive(true);
+              handleStatusChange(true);
             } else {
-              setPendingActive(false);
-              setActiveModalVisible(true);
+              handleStatusChange(false);
             }
           }}
           value={isActive}
@@ -179,7 +135,7 @@ export default function PointDetail() {
         </Text>
       </View>
 
-      <Text style={styles.title}>{point.pointName}</Text>
+      <Text style={styles.title}>{point.name}</Text>
 
       <ImageCarousel
         images={point.images}
@@ -196,17 +152,18 @@ export default function PointDetail() {
       <Text style={styles.title}>Descrição</Text>
       <DescriptionContainer description={point.description} />
 
+      {/* TODO AJUSTAR NO BACK PARA QUE week_start E week_end SEJAM ENUM OU ALGO DO TIPO PQ TA SALVANDO COMO DATA */}
       <Text style={styles.title}>Horários</Text>
       <TimeContainer
         startWeekday={point.startWeekday}
         endWeekday={point.endWeekday}
-        startTime={point.startTime}
-        endTime={point.endTime}
+        startTime={point.open_time}
+        endTime={point.close_time}
       />
 
       <Text style={styles.title}>Endereço</Text>
       <AddressContainer
-        cep={point.cep}
+        cep={point.zip_code}
         city={point.city}
         neighborhood={point.neighborhood}
         uf={point.uf}
@@ -229,10 +186,27 @@ export default function PointDetail() {
             setPendingActive(null);
             setActiveModalVisible(false);
           }}
-          onConfirm={() => {
-            setIsActive(false);
-            setPendingActive(null);
-            setActiveModalVisible(false);
+          onConfirm={async () => {
+            if (isChangingStatus) {
+              return;
+            }
+
+            try {
+              setIsChangingStatus(true);
+              const result = await changePointStatus(Number(id));
+
+              if (result) {
+                setPoint((prevPoint: any) => ({ ...prevPoint, is_active: result.is_active }));
+              }
+
+              setPendingActive(null);
+              setActiveModalVisible(false);
+            } catch (error) {
+              setPendingActive(null);
+              setActiveModalVisible(false);
+            } finally {
+              setIsChangingStatus(false);
+            }
           }}
           title="Deseja desativar esse ponto?"
           imagePath="warning"

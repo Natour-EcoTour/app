@@ -28,6 +28,7 @@ export default function PendingPoints() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Pontos em análise: {points.length}</Text>
       {isLoading ? (
         <>
           <ActivityIndicator size="large" color="#00672e" />
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#00672e',
     fontSize: 20,
+    marginTop: 20,
     marginBottom: 20,
     fontWeight: 'bold',
     textAlign: 'center',

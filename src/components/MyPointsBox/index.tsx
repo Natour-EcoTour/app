@@ -19,7 +19,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 interface MyPointsBoxProps {
   id: number;
   pointName: string;
-  pointStatus: string;
+  pointStatus: 'true' | 'false' | 'null' | 'none';
   starTime: string;
   closeTime: string;
   views: number;

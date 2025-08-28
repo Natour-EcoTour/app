@@ -33,12 +33,16 @@ export default function ImageCarousel({
 }: ImageCarouselProps) {
   const flatListRef = useRef<FlatList>(null);
 
+  const safeImages = images || [];
+
   useEffect(() => {
-    flatListRef.current?.scrollToIndex({
-      index: currentIndex,
-      animated: false,
-    });
-  }, [currentIndex]);
+    if (safeImages.length > 0 && currentIndex < safeImages.length) {
+      flatListRef.current?.scrollToIndex({
+        index: currentIndex,
+        animated: false,
+      });
+    }
+  }, [currentIndex, safeImages.length]);
 
   const scrollToIndex = (index: number) => {
     flatListRef.current?.scrollToIndex({ index, animated: true });
@@ -52,10 +56,10 @@ export default function ImageCarousel({
   }, [currentIndex]);
 
   const handleNext = useCallback(() => {
-    if (currentIndex < images.length - 1) {
+    if (currentIndex < safeImages.length - 1) {
       scrollToIndex(currentIndex + 1);
     }
-  }, [currentIndex, images]);
+  }, [currentIndex, safeImages.length]);
 
   const renderItem = ({ item }: { item: ImageItem }) => (
     <TouchableOpacity onPress={() => onImagePress && onImagePress(item)}>
@@ -68,6 +72,15 @@ export default function ImageCarousel({
       </View>
     </TouchableOpacity>
   );
+
+  // Don't render anything if there are no images
+  if (safeImages.length === 0) {
+    return (
+      <View style={styles.noImagesContainer}>
+        <Text style={styles.noImagesText}>Nenhuma imagem disponível</Text>
+      </View>
+    );
+  }
 
   return (
     <View>
@@ -83,7 +96,7 @@ export default function ImageCarousel({
         <View style={[styles.flatListContainer, { width: CAROUSEL_WIDTH }]}>
           <FlatList
             ref={flatListRef}
-            data={images}
+            data={safeImages}
             horizontal
             pagingEnabled
             keyExtractor={item => item.id}
@@ -95,14 +108,14 @@ export default function ImageCarousel({
         <TouchableOpacity
           style={[styles.arrowButton, { width: ARROW_BUTTON_WIDTH }]}
           onPress={handleNext}
-          disabled={currentIndex === images.length - 1}
+          disabled={currentIndex === safeImages.length - 1}
         >
           <Text style={styles.arrowText}>{'>'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.indexContainer}>
         <Text style={styles.indexText}>
-          {currentIndex + 1}/{images.length}
+          {currentIndex + 1}/{safeImages.length}
         </Text>
       </View>
     </View>
@@ -152,6 +165,23 @@ const styles = StyleSheet.create({
   },
   indexText: {
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  noImagesContainer: {
+    width: CAROUSEL_WIDTH,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'gray',
+    borderRadius: 10,
+    backgroundColor: 'lightgray',
+    marginTop: 10,
+    alignSelf: 'center',
+  },
+  noImagesText: {
+    fontSize: 16,
+    color: 'gray',
     fontWeight: 'bold',
   },
 });

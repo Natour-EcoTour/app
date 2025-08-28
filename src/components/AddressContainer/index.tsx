@@ -32,15 +32,16 @@ export default function AddressContainer({
 
   return (
     <View style={styles.container}>
-      <Text>{cep}</Text>
-      <Text>
-        {city}, {uf}
-      </Text>
-      <Text>
-        {street}, {number}
-      </Text>
-      <Text>{neighborhood}</Text>
-
+      <View style={styles.addressContainer}>
+        <Text>{cep}</Text>
+        <Text>
+          {city}, {uf}
+        </Text>
+        <Text>
+          {street}, {number}
+        </Text>
+        <Text>{neighborhood}</Text>
+      </View>
       <TouchableOpacity style={styles.mapButton} onPress={handleOpenInMaps}>
         <View style={styles.mapContent}>
           <Text style={styles.mapColor}>Abrir no maps</Text>
@@ -55,8 +56,15 @@ const styles = StyleSheet.create({
   container: {
     padding: 5,
     marginBottom: 10,
+    justifyContent: 'center',
+    alignContent: 'center',
+    width: '80%',
+  },
+  addressContainer: {
+    padding: 10,
+    marginBottom: 10,
     alignItems: 'center',
-    width: '45%',
+    width: '100%',
   },
   mapButton: {
     backgroundColor: 'darkgreen',
