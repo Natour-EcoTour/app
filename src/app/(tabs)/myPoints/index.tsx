@@ -9,74 +9,24 @@ import {
 import MypointsBox from '@/components/MyPointsBox';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-
-// interface Point {
-//   id: number;
-//   pointName: string;
-//   pointStatus: boolean;
-//   starTime: string;
-//   closeTime: string;
-//   views: number;
-//   review: number;
-// }
+import { getMyPoints } from '@/services/points/getMyPointsService';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function MyPoints() {
-  const points = [
-    {
-      id: 1,
-      pointName: 'a',
-      pointStatus: 'Ativo',
-      starTime: '09:00',
-      closeTime: '18:00',
-      views: 350,
-      review: 5,
-    },
-    {
-      id: 2,
-      pointName: 'Parque dos Fabianos',
-      pointStatus: 'Desativado',
-      starTime: '10:00',
-      closeTime: '11:00',
-      views: 0,
-      review: 0,
-    },
-    {
-      id: 3,
-      pointName: 'Lagoa do Coração',
-      pointStatus: 'Ativo',
-      starTime: '07:30',
-      closeTime: '17:45',
-      views: 120,
-      review: 4,
-    },
-    {
-      id: 4,
-      pointName: 'Parque dos Flamingos',
-      pointStatus: 'Desativado',
-      starTime: '09:00',
-      closeTime: '18:00',
-      views: 350,
-      review: 5,
-    },
-    {
-      id: 5,
-      pointName: 'Parque dos Fabianos',
-      pointStatus: 'Ativo',
-      starTime: '10:00',
-      closeTime: '11:00',
-      views: 0,
-      review: 0,
-    },
-    {
-      id: 6,
-      pointName: 'Lagoa do Coração',
-      pointStatus: 'Desativado',
-      starTime: '07:30',
-      closeTime: '17:45',
-      views: 120,
-      review: 4,
-    },
-  ];
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [points, setPoints] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPoints = async () => {
+      setIsLoading(true);
+      const data = await getMyPoints({ status: 'true' });
+      setPoints(data?.points || []);
+      setIsLoading(false);
+    };
+
+    fetchPoints();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -92,7 +42,9 @@ export default function MyPoints() {
         </TouchableOpacity>
       </View>
 
-      {points.length === 0 ? (
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#00672e" />
+      ) : points.length === 0 ? (
         <View>
           <Text style={styles.emptyText}>Nenhum ponto cadastrado</Text>
           <Text
@@ -107,12 +59,12 @@ export default function MyPoints() {
           <MypointsBox
             key={point.id}
             id={point.id}
-            pointName={point.pointName}
-            pointStatus={point.pointStatus}
-            starTime={point.starTime}
-            closeTime={point.closeTime}
+            pointName={point.name}
+            pointStatus={'true'}
+            starTime={point.open_time}
+            closeTime={point.close_time}
             views={point.views}
-            review={point.review}
+            review={point.avg_rating}
             screen="myPoints"
           />
         ))

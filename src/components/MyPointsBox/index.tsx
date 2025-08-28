@@ -54,18 +54,18 @@ export default function MyPointsBox({
               styles.statusBall,
               {
                 backgroundColor:
-                  pointStatus === 'Ativo'
+                  pointStatus === 'true'
                     ? 'green'
-                    : pointStatus === 'Desativado'
+                    : pointStatus === 'false'
                       ? 'red'
                       : 'yellow',
               },
             ]}
           />
           <Text style={styles.statusText}>
-            {pointStatus === 'Ativo'
+            {pointStatus === 'true'
               ? 'Ativo'
-              : pointStatus === 'Desativado'
+              : pointStatus === 'false'
                 ? 'Desativado'
                 : 'Em análise'}
           </Text>
@@ -79,7 +79,7 @@ export default function MyPointsBox({
         <Text>Visualizações: {views}</Text>
       </View>
 
-      {pointStatus !== 'Em análise' && (
+      {pointStatus !== 'null' && (
         <>
           <StarRating />
         </>
@@ -92,7 +92,7 @@ export default function MyPointsBox({
           <Text style={styles.detailsText}>Ver detalhes</Text>
         </TouchableOpacity>
 
-        {pointStatus !== 'Em análise' && (
+        {pointStatus !== 'null' && (
           <>
             <View style={styles.iconsContainer}>
               <TouchableOpacity
