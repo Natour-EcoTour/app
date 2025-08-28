@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import {
   Text,
@@ -18,7 +18,7 @@ const MAX_IMAGES = 10;
 
 interface AddPointMidiaProps {
   selectedImages: string[];
-  setSelectedImages: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedImages: Dispatch<SetStateAction<string[]>>;
 }
 
 export default function AddPointMidia({

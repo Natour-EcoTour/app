@@ -1,10 +1,10 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { useRouter, type RelativePathString } from 'expo-router';
 
-type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
+type IoniconName = ComponentProps<typeof Ionicons>['name'];
 
 interface LoginButtonProps {
   text: string;

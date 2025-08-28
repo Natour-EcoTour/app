@@ -5,12 +5,14 @@ import {
   Modal,
   Dimensions,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import StarRating from '@/components/StarRating';
+import { deletePoint } from '@/services/points/deletePointService';
+import { ActivityIndicator } from 'react-native-paper';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -35,11 +37,18 @@ export default function MyPointsBox({
   rating,
   screen,
 }: MyPointsBoxProps) {
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
 
-  const handleDelete = () => {
-    console.log(`Deleting point with id ${id}`);
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      await deletePoint(id);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
     setModalVisible(false);
   };
 
@@ -146,8 +155,13 @@ export default function MyPointsBox({
               <TouchableOpacity
                 onPress={handleDelete}
                 style={styles.deleteButton}
+                disabled={isLoading}
               >
-                <Text style={styles.buttonText}>Apagar</Text>
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text style={styles.buttonText}>Apagar</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
