@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { useForm, Controller, set } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/src/validations/loginSchema';
 import { images } from '@/utils/assets';
@@ -171,7 +171,7 @@ export default function Index() {
                 onClose={() => setIsModalVisible(false)}
                 route="./(main)/map"
                 title="Logado com sucesso!"
-                imagePath="check"
+                imageSource={require('@/assets/modalImages/check.png')}
               />
             )}
           </View>

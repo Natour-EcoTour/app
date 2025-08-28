@@ -182,7 +182,7 @@ export default function PointDetail() {
       {isActiveModalVisible && (
         <CustomConfirmationModal
           isVisible={isActiveModalVisible}
-          onCancel={() => {
+          onClose={() => {
             setPendingActive(null);
             setActiveModalVisible(false);
           }}
@@ -209,7 +209,7 @@ export default function PointDetail() {
             }
           }}
           title="Deseja desativar esse ponto?"
-          imagePath="warning"
+          imageSource={require('@/assets/modalImages/warning.png')}
         />
       )}
     </ScrollView>

@@ -134,6 +134,7 @@ export default function changePassword() {
                     onClose={() => setModalVisible(false)}
                     title="Senha alterada com sucesso!"
                     route='../'
+                    imageSource={require('@/assets/modalImages/check.png')}
                 />
             </View>
         </ImageBackground>

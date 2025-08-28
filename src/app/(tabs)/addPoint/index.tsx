@@ -207,7 +207,7 @@ export default function AddPoint() {
             onClose={() => setIsModalVisible(false)}
             route="../myPoints"
             title="Ponto cadastrado com sucesso!"
-            imagePath="check"
+            imageSource={require('@/assets/modalImages/check.png')}
           />
         )}
       </View>

@@ -333,10 +333,10 @@ export default function Profile() {
         {isConfirmationVisible && (
           <CustomConfirmationModal
             isVisible={isConfirmationVisible}
-            onCancel={() => setIsConfirmationVisible(false)}
+            onClose={() => setIsConfirmationVisible(false)}
             onConfirm={handleConfirmDelete}
             title="Tem certeza que deseja apagar sua conta?"
-            imagePath="warning"
+            imageSource={require('@/assets/modalImages/trash.png')}
           />
         )}
 
@@ -348,8 +348,8 @@ export default function Profile() {
               setIsEditable(false);
             }}
             title="Alterações salvas com sucesso!"
-            imagePath="check"
             route="../(main)/profile"
+            imageSource={require('@/assets/modalImages/check.png')}
           />
         )}
       </ScrollView>

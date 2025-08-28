@@ -6,40 +6,38 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ImageSourcePropType,
 } from 'react-native';
-import { PropsWithChildren } from 'react';
 import { useRouter, type RelativePathString } from 'expo-router';
-import { images } from '@/src/utils/assets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const imageMap: Record<string, any> = {
-  icon: images.icon,
-  check: images.icon,
-  warning: images.icon,
-};
-
-type Props = PropsWithChildren<{
+interface CustomModalProps {
   isVisible: boolean;
   onClose: () => void;
-  imagePath?: string;
   title?: string;
   route: RelativePathString;
-}>;
+  imageSource?: ImageSourcePropType;
+  imageUri?: string;
+}
 
 export default function CustomModal({
   isVisible,
   onClose,
-  imagePath = 'icon',
   title,
   route,
-}: Props) {
+  imageSource,
+  imageUri,
+}: CustomModalProps) {
   const router = useRouter();
 
   const handleClose = () => {
     onClose();
     router.push(route);
   };
+
+  const source =
+    imageSource ?? (imageUri ? { uri: imageUri } : undefined);
 
   return (
     <View>
@@ -50,10 +48,7 @@ export default function CustomModal({
               <Text style={styles.title}>{title}</Text>
             </View>
             <View style={styles.iconContainer}>
-              <Image
-                source={imageMap[imagePath]}
-                style={{ width: 200, height: 200 }}
-              />
+              <Image source={source} style={{ width: 150, height: 150 }} />
             </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -81,7 +76,7 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: '#fff',
     width: '80%',
-    height: '50%',
+    height: '45%',
     position: 'absolute',
     top: '25%',
     left: '10%',

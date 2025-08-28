@@ -6,33 +6,29 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ImageSourcePropType,
 } from 'react-native';
-import { PropsWithChildren } from 'react';
-import { images } from '@/src/utils/assets';
+import { RelativePathString } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const imageMap: Record<string, any> = {
-  icon: images.icon,
-  check: images.icon,
-  warning: images.icon,
-};
-
-type Props = PropsWithChildren<{
+interface CustomConfirmationModalProps {
   isVisible: boolean;
-  onCancel: () => void;
+  onClose: () => void;
   onConfirm: () => void;
-  imagePath?: string;
   title?: string;
-}>;
+  route?: RelativePathString;
+  imageSource?: ImageSourcePropType;
+  imageUri?: string;
+}
 
 export default function CustomConfirmationModal({
   isVisible,
-  onCancel,
+  onClose,
   onConfirm,
-  imagePath = 'warning',
+  imageSource,
   title = 'Tem certeza?',
-}: Props) {
+}: CustomConfirmationModalProps) {
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
       <View style={styles.overlay}>
@@ -42,13 +38,13 @@ export default function CustomConfirmationModal({
           </View>
           <View style={styles.iconContainer}>
             <Image
-              source={imageMap[imagePath]}
-              style={{ width: 150, height: 150 }}
+              source={imageSource}
+              style={{ width: 100, height: 100 }}
             />
           </View>
           <View style={styles.buttonRow}>
             <View style={styles.buttonWrapper}>
-              <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
+              <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
                 <Text style={styles.buttonText}>Cancelar</Text>
               </TouchableOpacity>
             </View>

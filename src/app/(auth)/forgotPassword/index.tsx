@@ -80,6 +80,7 @@ export default function forgotPassword() {
             onClose={() => setIsModalVisible(false)}
             title="E-mail enviado!"
             route='../'
+            imageSource={require('@/assets/modalImages/check.png')}
           />
         )}
 
