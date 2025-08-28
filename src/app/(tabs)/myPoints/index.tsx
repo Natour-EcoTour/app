@@ -64,7 +64,7 @@ export default function MyPoints() {
             starTime={point.open_time}
             closeTime={point.close_time}
             views={point.views}
-            review={point.avg_rating}
+            rating={point.avg_rating}
             screen="myPoints"
           />
         ))

@@ -21,7 +21,7 @@ interface MyPointsBoxProps {
   starTime: string;
   closeTime: string;
   views: number;
-  review: number;
+  rating: number;
   screen: 'myPoints' | 'pendingPoints';
 }
 
@@ -32,7 +32,7 @@ export default function MyPointsBox({
   starTime,
   closeTime,
   views,
-  review,
+  rating,
   screen,
 }: MyPointsBoxProps) {
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -81,7 +81,7 @@ export default function MyPointsBox({
 
       {pointStatus !== 'null' && (
         <>
-          <StarRating />
+          <StarRating rating={rating} />
         </>
       )}
 

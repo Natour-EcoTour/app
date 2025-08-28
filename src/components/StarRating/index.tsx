@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-export default function Rating() {
+interface StarRatingProps {
+  rating: number;
+}
+
+export default function StarRating({ rating }: StarRatingProps) {
+  const clampedRating = Math.max(0, Math.min(5, rating));
+
   return (
     <View style={styles.container}>
-      <FontAwesome6 name="star" size={24} color="green" solid />
-      <FontAwesome6 name="star" size={24} color="green" />
-      <FontAwesome6 name="star" size={24} color="green" />
-      <FontAwesome6 name="star" size={24} color="green" />
-      <FontAwesome6 name="star" size={24} color="green" />
+      {[1, 2, 3, 4, 5].map((starNumber) => (
+        <FontAwesome6
+          key={starNumber}
+          name="star"
+          size={24}
+          color="green"
+          solid={starNumber <= clampedRating}
+        />
+      ))}
     </View>
   );
 }
