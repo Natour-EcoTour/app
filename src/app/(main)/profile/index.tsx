@@ -24,6 +24,7 @@ import { updateUser } from '@/services/user/updateUserService';
 import { uploadPhoto, updatePhoto } from '@/services/photos/photoService';
 import { displayValidationErrors, getExactError } from '@/src/utils/errorHandling';
 import { getPhotoId } from '@/services/photos/photoIdService';
+import { ActivityIndicator } from 'react-native-paper';
 
 type ProfileFormData = {
   name: string;
@@ -124,44 +125,8 @@ export default function Profile() {
     } catch (error: any) {
       console.error('Error updating profile:', error);
 
-      // Enhanced error logging for debugging
-      if (error.response) {
-        console.error('Error response status:', error.response.status);
-        console.error('Error response data:', error.response.data);
-        console.error('Error response headers:', error.response.headers);
-      } else if (error.request) {
-        console.error('Error request:', error.request);
-      } else {
-        console.error('Error message:', error.message);
-      }
-
-      // Log the exact error structure for debugging
       if (error.isValidationError && error.data) {
         displayValidationErrors(error.data, 'Erro ao atualizar perfil');
-
-      } else if (error.isNetworkError) {
-        Toast.show({
-          type: 'error',
-          text1: 'Erro de conexão',
-          text2: 'Verifique sua conexão com a internet',
-        });
-      } else if (error.isUnauthorized) {
-        Toast.show({
-          type: 'error',
-          text1: 'Sessão expirada',
-          text2: 'Faça login novamente',
-        });
-      } else {
-        const errorMessage = error.response?.data?.message ||
-          error.response?.data?.error ||
-          error.message ||
-          'Erro desconhecido';
-
-        Toast.show({
-          type: 'error',
-          text1: 'Erro ao atualizar perfil',
-          text2: `Status: ${error.response?.status || 'N/A'} - ${errorMessage}`,
-        });
       }
     } finally {
       setIsLoading(false);
@@ -322,8 +287,15 @@ export default function Profile() {
             <TouchableOpacity
               style={styles.button}
               onPress={handleSubmit(onSubmit)}
+              disabled={isLoading}
             >
-              <Text style={styles.buttonText}>Salvar alterações</Text>
+              {isLoading && (
+                <ActivityIndicator
+                  size="small"
+                  color="#ffffffff"
+                />
+              )}
+              <Text style={styles.buttonText}>{isLoading ? 'Editando...' : 'Salvar alterações'}</Text>
             </TouchableOpacity>
           )}
 
