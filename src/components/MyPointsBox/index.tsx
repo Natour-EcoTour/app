@@ -25,6 +25,7 @@ interface MyPointsBoxProps {
   views: number;
   rating: number;
   screen: 'myPoints' | 'pendingPoints';
+  onDeleteSuccess?: () => void;
 }
 
 export default function MyPointsBox({
@@ -36,6 +37,7 @@ export default function MyPointsBox({
   views,
   rating,
   screen,
+  onDeleteSuccess,
 }: MyPointsBoxProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -46,10 +48,15 @@ export default function MyPointsBox({
       setIsLoading(true);
       await deletePoint(id);
       setIsLoading(false);
+      setModalVisible(false);
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      }
     } catch (error) {
+      console.error('Error deleting point:', error);
       setIsLoading(false);
+      setModalVisible(false);
     }
-    setModalVisible(false);
   };
 
   return (

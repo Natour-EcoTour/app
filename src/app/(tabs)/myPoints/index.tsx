@@ -17,16 +17,22 @@ export default function MyPoints() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [points, setPoints] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchPoints = async () => {
-      setIsLoading(true);
-      const data = await getMyPoints({ status: 'true' });
-      setPoints(data?.points || []);
-      setIsLoading(false);
-    };
+  const fetchPoints = async () => {
+    console.log('Fetching points...');
+    setIsLoading(true);
+    const data = await getMyPoints({ status: 'true' });
+    console.log('Points fetched:', data?.points?.length || 0);
+    setPoints(data?.points || []);
+    setIsLoading(false);
+  };
 
+  useEffect(() => {
     fetchPoints();
   }, []);
+
+  const handlePointDeleted = () => {
+    fetchPoints();
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -40,6 +46,7 @@ export default function MyPoints() {
             Voltar
           </Text>
         </TouchableOpacity>
+        <Text style={styles.title}>Meus Pontos: {points.length}</Text>
       </View>
 
       {isLoading ? (
@@ -66,6 +73,7 @@ export default function MyPoints() {
             views={point.views}
             rating={point.avg_rating}
             screen="myPoints"
+            onDeleteSuccess={handlePointDeleted}
           />
         ))
       )}

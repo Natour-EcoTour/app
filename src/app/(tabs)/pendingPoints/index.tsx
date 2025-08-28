@@ -29,7 +29,10 @@ export default function PendingPoints() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {isLoading ? (
-        <ActivityIndicator size="large" color="#00672e" />
+        <>
+          <ActivityIndicator size="large" color="#00672e" />
+          <Text style={styles.emptyText}>Carregando...</Text>
+        </>
       ) : points.length === 0 ? (
         <View>
           <Text style={styles.emptyText}>Nenhum ponto cadastrado</Text>
