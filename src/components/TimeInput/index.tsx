@@ -38,6 +38,22 @@ export default function TimeInput({
     timeEnd?: string;
   };
 }) {
+  const createDateFromTimeString = (timeString: string): Date => {
+    if (!timeString) return new Date();
+
+    if (timeString.match(/^\d{2}:\d{2}$/)) {
+      const [hours, minutes] = timeString.split(':');
+      const date = new Date();
+      date.setHours(parseInt(hours, 10));
+      date.setMinutes(parseInt(minutes, 10));
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      return date;
+    }
+
+    return new Date(timeString);
+  };
+
   const [selectedDayStart, setSelectedDayStart] = useState(
     value.weekStart || 'Segunda-feira'
   );
@@ -45,10 +61,10 @@ export default function TimeInput({
     value.weekEnd || 'Segunda-feira'
   );
   const [startTime, setStartTime] = useState(
-    value.timeStart ? new Date(value.timeStart) : new Date()
+    value.timeStart ? createDateFromTimeString(value.timeStart) : new Date()
   );
   const [endTime, setEndTime] = useState(
-    value.timeEnd ? new Date(value.timeEnd) : new Date()
+    value.timeEnd ? createDateFromTimeString(value.timeEnd) : new Date()
   );
 
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -65,7 +81,13 @@ export default function TimeInput({
     if (date) {
       setStartTime(date);
       setStartTimeSelected(true);
-      updateParent({ timeStart: date.toISOString() });
+      // Format time as HH:MM for the API
+      const timeString = date.toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      updateParent({ timeStart: timeString });
     }
   };
 
@@ -74,7 +96,13 @@ export default function TimeInput({
     if (date) {
       setEndTime(date);
       setEndTimeSelected(true);
-      updateParent({ timeEnd: date.toISOString() });
+      // Format time as HH:MM for the API
+      const timeString = date.toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      updateParent({ timeEnd: timeString });
     }
   };
 
@@ -131,9 +159,9 @@ export default function TimeInput({
         <Text style={styles.buttonText}>
           {startTimeSelected
             ? startTime.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
+              hour: '2-digit',
+              minute: '2-digit',
+            })
             : 'Selecione um horário'}
         </Text>
       </TouchableOpacity>
@@ -156,9 +184,9 @@ export default function TimeInput({
         <Text style={styles.buttonText}>
           {endTimeSelected
             ? endTime.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
+              hour: '2-digit',
+              minute: '2-digit',
+            })
             : 'Selecione um horário'}
         </Text>
       </TouchableOpacity>
