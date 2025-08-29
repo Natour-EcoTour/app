@@ -42,8 +42,8 @@ export default function AddPointMidia({
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
-      allowsEditing: true,
-      quality: 1,
+      allowsMultipleSelection: true,
+      quality: 0.7, // Compress images to 70% quality to reduce file size
     });
 
     if (!result.canceled) {

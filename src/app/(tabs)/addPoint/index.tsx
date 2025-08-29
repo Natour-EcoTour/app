@@ -14,15 +14,20 @@ import RegisterPointButton from '@/src/components/RegisterPointButton';
 import CustomModal from '@/src/components/CustomModal';
 import AddPointMidia from '@/src/components/AddPointMidia';
 import { Picker } from '@react-native-picker/picker';
+import { createPoint } from '@/services/points/createPointService';
+import { addPointPhoto } from '@/services/photos/addPhotoService';
+import { getMyPoints } from '@/services/points/getMyPointsService';
 
 export default function AddPoint() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(registerPointSchema),
     defaultValues: {
@@ -36,16 +41,16 @@ export default function AddPoint() {
         uf: 'aaa',
         street: 'aaa',
         number: 'aaa',
-        latitude: 'aaa',
-        longitude: 'aaa',
+        latitude: '-23.550520',
+        longitude: '-46.633308',
       },
       time: {
         weekStart: 'Segunda-feira',
         weekEnd: 'Segunda-feira',
-        timeStart: '1000',
-        timeEnd: '1000',
+        timeStart: '0800',
+        timeEnd: '1800',
       },
-      type: 'Trilha',
+      type: 'trail',
     },
   });
 
@@ -120,10 +125,11 @@ export default function AddPoint() {
                 onValueChange={itemValue => onChange(itemValue)}
                 style={styles.picker}
               >
-                <Picker.Item label="Trilha" value="trilha" />
-                <Picker.Item label="Cachoeira" value="cachoeira" />
-                <Picker.Item label="Parque" value="parque" />
-                <Picker.Item label="Sítio" value="sitio" />
+                <Picker.Item label="Trilha" value="trail" />
+                <Picker.Item label="Cachoeira" value="water_fall" />
+                <Picker.Item label="Parque" value="park" />
+                <Picker.Item label="Sítio" value="house" />
+                <Picker.Item label="Loja" value="shop" />
               </Picker>
               {errors.type && (
                 <Text style={styles.error}>{errors.type.message}</Text>
@@ -185,20 +191,8 @@ export default function AddPoint() {
         />
 
         <RegisterPointButton
-          text="Cadastrar ponto"
-          onPress={handleSubmit(data => {
-            if (selectedImages.length === 0) {
-              Toast.show({
-                type: 'error',
-                text1: 'Erro no campo de mídia',
-                text2: 'Adicione pelo menos uma imagem antes de continuar.',
-              });
-              return;
-            }
-
-            console.log('data', data);
-            setIsModalVisible(true);
-          })}
+          text={isSubmitting ? "Criando ponto..." : "Cadastrar ponto"}
+          onPress={isSubmitting ? () => {} : handleSubmit(handleCreatePointWithImages)}
         />
 
         {isModalVisible && (
