@@ -8,7 +8,7 @@ interface SearchPointInputProps {
   value: string;
   onChange: (text: string) => void;
 }
-
+// TODO INTEGRAR BUSCA
 export default function SearchPointInput({
   placeholder = 'Digite o nome do ponto...',
   value,

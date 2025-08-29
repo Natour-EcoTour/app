@@ -11,9 +11,9 @@ export default function Settings() {
     try {
       await SecureStore.deleteItemAsync('access');
       await SecureStore.deleteItemAsync('refresh');
-      
+
       console.log('User logged out successfully');
-      
+
       router.replace('/');
     } catch (error) {
       console.error('Error during logout:', error);
@@ -29,7 +29,7 @@ export default function Settings() {
         icon_type="pin"
         route="../(tabs)/myPoints"
       />
-
+      {/* FIXME AJUSTAR NAVEGAÇÃO */}
       <SettingsButton
         text="Termos de Uso"
         icon_type="documents"

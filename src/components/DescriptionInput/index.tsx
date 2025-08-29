@@ -38,7 +38,7 @@ export default function DescriptionInput({
         editable={editable}
         placeholder={placeholder}
         keyboardType="default"
-        autoCapitalize="none"
+        autoCapitalize="sentences"
         autoComplete="off"
         style={[styles.input, { height: Math.max(40, inputHeight) }]}
         value={value}

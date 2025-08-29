@@ -232,7 +232,7 @@ export default function AddPoint() {
                 neighborhood: value.neighborhood ?? '',
                 uf: value.uf ?? '',
                 street: value.street ?? '',
-                // number: value.number ?? '',
+                number: value.number ?? '',
                 latitude: value.latitude ?? '',
                 longitude: value.longitude ?? '',
               }}
@@ -242,7 +242,7 @@ export default function AddPoint() {
                 neighborhood: errors?.address?.neighborhood?.message,
                 uf: errors?.address?.uf?.message,
                 street: errors?.address?.street?.message,
-                // number: errors?.address?.number?.message,
+                number: errors?.address?.number?.message,
                 latitude: errors?.address?.latitude?.message,
                 longitude: errors?.address?.longitude?.message,
               }}
@@ -260,6 +260,7 @@ export default function AddPoint() {
         )}
 
         <RegisterPointButton
+          isLoading={isSubmitting}
           text={isSubmitting ? "Criando ponto..." : "Cadastrar ponto"}
           onPress={isSubmitting ? () => { } : handleSubmit(handleCreatePointWithImages)}
         />

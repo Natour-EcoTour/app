@@ -23,7 +23,7 @@ export default function FullnameInput({
         editable={editable}
         placeholder={placeholder}
         keyboardType="default"
-        autoCapitalize="none"
+        autoCapitalize="words"
         autoComplete="name"
         style={styles.input}
         value={value}

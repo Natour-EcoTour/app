@@ -396,9 +396,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#00672e',
     padding: 15,
     alignItems: 'center',
-    borderRadius: 4,
     marginTop: 10,
     marginBottom: 20,
+    borderRadius: 10,
   },
   Deletebutton: {
     backgroundColor: '#fc0303',
@@ -407,20 +407,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    borderRadius: 4,
-    flexDirection: 'row',
-  },
-  Exitbutton: {
-    backgroundColor: 'rgba(22, 150, 0, 0.24)',
-    marginBottom: 10,
-    width: '50%',
-    padding: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: 'darkgreen',
+    borderRadius: 10,
     flexDirection: 'row',
   },
   ChangePassbutton: {
@@ -428,7 +415,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: '#00672e',
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 10,
     marginTop: 10,
     marginBottom: 20,
   },
@@ -439,11 +426,6 @@ const styles = StyleSheet.create({
   ChangePasswordbuttonText: {
     color: '#00672e',
     fontSize: 16,
-  },
-  link: {
-    color: '#00672e',
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
   },
   image: {
     width: 200,

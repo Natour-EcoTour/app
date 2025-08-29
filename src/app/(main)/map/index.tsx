@@ -245,7 +245,7 @@ export default function Map() {
                       latitude={selectedMarker.latitude}
                       longitude={selectedMarker.longitude}
                     />
-
+                    {/* TODO INTEGRAR AVALIAÇÃO*/}
                     <AddReview />
                   </>
                 )}

@@ -1,17 +1,24 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { ActivityIndicator } from 'react-native-paper';
 
 interface LoginButtonProps {
   onPress: () => void;
   text: string;
+  isLoading: boolean;
 }
 
 export default function RegisterPointButton({
   onPress,
   text,
+  isLoading,
 }: LoginButtonProps) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.button}
+      onPress={onPress}
+      disabled={isLoading}
+    >
+      {isLoading && <ActivityIndicator size="large" color="#ffffffff" />}
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );

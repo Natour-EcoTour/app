@@ -9,7 +9,11 @@ interface LoginButtonProps {
 
 export default function RegisterButton({ onPress, text, isLoading }: LoginButtonProps) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress} disabled={isLoading}>
+    <TouchableOpacity
+      style={styles.button}
+      onPress={onPress}
+      disabled={isLoading}
+    >
       {isLoading &&
         <ActivityIndicator
           size="small"

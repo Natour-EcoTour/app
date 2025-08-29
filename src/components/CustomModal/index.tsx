@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffff',
     width: '80%',
     height: '45%',
     position: 'absolute',
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   title: {
-    color: '#464C55',
+    color: '#000000ff',
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cancelButton: {
-    backgroundColor: '#464C55',
+    backgroundColor: '#4c5546ff',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,

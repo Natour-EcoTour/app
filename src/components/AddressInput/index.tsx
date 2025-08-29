@@ -33,11 +33,39 @@ export default function AddressInput({
   const [isChecked, setIsChecked] = useState(false);
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
+  const inputTheme = {
+    colors: {
+      primary: '#00672e',
+      outline: '#cccccc',
+      onSurfaceVariant: '#666666',
+      background: '#ffffff',
+    },
+  };
+
   const handleCoordinateChange = (
     text: string,
     field: 'latitude' | 'longitude'
   ) => {
-    const cleaned = text.replace(/[^0-9.\-]/g, '');
+    let cleaned = text.replace(/[^0-9.\-]/g, '');
+
+    if (cleaned.includes('-')) {
+      const minusCount = (cleaned.match(/-/g) || []).length;
+      if (minusCount > 1) {
+        cleaned = cleaned.replace(/-/g, '');
+        if (text.startsWith('-')) {
+          cleaned = '-' + cleaned;
+        }
+      } else if (!cleaned.startsWith('-')) {
+        cleaned = cleaned.replace('-', '');
+      }
+    }
+
+    const dotCount = (cleaned.match(/\./g) || []).length;
+    if (dotCount > 1) {
+      const parts = cleaned.split('.');
+      cleaned = parts[0] + '.' + parts.slice(1).join('');
+    }
+
     onChange({ ...value, [field]: cleaned });
   };
 
@@ -96,7 +124,12 @@ export default function AddressInput({
         value={value.latitude}
         onChangeText={text => handleCoordinateChange(text, 'latitude')}
         keyboardType="numbers-and-punctuation"
+        theme={inputTheme}
+        outlineColor="#cccccc"
+        activeOutlineColor="#00672e"
+        maxLength={10}
       />
+      <Text style={styles.helperText}>Ex: -23.517001</Text>
       {errors.latitude && (
         <Text style={styles.error}>{errors.latitude}</Text>
       )}
@@ -108,7 +141,12 @@ export default function AddressInput({
         value={value.longitude}
         onChangeText={text => handleCoordinateChange(text, 'longitude')}
         keyboardType="numbers-and-punctuation"
+        theme={inputTheme}
+        outlineColor="#cccccc"
+        activeOutlineColor="#00672e"
+        maxLength={10}
       />
+      <Text style={styles.helperText}>Ex: -46.183404</Text>
       {errors.longitude && (
         <Text style={styles.error}>{errors.longitude}</Text>
       )}
@@ -126,7 +164,9 @@ export default function AddressInput({
           <TextInput
             label="CEP"
             mode="outlined"
-            style={styles.input}
+            theme={inputTheme}
+            outlineColor="#cccccc"
+            activeOutlineColor="#00672e"
             value={value.cep}
             onChangeText={handleCepChange}
             keyboardType="numeric"
@@ -137,7 +177,9 @@ export default function AddressInput({
           <TextInput
             label="Cidade"
             mode="outlined"
-            style={styles.input}
+            theme={inputTheme}
+            outlineColor="#cccccc"
+            activeOutlineColor="#00672e"
             value={value.city}
             onChangeText={text => handleTextChange('city', text)}
           />
@@ -146,7 +188,9 @@ export default function AddressInput({
           <TextInput
             label="Bairro"
             mode="outlined"
-            style={styles.input}
+            theme={inputTheme}
+            outlineColor="#cccccc"
+            activeOutlineColor="#00672e"
             value={value.neighborhood}
             onChangeText={text => handleTextChange('neighborhood', text)}
           />
@@ -157,7 +201,9 @@ export default function AddressInput({
           <TextInput
             label="UF"
             mode="outlined"
-            style={styles.input}
+            theme={inputTheme}
+            outlineColor="#cccccc"
+            activeOutlineColor="#00672e"
             value={value.uf}
             onChangeText={text => handleTextChange('uf', text)}
             maxLength={2}
@@ -168,7 +214,9 @@ export default function AddressInput({
           <TextInput
             label="Rua"
             mode="outlined"
-            style={styles.input}
+            theme={inputTheme}
+            outlineColor="#cccccc"
+            activeOutlineColor="#00672e"
             value={value.street}
             onChangeText={text => handleTextChange('street', text)}
           />
@@ -177,8 +225,10 @@ export default function AddressInput({
           <TextInput
             label="Número"
             mode="outlined"
-            style={styles.input}
-            value={value.number?.toString() || ''}
+            theme={inputTheme}
+            outlineColor="#cccccc"
+            activeOutlineColor="#00672e"
+            value={value.number || ''}
             onChangeText={text =>
               handleTextChange('number', text.replace(/\D/g, ''))
             }
@@ -205,5 +255,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 10,
     marginTop: -5,
+  },
+  helperText: {
+    color: '#666666',
+    fontSize: 12,
+    marginBottom: 10,
+    marginTop: -8,
+    paddingLeft: 12,
   },
 });

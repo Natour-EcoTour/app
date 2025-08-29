@@ -205,7 +205,6 @@ export default function TimeInput({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
     width: '100%',
   },
   weekdayPicker: {
@@ -215,10 +214,11 @@ const styles = StyleSheet.create({
   dayPickerContainer: {
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#000000ff',
     borderRadius: 5,
     paddingHorizontal: 5,
     backgroundColor: '#f8f8f8',
+    elevation: 2,
   },
   timeButton: {
     backgroundColor: '#00672e',
