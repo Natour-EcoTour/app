@@ -90,7 +90,7 @@ export default function MyPointsBox({
 
       <View style={styles.viewsText}>
         <Text>
-          Horário de funcionamento: {starTime} - {closeTime}
+          Horário de funcionamento: {starTime.slice(0, 5)} - {closeTime.slice(0, 5)}
         </Text>
         <Text>Visualizações: {views}</Text>
       </View>

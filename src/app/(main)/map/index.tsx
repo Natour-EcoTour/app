@@ -24,6 +24,7 @@ import { points } from '@/src/utils/assets';
 import { mapPoints } from '@/services/map/mapPoints';
 import { mapPointDetails } from '@/services/map/mapPointDetailsService';
 import { addView } from '@/services/map/addViewService';
+import { translateWeekday } from '@/src/utils/weekdayTranslation';
 
 
 export default function Map() {
@@ -137,8 +138,8 @@ export default function Map() {
           id: `${marker.id}-${index}`,
           image: url
         })) || [],
-        startWeekday: 'Segunda', // TODO MUDAR AQUI PARA PEGAR OS DIAS DA SEMANA CORRETOS
-        endWeekday: 'Domingo',
+        startWeekday: translateWeekday(detailedData.week_start),
+        endWeekday: translateWeekday(detailedData.week_end),
         startTime: detailedData.open_time?.slice(0, 5),
         endTime: detailedData.close_time?.slice(0, 5),
       };

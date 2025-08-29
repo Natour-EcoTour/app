@@ -15,6 +15,7 @@ import TimeContainer from '@/src/components/TimeContainer';
 import AddressContainer from '@/src/components/AddressContainer';
 import { pointDetails } from '@/services/points/pointDetailsService';
 import { ActivityIndicator } from 'react-native-paper';
+import { translateWeekday } from '@/src/utils/weekdayTranslation';
 
 export default function PendingPointDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -92,11 +93,10 @@ export default function PendingPointDetail() {
       <Text style={styles.title}>Descrição</Text>
       <DescriptionContainer description={point.description} />
 
-      {/* TODO AJUSTAR NO BACK PARA QUE week_start E week_end SEJAM ENUM OU ALGO DO TIPO PQ TA SALVANDO COMO DATA */}
       <Text style={styles.title}>Horários</Text>
       <TimeContainer
-        startWeekday={point.startWeekday}
-        endWeekday={point.endWeekday}
+        startWeekday={translateWeekday(point.week_start)}
+        endWeekday={translateWeekday(point.week_end)}
         startTime={point.open_time}
         endTime={point.close_time}
       />

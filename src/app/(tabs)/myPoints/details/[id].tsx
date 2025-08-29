@@ -18,6 +18,7 @@ import AddressContainer from '@/src/components/AddressContainer';
 import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
 import { pointDetails } from '@/services/points/pointDetailsService';
 import { changePointStatus } from '@/services/points/changePointStatusService';
+import { translateWeekday } from '@/src/utils/weekdayTranslation';
 
 export default function PointDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -152,11 +153,10 @@ export default function PointDetail() {
       <Text style={styles.title}>Descrição</Text>
       <DescriptionContainer description={point.description} />
 
-      {/* TODO AJUSTAR NO BACK PARA QUE week_start E week_end SEJAM ENUM OU ALGO DO TIPO PQ TA SALVANDO COMO DATA */}
       <Text style={styles.title}>Horários</Text>
       <TimeContainer
-        startWeekday={point.startWeekday}
-        endWeekday={point.endWeekday}
+        startWeekday={translateWeekday(point.week_start)}
+        endWeekday={translateWeekday(point.week_end)}
         startTime={point.open_time}
         endTime={point.close_time}
       />
