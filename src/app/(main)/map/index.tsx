@@ -242,6 +242,8 @@ export default function Map() {
                       uf={selectedMarker.uf}
                       number={selectedMarker.number}
                       street={selectedMarker.street}
+                      latitude={selectedMarker.latitude}
+                      longitude={selectedMarker.longitude}
                     />
 
                     <AddReview />

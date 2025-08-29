@@ -9,14 +9,14 @@ export default function AddressInput({
   errors = {},
 }: {
   value: {
-    cep: string;
-    city: string;
-    neighborhood: string;
-    uf: string;
+    cep?: string;
+    city?: string;
+    neighborhood?: string;
+    uf?: string;
     latitude?: string;
     longitude?: string;
-    number: string;
-    street: string;
+    number?: string;
+    street?: string;
   };
   onChange: (val: any) => void;
   errors?: {
@@ -53,7 +53,7 @@ export default function AddressInput({
       try {
         setIsFetchingCep(true);
         const response = await fetch(
-          `https://viacep.com.br/ws/${cleanedCep}/json/`
+          `https://cep.awesomeapi.com.br/json/${cleanedCep}`
         );
         const data = await response.json();
 
@@ -61,10 +61,12 @@ export default function AddressInput({
           onChange({
             ...value,
             cep: cleanedCep,
-            city: data.localidade || '',
-            neighborhood: data.bairro || '',
-            uf: data.uf || '',
-            street: data.logradouro || '',
+            city: data.city || '',
+            neighborhood: data.district || '',
+            uf: data.state || '',
+            street: data.address || data.address_name || '',
+            latitude: data.lat || '',
+            longitude: data.lng || '',
           });
         } else {
           Toast.show({
@@ -87,8 +89,32 @@ export default function AddressInput({
 
   return (
     <View style={styles.container}>
+      <TextInput
+        label="Latitude"
+        mode="outlined"
+        style={styles.input}
+        value={value.latitude}
+        onChangeText={text => handleCoordinateChange(text, 'latitude')}
+        keyboardType="numbers-and-punctuation"
+      />
+      {errors.latitude && (
+        <Text style={styles.error}>{errors.latitude}</Text>
+      )}
+
+      <TextInput
+        label="Longitude"
+        mode="outlined"
+        style={styles.input}
+        value={value.longitude}
+        onChangeText={text => handleCoordinateChange(text, 'longitude')}
+        keyboardType="numbers-and-punctuation"
+      />
+      {errors.longitude && (
+        <Text style={styles.error}>{errors.longitude}</Text>
+      )}
+
       <Checkbox.Item
-        label="Cadastrar por coordenadas?"
+        label="Cadastrar por CEP?"
         status={isChecked ? 'checked' : 'unchecked'}
         onPress={() => setIsChecked(!isChecked)}
         color="#00672e"
@@ -98,93 +124,69 @@ export default function AddressInput({
       {isChecked && (
         <>
           <TextInput
-            label="Latitude"
+            label="CEP"
             mode="outlined"
             style={styles.input}
-            value={value.latitude}
-            onChangeText={text => handleCoordinateChange(text, 'latitude')}
-            keyboardType="numbers-and-punctuation"
+            value={value.cep}
+            onChangeText={handleCepChange}
+            keyboardType="numeric"
+            right={isFetchingCep ? <TextInput.Icon icon="loading" /> : undefined}
           />
-          {errors.latitude && (
-            <Text style={styles.error}>{errors.latitude}</Text>
+          {errors.cep && <Text style={styles.error}>{errors.cep}</Text>}
+
+          <TextInput
+            label="Cidade"
+            mode="outlined"
+            style={styles.input}
+            value={value.city}
+            onChangeText={text => handleTextChange('city', text)}
+          />
+          {errors.city && <Text style={styles.error}>{errors.city}</Text>}
+
+          <TextInput
+            label="Bairro"
+            mode="outlined"
+            style={styles.input}
+            value={value.neighborhood}
+            onChangeText={text => handleTextChange('neighborhood', text)}
+          />
+          {errors.neighborhood && (
+            <Text style={styles.error}>{errors.neighborhood}</Text>
           )}
 
           <TextInput
-            label="Longitude"
+            label="UF"
             mode="outlined"
             style={styles.input}
-            value={value.longitude}
-            onChangeText={text => handleCoordinateChange(text, 'longitude')}
-            keyboardType="numbers-and-punctuation"
+            value={value.uf}
+            onChangeText={text => handleTextChange('uf', text)}
+            maxLength={2}
+            autoCapitalize="characters"
           />
-          {errors.longitude && (
-            <Text style={styles.error}>{errors.longitude}</Text>
-          )}
+          {errors.uf && <Text style={styles.error}>{errors.uf}</Text>}
+
+          <TextInput
+            label="Rua"
+            mode="outlined"
+            style={styles.input}
+            value={value.street}
+            onChangeText={text => handleTextChange('street', text)}
+          />
+          {errors.street && <Text style={styles.error}>{errors.street}</Text>}
+
+          <TextInput
+            label="Número"
+            mode="outlined"
+            style={styles.input}
+            value={value.number?.toString() || ''}
+            onChangeText={text =>
+              handleTextChange('number', text.replace(/\D/g, ''))
+            }
+            keyboardType="numeric"
+          />
+          {errors.number && <Text style={styles.error}>{errors.number}</Text>}
         </>
       )}
-
-      <TextInput
-        label="CEP"
-        mode="outlined"
-        style={styles.input}
-        value={value.cep}
-        onChangeText={handleCepChange}
-        keyboardType="numeric"
-        right={isFetchingCep ? <TextInput.Icon icon="loading" /> : undefined}
-      />
-      {errors.cep && <Text style={styles.error}>{errors.cep}</Text>}
-
-      <TextInput
-        label="Cidade"
-        mode="outlined"
-        style={styles.input}
-        value={value.city}
-        onChangeText={text => handleTextChange('city', text)}
-      />
-      {errors.city && <Text style={styles.error}>{errors.city}</Text>}
-
-      <TextInput
-        label="Bairro"
-        mode="outlined"
-        style={styles.input}
-        value={value.neighborhood}
-        onChangeText={text => handleTextChange('neighborhood', text)}
-      />
-      {errors.neighborhood && (
-        <Text style={styles.error}>{errors.neighborhood}</Text>
-      )}
-
-      <TextInput
-        label="UF"
-        mode="outlined"
-        style={styles.input}
-        value={value.uf}
-        onChangeText={text => handleTextChange('uf', text)}
-        maxLength={2}
-        autoCapitalize="characters"
-      />
-      {errors.uf && <Text style={styles.error}>{errors.uf}</Text>}
-
-      <TextInput
-        label="Rua"
-        mode="outlined"
-        style={styles.input}
-        value={value.street}
-        onChangeText={text => handleTextChange('street', text)}
-      />
-      {errors.street && <Text style={styles.error}>{errors.street}</Text>}
-
-      <TextInput
-        label="Número"
-        mode="outlined"
-        style={styles.input}
-        value={value.number?.toString() || ''}
-        onChangeText={text =>
-          handleTextChange('number', text.replace(/\D/g, ''))
-        }
-        keyboardType="numeric"
-      />
-      {errors.number && <Text style={styles.error}>{errors.number}</Text>}
     </View>
   );
 }
