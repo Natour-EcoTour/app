@@ -169,6 +169,8 @@ export default function PointDetail() {
         uf={point.uf}
         number={point.number}
         street={point.street}
+        latitude={point.latitude}
+        longitude={point.longitude}
       />
 
       {isModalVisible && (

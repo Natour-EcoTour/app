@@ -45,7 +45,6 @@ export default function PendingPointDetail() {
     fetchPoints();
   }, []);
 
-
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -87,9 +86,6 @@ export default function PendingPointDetail() {
         }}
       />
 
-      <Text style={styles.title}>Visualizações</Text>
-      <Text style={styles.text}>{point.views} visualizações</Text>
-
       <Text style={styles.title}>Descrição</Text>
       <DescriptionContainer description={point.description} />
 
@@ -109,6 +105,8 @@ export default function PendingPointDetail() {
         uf={point.uf}
         number={point.number}
         street={point.street}
+        latitude={point.latitude}
+        longitude={point.longitude}
       />
 
       {isModalVisible && (

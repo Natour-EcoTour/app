@@ -51,9 +51,9 @@ export default function AddPoint() {
       },
       time: {
         weekStart: 'Segunda-feira',
-        weekEnd: 'Segunda-feira',
-        timeStart: '1000',
-        timeEnd: '1000',
+        weekEnd: 'Domingo',
+        timeStart: '10:00',
+        timeEnd: '18:00',
       },
       type: 'Trilha',
     },
