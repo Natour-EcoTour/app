@@ -15,8 +15,7 @@ import CustomModal from '@/src/components/CustomModal';
 import AddPointMidia from '@/src/components/AddPointMidia';
 import { Picker } from '@react-native-picker/picker';
 import { createPoint } from '@/services/points/createPointService';
-import { addPointPhoto } from '@/services/photos/addPhotoService';
-import { getMyPoints } from '@/services/points/getMyPointsService';
+import { uploadPhoto } from '@/services/photos/photoService';
 
 export default function AddPoint() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -28,31 +27,93 @@ export default function AddPoint() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    trigger,
   } = useForm({
     resolver: yupResolver(registerPointSchema),
     defaultValues: {
-      name: 'aaa',
-      description: 'aaa',
-      link: 'https://www.google.com',
+      name: 'Ponto automatico',
+      description: 'Descrição automatica',
+      link: 'https://www.mogidascruzes.sp.gov.br/unidade-e-equipamento/0/parque-centenario-da-imigracao-japonesa',
       address: {
-        cep: '03434455',
-        city: 'aaa',
-        neighborhood: 'aaa',
-        uf: 'aaa',
-        street: 'aaa',
-        number: 'aaa',
-        latitude: '-23.550520',
-        longitude: '-46.633308',
+        cep: '',
+        city: '',
+        neighborhood: '',
+        uf: '',
+        street: '',
+        // number: '',
+        latitude: '',
+        longitude: '',
       },
       time: {
         weekStart: 'Segunda-feira',
-        weekEnd: 'Segunda-feira',
-        timeStart: '0800',
-        timeEnd: '1800',
+        weekEnd: 'Domingo',
+        timeStart: '08:00',
+        timeEnd: '18:00',
       },
       type: 'trail',
+      images: [],
     },
   });
+
+  const setSelectedImagesWithValidation = (value: React.SetStateAction<string[]>) => {
+    setSelectedImages(value);
+
+    const newImages = typeof value === 'function' ? value(selectedImages) : value;
+    setValue('images', newImages);
+    trigger('images');
+  };
+
+  const handleCreatePointWithImages = async (data: any) => {
+    setIsSubmitting(true);
+    try {
+      const pointData = {
+        name: data.name,
+        description: data.description,
+        week_start: data.time.weekStart,
+        week_end: data.time.weekEnd,
+        open_time: data.time.timeStart,
+        close_time: data.time.timeEnd,
+        point_type: data.type,
+        link: data.link || '',
+        latitude: parseFloat(data.address.latitude),
+        longitude: parseFloat(data.address.longitude),
+        zip_code: data.address.cep,
+        city: data.address.city,
+        neighborhood: data.address.neighborhood,
+        state: data.address.uf,
+        street: data.address.street,
+        number: parseInt(data.address.number),
+      };
+      console.log('errador? ', pointData.longitude);
+      const createdPoint = await createPoint(pointData);
+
+      if (selectedImages.length > 0 && createdPoint?.id) {
+        for (let i = 0; i < selectedImages.length; i++) {
+          const imageUri = selectedImages[i];
+          try {
+            const result = await uploadPhoto('points', createdPoint.id, imageUri);
+          } catch (error) {
+            console.error(`Erro ao fazer upload da imagem ${i + 1}:`, error);
+          }
+        }
+      } else if (selectedImages.length > 0) {
+        console.error('Não foi possível fazer upload das imagens: ponto criado sem ID');
+      }
+
+      setIsModalVisible(true);
+      reset();
+      setSelectedImages([]);
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao criar ponto',
+        text2: 'Não foi possível criar o ponto. Tente novamente.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <ScrollView>
@@ -166,7 +227,12 @@ export default function AddPoint() {
             <AddressInput
               onChange={onChange}
               value={{
-                ...value,
+                cep: value.cep ?? '',
+                city: value.city ?? '',
+                neighborhood: value.neighborhood ?? '',
+                uf: value.uf ?? '',
+                street: value.street ?? '',
+                // number: value.number ?? '',
                 latitude: value.latitude ?? '',
                 longitude: value.longitude ?? '',
               }}
@@ -176,7 +242,7 @@ export default function AddPoint() {
                 neighborhood: errors?.address?.neighborhood?.message,
                 uf: errors?.address?.uf?.message,
                 street: errors?.address?.street?.message,
-                number: errors?.address?.number?.message,
+                // number: errors?.address?.number?.message,
                 latitude: errors?.address?.latitude?.message,
                 longitude: errors?.address?.longitude?.message,
               }}
@@ -187,12 +253,15 @@ export default function AddPoint() {
         <Text style={styles.stepTitle}>Mídia</Text>
         <AddPointMidia
           selectedImages={selectedImages}
-          setSelectedImages={setSelectedImages}
+          setSelectedImages={setSelectedImagesWithValidation}
         />
+        {errors.images && (
+          <Text style={styles.error}>{errors.images.message}</Text>
+        )}
 
         <RegisterPointButton
           text={isSubmitting ? "Criando ponto..." : "Cadastrar ponto"}
-          onPress={isSubmitting ? () => {} : handleSubmit(handleCreatePointWithImages)}
+          onPress={isSubmitting ? () => { } : handleSubmit(handleCreatePointWithImages)}
         />
 
         {isModalVisible && (

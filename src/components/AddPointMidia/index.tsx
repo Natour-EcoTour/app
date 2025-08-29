@@ -43,7 +43,7 @@ export default function AddPointMidia({
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsMultipleSelection: true,
-      quality: 0.7, // Compress images to 70% quality to reduce file size
+      quality: 0.7,
     });
 
     if (!result.canceled) {
@@ -168,7 +168,7 @@ export default function AddPointMidia({
         >
           <View style={styles.overlay}>
             <View
-              style={[styles.modalContent, { width: '95%', height: '70%' }]}
+              style={[styles.modalContent, { width: '95%', height: '70%', backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}
             >
               <Image
                 source={{ uri: previewImageUri }}
@@ -298,13 +298,13 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginTop: 20,
-    backgroundColor: '#464C55',
+    backgroundColor: '#ffffffff',
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 8,
   },
   closeButtonText: {
-    color: '#fff',
+    color: '#000000ff',
     fontSize: 16,
     textAlign: 'center',
   },
