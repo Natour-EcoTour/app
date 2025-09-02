@@ -1,23 +1,12 @@
 import { Text, View, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
+import { logout } from '@/src/utils/tokenUtils';
 
 import SettingsButton from '@/components/SettingsButton';
+import { router } from 'expo-router';
 
 export default function Settings() {
-  const router = useRouter();
-
   const handleLogout = async () => {
-    try {
-      await SecureStore.deleteItemAsync('access');
-      await SecureStore.deleteItemAsync('refresh');
-
-      console.log('User logged out successfully');
-
-      router.replace('/');
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
+    await logout(router);
   };
 
   return (

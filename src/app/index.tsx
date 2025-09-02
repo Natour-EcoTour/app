@@ -8,22 +8,19 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
-import { useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActivityIndicator, Checkbox } from 'react-native-paper';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/src/validations/loginSchema';
 import { images } from '@/utils/assets';
-
-import { loginUser } from '@/services/auth/authService';
-import * as SecureStore from 'expo-secure-store';
-
+import { login, validateTokenAndRedirect } from '../utils/tokenUtils';
 import PasswordInput from '@/components/PasswordInput';
 import LoginButton from '@/components/LoginButton';
 import CustomModal from '@/components/CustomModal';
 import EmailInput from '@/components/EmailInput';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Checkbox } from 'react-native-paper';
 
 interface LoginFormData {
   email: string;
@@ -31,17 +28,34 @@ interface LoginFormData {
   rememberMe: boolean;
 }
 
-// TODO SE O USER JA TIVER TOKEN ELE DEVE IR DIRETO PARA A TELA DO MAPA
+// FIXME ADICIONAR SAFEAREA
 export default function Index() {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCheckingToken, setIsCheckingToken] = useState<boolean>(true);
 
   const insets = useSafeAreaInsets();
   const keyboardOffset = Platform.select({
     ios: insets.top + 16,
     android: 0,
   });
+
+  useEffect(() => {
+    const checkExistingToken = async () => {
+      try {
+        const hasValidToken = await validateTokenAndRedirect(router);
+        if (!hasValidToken) {
+          setIsCheckingToken(false);
+        }
+      } catch (error) {
+        console.error('Error checking existing token:', error);
+        setIsCheckingToken(false);
+      }
+    };
+
+    checkExistingToken();
+  }, [router]);
 
   const {
     control,
@@ -60,10 +74,7 @@ export default function Index() {
     try {
       setIsLoading(true);
 
-      const { access, refresh } = await loginUser(data.email, data.password, data.rememberMe);
-
-      await SecureStore.setItemAsync('access', access);
-      await SecureStore.setItemAsync('refresh', refresh);
+      await login(data);
 
       setIsLoading(false);
 
@@ -73,6 +84,24 @@ export default function Index() {
       console.error('Error logging in:', error);
     }
   };
+
+  if (isCheckingToken) {
+    return (
+      <ImageBackground
+        source={images.background}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            size="large"
+            color="#00672e"
+          />
+          <Text style={styles.loadingText}>Carregando...</Text>
+        </View>
+      </ImageBackground>
+    );
+  }
 
   return (
     <ImageBackground
@@ -234,5 +263,15 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#00672e',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
