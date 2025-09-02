@@ -3,7 +3,7 @@ import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import MapView, { Marker, Region } from 'react-native-maps';
-import { StyleSheet, View, Text, FlatList, Dimensions, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, {
   BottomSheetScrollView,
@@ -37,6 +37,7 @@ export default function Map() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const flatListRef = useRef<FlatList>(null);
+  const mapRef = useRef<MapView>(null);
   const snapPoints = useMemo(() => ['25%', '50%'], []);
 
   const [searchText, setSearchText] = useState('');
@@ -153,10 +154,28 @@ export default function Map() {
     }
   };
 
+  const handleSearchResultSelect = async (resultId: number, resultName: string) => {
+    const marker = markers.find(m => m.id === resultId);
+
+    if (marker) {
+      mapRef.current?.animateToRegion({
+        latitude: marker.coordinate.latitude,
+        longitude: marker.coordinate.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }, 1000);
+
+      await handleMarkerPress(marker);
+
+      setSearchText('');
+    }
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <MapView
+          ref={mapRef}
           customMapStyle={customMapStyle}
           showsBuildings={false}
           showsCompass={false}
@@ -172,14 +191,16 @@ export default function Map() {
               image={marker.icon}
               onPress={() => handleMarkerPress(marker)}
             />
+
           ))}
         </MapView>
 
         {!isBottomSheetOpen && (
           <View style={styles.searchWrapper}>
             <SearchPointInput
-              onChange={(text) => setSearchText(text)}
+              onChangeText={setSearchText}
               value={searchText}
+              onSelectResult={handleSearchResultSelect}
             />
           </View>
         )}
