@@ -291,6 +291,7 @@ export default function RegisterScreen() {
               route="../"
               title="Confirme seu Email"
               subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
+              isPassword={false}
               onCodeSubmit={async (code) => {
                 console.log('Código recebido:', code);
                 const formData = getValues();

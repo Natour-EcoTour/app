@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    Dimensions,
     TouchableOpacity,
     TextInput,
 } from 'react-native';
@@ -11,8 +10,7 @@ import { PropsWithChildren, useState } from 'react';
 import { useRouter, type RelativePathString } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+import PasswordInput from '@/src/components/PasswordInput';
 
 type Props = PropsWithChildren<{
     isVisible: boolean;
@@ -20,7 +18,8 @@ type Props = PropsWithChildren<{
     route: RelativePathString;
     title?: string;
     subtitle?: string;
-    onCodeSubmit?: (code: string) => void;
+    isPassword: boolean;
+    onCodeSubmit?: (code: string, password?: string) => void;
 }>;
 
 export default function CodeModal({
@@ -29,10 +28,12 @@ export default function CodeModal({
     route,
     title = "Validação de Email",
     subtitle = "Digite o código de 6 dígitos enviado para seu email",
+    isPassword = false,
     onCodeSubmit,
 }: Props) {
     const router = useRouter();
     const [code, setCode] = useState('');
+    const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleValidateCode = async () => {
@@ -40,7 +41,7 @@ export default function CodeModal({
 
         try {
             if (onCodeSubmit) {
-                await onCodeSubmit(code);
+                await onCodeSubmit(code, isPassword ? password : undefined);
             }
 
             Toast.show({
@@ -63,6 +64,7 @@ export default function CodeModal({
 
     const handleClose = () => {
         setCode('');
+        setPassword('');
         onClose();
     };
 
@@ -93,11 +95,24 @@ export default function CodeModal({
                         </View>
                     </View>
 
+                    {isPassword && (
+                        <View style={styles.passwordContainer}>
+                            <View style={styles.passwordWrapper}>
+                                <PasswordInput
+                                    label="Nova Senha"
+                                    placeholder="Digite sua nova senha"
+                                    value={password}
+                                    onChange={setPassword}
+                                />
+                            </View>
+                        </View>
+                    )}
+
                     <View style={styles.footer}>
                         <TouchableOpacity
                             onPress={handleValidateCode}
                             style={[styles.validateButton, isLoading && styles.validateButtonDisabled]}
-                            disabled={isLoading || code.length !== 5}
+                            disabled={isLoading || code.length !== 5 || (isPassword && password.length < 6)}
                         >
                             <Text style={styles.validateButtonText}>
                                 {isLoading ? 'Validando...' : 'Validar Código'}
@@ -159,8 +174,18 @@ const styles = StyleSheet.create({
         lineHeight: 22,
     },
     inputContainer: {
+        width: '60%',
+        marginBottom: 24,
+    },
+    passwordContainer: {
         width: '100%',
         marginBottom: 24,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    passwordWrapper: {
+        width: '80%',
+        alignItems: 'center',
     },
     input: {
         borderWidth: 2,

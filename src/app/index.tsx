@@ -74,11 +74,15 @@ export default function Index() {
     try {
       setIsLoading(true);
 
-      await login(data);
-
-      setIsLoading(false);
-
-      setIsModalVisible(true);
+      const result = await login(data);
+      
+      if (result && result.access && result.refresh) {
+        setIsLoading(false);
+        setIsModalVisible(true);
+      } else {
+        setIsLoading(false);
+        console.error('Login failed: No tokens received');
+      }
     } catch (error) {
       setIsLoading(false);
       console.error('Error logging in:', error);

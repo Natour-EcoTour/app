@@ -1,29 +1,31 @@
 import { Text, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground } from 'react-native';
-
 import { useState } from 'react';
 import { router } from 'expo-router';
-
 import { useForm, Controller } from 'react-hook-form';
+import { images } from '@/src/utils/assets';
+import * as SecureStore from 'expo-secure-store';
+
 import { yupResolver } from '@hookform/resolvers/yup';
-import { forgotPasswordSchema } from '@/src/validations/forgotPasswordSchema';
+import { forgotPasswordEmailSchema } from '@/src/validations/forgotPasswordSchema';
 
 import EmailInput from '@/src/components/EmailInput';
-import { images } from '@/src/utils/assets';
-import CustomModal from '@/src/components/CustomModal';
+import CodeModal from '@/src/components/CodeModal/CodeModal';
+
 import { sendForgotPasswordCode } from '@/services/auth/sendForgotPassword';
+import { updateForgotPassword } from '@/services/auth/updateForgotPassword';
 
-// TODO modal to verify the code!!!
 export default function forgotPassword() {
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
+  const [isCodeModalVisible, setIsCodeModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     control,
     handleSubmit,
+    reset,
+    getValues,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(forgotPasswordSchema),
+    resolver: yupResolver(forgotPasswordEmailSchema),
     defaultValues: {
       email: 'vitorantunes2003@gmail.com',
     },
@@ -31,9 +33,23 @@ export default function forgotPassword() {
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
-    console.log('Form data:', data.email);
-    await sendForgotPasswordCode(data.email);
-    setIsModalVisible(true);
+    try {
+      await sendForgotPasswordCode(data.email);
+      setIsCodeModalVisible(true);
+    } catch (error) {
+      console.error('Error sending forgot password code:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const clearFormData = async () => {
+    try {
+      await SecureStore.deleteItemAsync('registerFormData');
+      reset();
+    } catch (error) {
+      console.error('Error clearing form data:', error);
+    }
   };
 
   return (
@@ -69,18 +85,41 @@ export default function forgotPassword() {
             </View>
           )}
         />
-        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            handleSubmit(onSubmit)();
+          }}
+        >
           <Text style={styles.buttonText}>
             {isLoading ? 'Enviando...' : 'Enviar'}
           </Text>
         </TouchableOpacity>
-        {isModalVisible && (
-          <CustomModal
-            isVisible={isModalVisible}
-            onClose={() => setIsModalVisible(false)}
-            title="E-mail enviado!"
-            route='../'
-            imageSource={require('@/assets/modalImages/check.png')}
+
+        {isCodeModalVisible && (
+          <CodeModal
+            isVisible={isCodeModalVisible}
+            onClose={() => setIsCodeModalVisible(false)}
+            route="../"
+            title="Confirme seu Email"
+            subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
+            isPassword={true}
+            onCodeSubmit={async (code, password) => {
+              const formData = getValues();
+
+              if (!password) {
+                console.error('Password is required');
+                return;
+              }
+
+              try {
+                await updateForgotPassword(formData.email, code, password);
+                await clearFormData();
+              } catch (error) {
+                console.error('Password reset error:', error);
+                throw error;
+              }
+            }}
           />
         )}
 

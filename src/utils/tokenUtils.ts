@@ -13,6 +13,7 @@ export const login = async (data: { email: string; password: string; rememberMe:
         return { access, refresh };
     } catch (error) {
         console.error('Error during login:', error);
+        throw error;
     }
 };
 
