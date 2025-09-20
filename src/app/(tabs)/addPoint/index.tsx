@@ -32,8 +32,8 @@ export default function AddPoint() {
   } = useForm({
     resolver: yupResolver(registerPointSchema),
     defaultValues: {
-      name: 'Ponto automatico',
-      description: 'Descrição automatica',
+      name: 'Ponto automático',
+      description: 'Descrição automática',
       link: 'https://www.mogidascruzes.sp.gov.br/unidade-e-equipamento/0/parque-centenario-da-imigracao-japonesa',
       address: {
         cep: '',
