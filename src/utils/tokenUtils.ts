@@ -3,9 +3,9 @@ import { Router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import apiClient from '@/services/apiClient';
 
-export const login = async (data: { email: string; password: string; rememberMe: boolean }) => {
+export const login = async (data: { email: string; password: string; remember_me: boolean }) => {
     try {
-        const { access, refresh } = await loginUser(data.email, data.password, data.rememberMe);
+        const { access, refresh } = await loginUser(data.email, data.password, data.remember_me);
 
         await SecureStore.setItemAsync('access', access);
         await SecureStore.setItemAsync('refresh', refresh);

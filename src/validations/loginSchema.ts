@@ -9,5 +9,5 @@ export const loginSchema = yup.object().shape({
             /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
             'A senha deve ter pelo menos:\n8 caracteres\n1 letra maiúscula\n1 caractere especial'
         ),
-    rememberMe: yup.boolean().required(),
+    remember_me: yup.boolean().required(),
 });

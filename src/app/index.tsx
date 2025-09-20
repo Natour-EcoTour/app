@@ -25,7 +25,7 @@ import EmailInput from '@/components/EmailInput';
 interface LoginFormData {
   email: string;
   password: string;
-  rememberMe: boolean;
+  remember_me: boolean;
 }
 
 // FIXME ADICIONAR SAFEAREA
@@ -66,7 +66,7 @@ export default function Index() {
     defaultValues: {
       email: 'vitorantunes2003@gmail.com',
       password: 'Aa12345678!',
-      rememberMe: false,
+      remember_me: false,
     },
   });
 
@@ -163,7 +163,7 @@ export default function Index() {
             <View style={styles.actions}>
               <Controller
                 control={control}
-                name="rememberMe"
+                name="remember_me"
                 render={({ field: { onChange, value } }) => (
                   <Checkbox
                     status={value ? 'checked' : 'unchecked'}
