@@ -183,6 +183,9 @@ export default function Map() {
           style={styles.map}
           region={region!}
           showsUserLocation={true}
+          loadingEnabled={loading}
+          loadingIndicatorColor="#00672e"
+          loadingBackgroundColor="#ffffff"
         >
           {markers.map((marker) => (
             <Marker
