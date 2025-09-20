@@ -135,6 +135,8 @@ export default function Map() {
         uf: detailedData.state,
         number: detailedData.number,
         street: detailedData.street,
+        latitude: marker.coordinate?.latitude,
+        longitude: marker.coordinate?.longitude,
         images: detailedData.photos?.map((url: string, index: number) => ({
           id: `${marker.id}-${index}`,
           image: url
