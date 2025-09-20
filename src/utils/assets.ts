@@ -1,8 +1,8 @@
 export const images = {
   background: require('@/assets/images/background.png'),
-  icon: require('@/assets/images/icon.png'),
-  natourLogo: require('@/assets/images/natour_logo.png'),
-  natourSplash: require('@/assets/images/natour_splash.png'),
+  icon: require('@/assets/icons/fullNatourLogo.png'),
+  natourLogo: require('@/assets/icons/fullNatourLogo.png'),
+  natourSplash: require('@/assets/icons/fullNatourLogo.png'),
   noPfp: require('@/assets/images/no_pfp.jpg'),
   noPermission: require('@/assets/images/noPermission.png'),
   leafBg: require('@/assets/images/leaf_bg.jpg'),
@@ -11,6 +11,7 @@ export const images = {
   splashIcon: require('@/assets/images/splash-icon.png'),
   partialReactLogo: require('@/assets/images/partial-react-logo.png'),
   reactLogo: require('@/assets/images/react-logo.png'),
+
 };
 
 export const icons = {
