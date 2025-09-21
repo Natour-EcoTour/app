@@ -1,11 +1,41 @@
-import React from 'react';
-import { Text, View, StyleSheet, ImageBackground, ScrollView } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  ScrollView,
+} from 'react-native';
 import { router } from 'expo-router';
+import { images } from '@/src/utils/assets';
+import { useEffect, useState } from 'react';
+import { getTerms } from '@/services/terms/termsService';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function PrivacyPolicy() {
+  const [terms, setTerms] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTerms = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const termsData = await getTerms(2);
+        setTerms(termsData.content || '');
+      } catch (err) {
+        setError('Erro ao carregar a política de privacidade');
+        console.error('Error fetching policy:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTerms();
+  }, []);
   return (
-    <ImageBackground 
-      source={require('../../../../assets/images/leaf_bg.jpg')}
+    <ImageBackground
+      source={images.background}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -14,28 +44,23 @@ export default function PrivacyPolicy() {
 
         <View style={styles.textBox}>
           <ScrollView showsVerticalScrollIndicator={true}>
-            <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat, 
-              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque. 
-              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu. 
-              Integer dictum nisl et magna porttitor, a interdum lorem interdum. Aenean vel orci eu velit tristique malesuada.
-              {"\n\n"}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
-              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat. 
-              Suspendisse potenti. Proin sit amet sem nec justo pharetra vehicula vel eu dolor.
-              {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, nunc vel malesuada placerat, 
-              neque velit tincidunt justo, vitae varius nulla lorem eget neque. Ut eget purus a justo gravida scelerisque. 
-              Mauris malesuada, libero vel varius tincidunt, magna augue faucibus turpis, ut cursus velit felis in arcu. 
-              Integer dictum nisl et magna porttitor, a interdum lorem interdum. Aenean vel orci eu velit tristique malesuada.
-              {"\n\n"}
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
-              Donec quis nibh sed libero volutpat eleifend. Morbi non mauris eget purus vulputate consequat. 
-              Suspendisse potenti. Proin sit amet sem nec justo pharetra vehicula vel eu dolor.
-            </Text>
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#00672e" />
+                <Text style={styles.loadingText}>Carregando política...</Text>
+              </View>
+            ) : error ? (
+              <Text style={styles.errorText}>{error}</Text>
+            ) : (
+              <Text style={styles.text}>
+                {terms || 'Política de privacidade não disponíveis no momento.'}
+              </Text>
+            )}
           </ScrollView>
         </View>
-        <Text style={styles.link} onPress={() => router.push('/(auth)/register')}>Voltar</Text>
+        <Text style={styles.link} onPress={() => router.back()}>
+          Voltar
+        </Text>
       </View>
     </ImageBackground>
   );
@@ -46,34 +71,28 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
   },
   container: {
-    backgroundColor: 'rgba(235, 237, 240, 0.9)',
-    borderRadius: 20,
-    padding: 40,
-    width: '90%', 
+    width: '90%',
     height: '80%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 15,
     alignItems: 'center',
   },
   title: {
-    color: '#04d361',
+    color: '#00672e',
     fontSize: 24,
     marginBottom: 20,
     fontWeight: 'bold',
   },
   textBox: {
-    width: '100%', 
+    width: '100%',
     height: '90%',
-    padding: 30,
+    padding: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 10,
+    borderColor: 'rgba(0, 0, 0, 0.31)',
+    borderWidth: 2,
   },
   text: {
     color: '#000',
@@ -81,10 +100,28 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   link: {
-    color: '#04d361',
+    color: '#00672e',
     marginTop: 10,
     fontSize: 16,
     textDecorationLine: 'underline',
     fontWeight: 'bold',
-  }
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    color: '#00672e',
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  errorText: {
+    color: '#d32f2f',
+    fontSize: 16,
+    textAlign: 'center',
+    padding: 20,
+  },
 });

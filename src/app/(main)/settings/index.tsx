@@ -1,28 +1,126 @@
-import { Text, View,  StyleSheet } from 'react-native';
-import { Link } from 'expo-router'
+import { Text, View, StyleSheet } from 'react-native';
+import { logout } from '@/src/utils/tokenUtils';
 
-export default function Banana() {
+import SettingsButton from '@/components/SettingsButton';
+import { router } from 'expo-router';
+
+export default function Settings() {
+  const handleLogout = async () => {
+    await logout(router);
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>CONFIGURAÇÔES</Text>
-    
+      <Text style={styles.title}>Configurações</Text>
+
+      <SettingsButton
+        text="Pontos"
+        icon_type="pin"
+        route="../(tabs)/myPoints"
+      />
+      {/* FIXME AJUSTAR NAVEGAÇÃO */}
+      <SettingsButton
+        text="Termos de Uso"
+        icon_type="documents"
+        route="../(terms)/userTerms"
+      />
+
+      <SettingsButton
+        text="Política de Privacidade"
+        icon_type="document"
+        route="../(terms)/privacyPolicy"
+      />
+
+      <SettingsButton
+        text="Sair"
+        icon_type="exit"
+        onPress={handleLogout}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
-    backgroundColor: '#25292e',
+  },
+  container: {
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 50,
   },
-  text: {
-    color: '#fff',
+  title: {
+    color: '#00672e',
+    fontSize: 20,
+    marginBottom: 20,
+    fontWeight: 'bold',
+  },
+  inputContainer: {
+    width: '100%',
+  },
+  label: {
+    color: '#000',
+    marginBottom: 5,
+    fontSize: 16,
+  },
+  input: {
+    backgroundColor: '#ffffff',
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 15,
+    borderRadius: 4,
+  },
+  error: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 15,
   },
   button: {
-    fontSize: 20,
-    textDecorationLine: 'underline',
+    backgroundColor: '#00672e',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 4,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  Deletebutton: {
+    backgroundColor: '#fc0303',
+    width: '50%',
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 4,
+  },
+  ChangePassbutton: {
+    padding: 15,
+    alignItems: 'center',
+    borderColor: '#00672e',
+    borderWidth: 1,
+    borderRadius: 4,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  buttonText: {
     color: '#fff',
+    fontSize: 16,
+  },
+  ChangePasswordbuttonText: {
+    color: '#00672e',
+    fontSize: 16,
+  },
+  link: {
+    color: '#00672e',
+    textDecorationLine: 'underline',
+    fontWeight: 'bold',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
+    marginBottom: 20,
+    borderRadius: 100,
+    resizeMode: 'contain',
   },
 });

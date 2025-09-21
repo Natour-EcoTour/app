@@ -1,6 +1,13 @@
-import { Modal, View, Text, Image, StyleSheet, Button, Dimensions } from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { PropsWithChildren } from 'react';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -20,32 +27,29 @@ export default function ImageModal({ isVisible, imageUri, onClose }: Props) {
 
   return (
     <View>
-      <Modal 
-        animationType="fade" 
-        visible={isVisible}
-        transparent={true}
-      >
+      <Modal animationType="fade" visible={isVisible} transparent={true}>
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
-            <View style={styles.buttonContainer}>
-              <Button 
-                title="Fechar" 
-                onPress={handleClose} 
-                color="#464C55" 
-                accessibilityLabel="Fechar modal"
-              />
-            </View>
-
             <View style={styles.imageContainer}>
               {imageUri ? (
-                <Image 
-                  source={{ uri: imageUri }} 
+                <Image
+                  source={{ uri: imageUri }}
                   resizeMode="contain"
                   style={styles.image}
                 />
               ) : (
                 <Text style={styles.errorText}>Imagem não encontrada!</Text>
               )}
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleClose}
+                accessibilityLabel="Fechar modal"
+              >
+                <Text style={styles.buttonText}>Fechar</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -65,16 +69,31 @@ const styles = StyleSheet.create({
   modalContent: {
     width: SCREEN_WIDTH * 0.9,
     height: '50%',
-    backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 20,
+    backgroundColor: '#0000003c',
   },
   buttonContainer: {
     width: '100%',
     paddingHorizontal: 20,
+    marginTop: 10,
     marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#ffffffff',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: 'center',
+    borderColor: '#000000ff',
+    borderWidth: 2,
+  },
+  buttonText: {
+    color: '#000000ff',
+    fontSize: 16,
+    fontWeight: '600',
   },
   imageContainer: {
     flex: 1,

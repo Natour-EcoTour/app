@@ -1,180 +1,320 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
-import { router } from 'expo-router';
-import { Linking } from 'react-native';
+import { useState, useEffect, useCallback } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+
+import { ActivityIndicator, Checkbox } from 'react-native-paper';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerSchema } from '@/src/validations/validationSchema';
-import RegisterModal from '@/src/components/RegisterModal';
+import { registerSchema } from '@/src/validations/registerSchema';
 
-import Fullnamelnput from "@/src/components/NameInput";
-import EmailInput  from '@/src/components/EmailInput';
-import PasswordForm from '@/src/components/ConfirmPasswordInput';
+import Fullnamelnput from '@/src/components/NameInput';
+import EmailInput from '@/src/components/EmailInput';
+import PasswordInput from '@/src/components/PasswordInput';
+import SafeKeyboardAvoidingView from '@/src/components/SafeKeyboardAvoidingView';
+import { images } from '@/src/utils/assets';
+import CodeModal from '@/src/components/CodeModal/CodeModal';
+import { sendVerificationCode } from '@/services/singUp/sendVerificationCode';
+import { verifyCodeAndRegister } from '@/services/singUp/verifyCodeAndRegister';
+import { createAccount } from '@/services/singUp/createAccountService';
 
+interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  termsAccept: boolean;
+}
 
 export default function RegisterScreen() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
-  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(registerSchema),
-    defaultValues: {
-      name: 'Vitor Antunes Ferreira',
-      email: 'vitinho@gmail.com',
-      // cpf: '45999669839',
-      password: 'Aa12345678!',
-      confirmPassword: 'Aa12345678!',
-    },
+
   });
 
-  const onSubmit = (data: any) => {
-    console.log('Form data:', data);
-    setIsModalVisible(true);
+  const saveFormData = useCallback(async () => {
+    try {
+      const currentValues = getValues();
+      await SecureStore.setItemAsync('registerFormData', JSON.stringify(currentValues));
+    } catch (error) {
+      console.error('Error saving form data:', error);
+    }
+  }, [getValues]);
+
+  const loadFormData = useCallback(async () => {
+    try {
+      const savedData = await SecureStore.getItemAsync('registerFormData');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        Object.keys(parsedData).forEach((key) => {
+          setValue(key as any, parsedData[key]);
+        });
+      }
+    } catch (error) {
+      console.error('Error loading form data:', error);
+    }
+  }, [setValue]);
+
+  useEffect(() => {
+    loadFormData();
+  }, [loadFormData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        saveFormData();
+      };
+    }, [saveFormData])
+  );
+
+  const clearFormData = async () => {
+    try {
+      await SecureStore.deleteItemAsync('registerFormData');
+      reset();
+    } catch (error) {
+      console.error('Error clearing form data:', error);
+    }
   };
 
-  // const formatCpf = (cpf: string) => {
-  //   cpf = cpf.replace(/\D/g, '');
-  //   if (cpf.length > 3) cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
-  //   if (cpf.length > 6) cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-  //   if (cpf.length > 9) cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
-  //   return cpf;
-  // };
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      setIsLoading(true);
+
+      await sendVerificationCode(data.name, data.email, data.password);
+
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error('Error sending verification code:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <ImageBackground 
-          source={require('../../../../assets/images/leaf_bg.jpg')}
-          style={styles.backgroundImage}
-          resizeMode="cover"
+    <ImageBackground
+      source={images.background}
+      style={styles.backgroundImage}
+      resizeMode="cover"
     >
-    <ScrollView contentContainerStyle={styles.scrollContentContainer} style={styles.scrollView}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Cadastro</Text>
-        <View style={styles.inputContainer}>
-          <Controller
-            control={control}
-            name="name"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <Fullnamelnput
-                  placeholder="Digite o seu nome completo"
-                  onChange={onChange}
-                  value={value}
-                />
-                {errors.name && <Text style={styles.error}>{errors.name.message as string}</Text>}
-              </>
-            )}
-          />
+      <SafeKeyboardAvoidingView>
+        <ScrollView
+          contentContainerStyle={styles.scrollContentContainer}
+          style={styles.scrollView}
+        >
+          <View style={styles.container}>
+            <Text style={styles.title}>Cadastro</Text>
+            <View style={styles.inputContainer}>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Fullnamelnput
+                      label="Nome"
+                      editable={true}
+                      placeholder="Digite o seu nome"
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                      value={value}
+                    />
+                    {errors.name && (
+                      <Text style={styles.error}>
+                        {errors.name.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
 
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <EmailInput
-                  placeholder="Digite seu e-mail"
-                  onChange={onChange}
-                  value={value}
-                />
-                {errors.email && <Text style={styles.error}>{errors.email.message as string}</Text>}
-              </>
-            )}
-          />
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <EmailInput
+                      editable={true}
+                      placeholder="Digite seu e-mail"
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                      value={value}
+                    />
+                    {errors.email && (
+                      <Text style={styles.error}>
+                        {errors.email.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
 
-          {/* <Controller
-            control={control}
-            name="cpf"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <Text style={styles.label}>CPF</Text>
-                <TextInput
-                  placeholder="Insira seu CPF"
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={(text) => onChange(formatCpf(text))}
-                  value={value}
-                  keyboardType="numeric"
-                  maxLength={14}
-                />
-                {errors.cpf && <Text style={styles.error}>{errors.cpf.message as string}</Text>}
-              </>
-            )}
-          /> */}
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <PasswordInput
+                      label="Senha"
+                      placeholder="Insira sua senha"
+                      value={value || ''}
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                    />
+                    {errors.password && (
+                      <Text style={styles.error}>
+                        {errors.password.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
 
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <>
-                <Text style={styles.label}>Senha</Text>
-                <PasswordForm
-                  password={value}
-                  onChangePassword={onChange}
-                />
-                {errors.password && <Text style={styles.error}>{errors.password.message as string}</Text>}
-              </>
-            )}
-          />
+              <Controller
+                control={control}
+                name="confirmPassword"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <PasswordInput
+                      label="Confirmação de senha"
+                      placeholder="Confirme sua senha"
+                      value={value || ''}
+                      onChange={(text) => {
+                        onChange(text);
+                        saveFormData();
+                      }}
+                    />
+                    {errors.confirmPassword && (
+                      <Text style={styles.error}>
+                        {errors.confirmPassword.message as string}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
 
-          <Controller
-            control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, value } }) => (
-              <>
-                <Text style={styles.label}>Confirmação de senha</Text>
-                <PasswordForm
-                  password={value}
-                  onChangePassword={onChange}
-                />
-                {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
-              </>
-            )}
-          />
+              <Controller
+                control={control}
+                name="termsAccept"
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <View style={styles.termsContainer}>
+                      <Checkbox
+                        status={value ? 'checked' : 'unchecked'}
+                        onPress={() => {
+                          const newValue = !value;
+                          onChange(newValue);
+                          saveFormData();
+                        }}
+                        color="#00672e"
+                      />
+                      <Text style={{ fontSize: 13 }}>
+                        Declaro que li e aceito os{' '}
+                      </Text>
+                      <Text
+                        style={[styles.termsText, { fontSize: 13 }]}
+                        onPress={() => router.push('/(terms)/userTerms')}
+                      >
+                        termos de uso
+                      </Text>
+                      <Text>{' e as '}</Text>
+                      <Text
+                        style={[styles.termsText, { fontSize: 13 }]}
+                        onPress={() => router.push('/(terms)/privacyPolicy')}
+                      >
+                        política de privacidade
+                      </Text>
+                    </View>
+                    {error && <Text style={styles.error}>{error.message}</Text>}
+                  </>
+                )}
+              />
 
-          {/* <Controller
-            control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <Text style={styles.label}>Confirmação de senha</Text>
-                <TextInput
-                  placeholder="Repita a sua senha"
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                  autoCapitalize="none"
-                />
-                {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword.message as string}</Text>}
-              </>
-            )}
-          /> */}
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleSubmit(onSubmit)}
+              >
+                {isLoading &&
+                  <ActivityIndicator
+                    size="small"
+                    color="#00672e"
+                  />}
+                <Text
+                  style={styles.buttonText}>
+                  {isLoading ? 'Carregando...' : 'Cadastrar'}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.buttonText}>Cadastrar</Text>
-          </TouchableOpacity>
-
-            <View style={styles.termsContainer}>
-              <Text style={styles.termsText}
-                onPress={() => router.push('/(terms)/userTerms')}>
-                Termos de uso
-              </Text>
-              <Text style={styles.termsText}
-                onPress={() => router.push('/(terms)/privacyPolicy')}>
-                Política de privacidade
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 20,
+              }}
+            >
+              <Text>Já tem uma conta? </Text>
+              <Text style={styles.link} onPress={() => router.push('/')}>
+                Entrar
               </Text>
             </View>
-          
-        </View>
-        <Text style={styles.link} onPress={() => router.push('/')}>Voltar para o login</Text>
-      </View>
-      {isModalVisible && (
-              <RegisterModal 
-                isVisible={isModalVisible} 
-                onClose={() => setIsModalVisible(false)}
-              />
-            )}
-    </ScrollView>
+          </View>
+          {isModalVisible && (
+            <CodeModal
+              isVisible={isModalVisible}
+              onClose={() => setIsModalVisible(false)}
+              route="../"
+              title="Confirme seu Email"
+              subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
+              isPassword={false}
+              onCodeSubmit={async (code) => {
+                const formData = getValues();
+
+                try {
+                  await verifyCodeAndRegister(formData.email, code);
+
+                  await createAccount(
+                    formData.name,
+                    formData.email,
+                    formData.password
+                  );
+
+                  await clearFormData();
+
+
+                } catch (error) {
+                  console.error('Registration error:', error);
+                  throw error;
+                }
+              }}
+            />
+          )}
+        </ScrollView>
+      </SafeKeyboardAvoidingView>
     </ImageBackground>
   );
 }
@@ -187,7 +327,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    backgroundColor: '',
   },
   scrollContentContainer: {
     flexGrow: 1,
@@ -196,32 +335,24 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   container: {
-    backgroundColor: 'rgba(235, 237, 240, 0.9)',
-    borderRadius: 20,
-    padding: 50,
+    padding: 20,
     width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 15,
     alignItems: 'center',
   },
   termsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 20
+    width: '100%',
+    flexWrap: 'wrap',
+    marginBottom: 20,
   },
   termsText: {
-    marginRight: 20,
-    marginLeft: 10,
-    color: '#04d361',
+    color: '#00672e',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
   },
   title: {
-    color: '#04d361',
+    color: '#00672e',
     fontSize: 20,
     marginBottom: 20,
     fontWeight: 'bold',
@@ -247,7 +378,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   button: {
-    backgroundColor: '#04d361',
+    backgroundColor: '#00672e',
     padding: 15,
     alignItems: 'center',
     borderRadius: 4,
@@ -257,8 +388,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   link: {
-    color: '#04d361',
-    marginTop: 20,
+    color: '#00672e',
     textDecorationLine: 'underline',
-  }
+    fontWeight: 'bold',
+  },
 });

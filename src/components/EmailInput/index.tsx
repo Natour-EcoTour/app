@@ -1,23 +1,25 @@
-import React from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
 
 interface EmailInputProps {
   label?: string;
   placeholder?: string;
   value: string;
+  editable: boolean;
   onChange: (text: string) => void;
 }
 
 export default function EmailInput({
   label = 'E-mail',
-  placeholder = 'Digite seu e-mail',
+  placeholder = 'Insira seu e-mail',
   value,
+  editable,
   onChange,
 }: EmailInputProps) {
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        editable={editable}
         placeholder={placeholder}
         keyboardType="email-address"
         autoCapitalize="none"
@@ -41,11 +43,11 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#ffffff',
-    borderColor: '#000',
+    borderColor: 'rgba(0, 0, 0, 0.56)',
     borderWidth: 1,
     padding: 10,
     fontSize: 16,
     marginBottom: 15,
-    borderRadius: 4,
+    borderRadius: 10,
   },
 });
