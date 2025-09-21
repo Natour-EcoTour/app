@@ -63,8 +63,8 @@ export default function Index() {
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: 'vitorantunes2003@gmail.com',
-      password: 'Aa12345678!',
+      email: '',
+      password: '',
       remember_me: false,
     },
   });
