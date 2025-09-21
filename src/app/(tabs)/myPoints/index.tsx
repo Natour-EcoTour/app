@@ -18,10 +18,8 @@ export default function MyPoints() {
   const [points, setPoints] = useState<any[]>([]);
 
   const fetchPoints = async () => {
-    console.log('Fetching points...');
     setIsLoading(true);
     const data = await getMyPoints({ status: 'true' });
-    console.log('Points fetched:', data?.points?.length || 0);
     setPoints(data?.points || []);
     setIsLoading(false);
   };

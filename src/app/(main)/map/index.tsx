@@ -24,7 +24,6 @@ import { points } from '@/src/utils/assets';
 import { mapPoints } from '@/services/map/mapPoints';
 import { mapPointDetails } from '@/services/map/mapPointDetailsService';
 import { addView } from '@/services/map/addViewService';
-import { translateWeekday } from '@/src/utils/weekdayTranslation';
 
 
 export default function Map() {
@@ -61,6 +60,28 @@ export default function Map() {
       'trail': points.trail,
     };
     return iconMap[pointType] || points.marker;
+  };
+
+  function translateWeekday(week_start: string | number | undefined): string {
+    if (typeof week_start === 'undefined' || week_start === null) return '';
+    const weekdays: { [key: string]: string } = {
+      'monday': 'Segunda-feira',
+      'tuesday': 'Terça-feira',
+      'wednesday': 'Quarta-feira',
+      'thursday': 'Quinta-feira',
+      'friday': 'Sexta-feira',
+      'saturday': 'Sábado',
+      'sunday': 'Domingo',
+      '1': 'Segunda-feira',
+      '2': 'Terça-feira',
+      '3': 'Quarta-feira',
+      '4': 'Quinta-feira',
+      '5': 'Sexta-feira',
+      '6': 'Sábado',
+      '7': 'Domingo',
+    };
+    const key = String(week_start).toLowerCase();
+    return weekdays[key] || '';
   };
 
   const fetchPoints = async () => {

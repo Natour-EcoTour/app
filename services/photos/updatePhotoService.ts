@@ -1,7 +1,6 @@
 import apiClient from '@/services/apiClient';
 import Toast from 'react-native-toast-message';
 
-// Helper function to get MIME type from URI
 const getMimeType = (uri: string): string => {
     const extension = uri.split('.').pop()?.toLowerCase();
     switch (extension) {
@@ -23,7 +22,6 @@ export const updatePhoto = async (entityType: string, entityId: number, photoId:
     try {
         const formData = new FormData();
         
-        // Create file object for React Native
         const mimeType = getMimeType(imageUri);
         const imageFile = {
             uri: imageUri,
@@ -33,7 +31,6 @@ export const updatePhoto = async (entityType: string, entityId: number, photoId:
         
         formData.append('image', imageFile);
 
-        // users or points
         const response = await apiClient.put(`${entityType}/${entityId}/photo/update/${photoId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',

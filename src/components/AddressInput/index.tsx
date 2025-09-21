@@ -75,7 +75,10 @@ export default function AddressInput({
 
   const handleCepChange = async (text: string) => {
     const cleanedCep = text.replace(/\D/g, '');
-    onChange({ ...value, cep: cleanedCep });
+    
+    // Update CEP immediately
+    const updatedValue = { ...value, cep: cleanedCep };
+    onChange(updatedValue);
 
     if (cleanedCep.length === 8) {
       try {
@@ -85,29 +88,40 @@ export default function AddressInput({
         );
         const data = await response.json();
 
-        if (!data.erro) {
-          onChange({
-            ...value,
-            cep: cleanedCep,
+        if (!data.erro && response.ok) {
+          // Create the complete updated object with all fields
+          const completeUpdatedValue = {
+            ...updatedValue, // Keep the current CEP value
             city: data.city || '',
             neighborhood: data.district || '',
             uf: data.state || '',
             street: data.address || data.address_name || '',
             latitude: data.lat || '',
             longitude: data.lng || '',
+            // Keep number unchanged
+            number: value.number || '',
+          };
+          
+          onChange(completeUpdatedValue);
+          
+          Toast.show({
+            type: 'success',
+            text1: 'CEP encontrado!',
+            text2: 'Endereço preenchido automaticamente.',
           });
         } else {
           Toast.show({
             type: 'error',
             text1: 'Erro no CEP',
-            text2: `CEP não encontrado ou inválido.`,
+            text2: 'CEP não encontrado ou inválido.',
           });
         }
       } catch (error) {
+        console.error('CEP API error:', error);
         Toast.show({
           type: 'error',
           text1: 'Erro no CEP',
-          text2: `CEP não encontrado ou inválido.`,
+          text2: 'Não foi possível consultar o CEP. Verifique sua conexão.',
         });
       } finally {
         setIsFetchingCep(false);
@@ -121,7 +135,7 @@ export default function AddressInput({
         label="Latitude"
         mode="outlined"
         style={styles.input}
-        value={value.latitude}
+        value={value.latitude || ''}
         onChangeText={text => handleCoordinateChange(text, 'latitude')}
         keyboardType="numbers-and-punctuation"
         theme={inputTheme}
@@ -138,7 +152,7 @@ export default function AddressInput({
         label="Longitude"
         mode="outlined"
         style={styles.input}
-        value={value.longitude}
+        value={value.longitude || ''}
         onChangeText={text => handleCoordinateChange(text, 'longitude')}
         keyboardType="numbers-and-punctuation"
         theme={inputTheme}
@@ -164,12 +178,14 @@ export default function AddressInput({
           <TextInput
             label="CEP"
             mode="outlined"
+            style={styles.input}
             theme={inputTheme}
             outlineColor="#cccccc"
             activeOutlineColor="#00672e"
-            value={value.cep}
+            value={value.cep || ''}
             onChangeText={handleCepChange}
             keyboardType="numeric"
+            maxLength={8}
             right={isFetchingCep ? <TextInput.Icon icon="loading" /> : undefined}
           />
           {errors.cep && <Text style={styles.error}>{errors.cep}</Text>}
@@ -177,10 +193,11 @@ export default function AddressInput({
           <TextInput
             label="Cidade"
             mode="outlined"
+            style={styles.input}
             theme={inputTheme}
             outlineColor="#cccccc"
             activeOutlineColor="#00672e"
-            value={value.city}
+            value={value.city || ''}
             onChangeText={text => handleTextChange('city', text)}
           />
           {errors.city && <Text style={styles.error}>{errors.city}</Text>}
@@ -188,10 +205,11 @@ export default function AddressInput({
           <TextInput
             label="Bairro"
             mode="outlined"
+            style={styles.input}
             theme={inputTheme}
             outlineColor="#cccccc"
             activeOutlineColor="#00672e"
-            value={value.neighborhood}
+            value={value.neighborhood || ''}
             onChangeText={text => handleTextChange('neighborhood', text)}
           />
           {errors.neighborhood && (
@@ -201,11 +219,12 @@ export default function AddressInput({
           <TextInput
             label="UF"
             mode="outlined"
+            style={styles.input}
             theme={inputTheme}
             outlineColor="#cccccc"
             activeOutlineColor="#00672e"
-            value={value.uf}
-            onChangeText={text => handleTextChange('uf', text)}
+            value={value.uf || ''}
+            onChangeText={text => handleTextChange('uf', text.toUpperCase())}
             maxLength={2}
             autoCapitalize="characters"
           />
@@ -214,10 +233,11 @@ export default function AddressInput({
           <TextInput
             label="Rua"
             mode="outlined"
+            style={styles.input}
             theme={inputTheme}
             outlineColor="#cccccc"
             activeOutlineColor="#00672e"
-            value={value.street}
+            value={value.street || ''}
             onChangeText={text => handleTextChange('street', text)}
           />
           {errors.street && <Text style={styles.error}>{errors.street}</Text>}
@@ -225,6 +245,7 @@ export default function AddressInput({
           <TextInput
             label="Número"
             mode="outlined"
+            style={styles.input}
             theme={inputTheme}
             outlineColor="#cccccc"
             activeOutlineColor="#00672e"

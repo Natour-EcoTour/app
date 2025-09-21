@@ -16,26 +16,38 @@ import Toast from 'react-native-toast-message';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MAX_IMAGES = 10;
 
+interface ExistingPhoto {
+  id: number;
+  url: string;
+  public_id: string;
+}
+
 interface AddPointMidiaProps {
   selectedImages: string[];
   setSelectedImages: Dispatch<SetStateAction<string[]>>;
+  existingPhotos?: ExistingPhoto[];
+  onRemoveExistingPhoto?: (photoId: number, publicId: string) => void;
 }
 
 export default function AddPointMidia({
   selectedImages,
   setSelectedImages,
+  existingPhotos = [],
+  onRemoveExistingPhoto,
 }: AddPointMidiaProps) {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isImageModalVisible, setIsImageModalVisible] =
     useState<boolean>(false);
   const [previewImageUri, setPreviewImageUri] = useState<string | null>(null);
 
+  const totalImageCount = existingPhotos.length + selectedImages.length;
+
   const pickImageAsync = async () => {
-    if (selectedImages.length >= MAX_IMAGES) {
+    if (totalImageCount >= MAX_IMAGES) {
       Toast.show({
         type: 'info',
         text1: 'Limite de fotos atingido',
-        text2: `Você já selecionou o máximo de fotos permitidas (${MAX_IMAGES}).`,
+        text2: `Você já tem o máximo de fotos permitidas (${MAX_IMAGES}).`,
       });
       return;
     }
@@ -48,13 +60,19 @@ export default function AddPointMidia({
 
     if (!result.canceled) {
       const newUris = result.assets.map(asset => asset.uri);
-      const remainingSlots = MAX_IMAGES - selectedImages.length;
+      const remainingSlots = MAX_IMAGES - totalImageCount;
       const filteredUris = newUris.slice(0, remainingSlots);
       setSelectedImages(prev => [...prev, ...filteredUris]);
     }
   };
 
   const handleClose = () => setIsModalVisible(false);
+
+  const handleRemoveExisting = (photoId: number, publicId: string) => {
+    if (onRemoveExistingPhoto) {
+      onRemoveExistingPhoto(photoId, publicId);
+    }
+  };
 
   return (
     <View style={{ width: '100%' }}>
@@ -77,13 +95,37 @@ export default function AddPointMidia({
       </TouchableOpacity>
 
       <Text style={styles.counterText}>
-        {selectedImages.length} / {MAX_IMAGES} imagens selecionadas
+        {totalImageCount} / {MAX_IMAGES} imagens
       </Text>
 
-      {selectedImages.length > 0 ? (
+      {/* All Photos Section */}
+      {(existingPhotos.length > 0 || selectedImages.length > 0) && (
         <View style={styles.gridContainer}>
+          {/* Render existing photos first */}
+          {existingPhotos.map((photo) => (
+            <View key={`existing-${photo.id}`} style={styles.imageWrapper}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsImageModalVisible(true);
+                  setPreviewImageUri(photo.url);
+                }}
+              >
+                <Image source={{ uri: photo.url }} style={styles.image} />
+              </TouchableOpacity>
+              {onRemoveExistingPhoto && (
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => handleRemoveExisting(photo.id, photo.public_id)}
+                >
+                  <Ionicons name="trash" size={25} color="red" />
+                </TouchableOpacity>
+              )}
+            </View>
+          ))}
+          
+          {/* Render new selected images */}
           {selectedImages.map((uri, index) => (
-            <View key={index} style={styles.imageWrapper}>
+            <View key={`new-${index}`} style={styles.imageWrapper}>
               <TouchableOpacity
                 onPress={() => {
                   setIsImageModalVisible(true);
@@ -103,7 +145,10 @@ export default function AddPointMidia({
             </View>
           ))}
         </View>
-      ) : (
+      )}
+
+      {/* Show message when no images */}
+      {totalImageCount === 0 && (
         <Text style={styles.noImageText}>Nenhuma imagem selecionada</Text>
       )}
 
@@ -223,6 +268,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
     fontSize: 14,
+    color: '#333',
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 15,
+    marginBottom: 10,
     color: '#333',
   },
   gridContainer: {

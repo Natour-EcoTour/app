@@ -29,7 +29,6 @@ export default function changePassword() {
     });
 
     const onSubmit = async (data: FormData) => {
-        console.log('Password change data:', data);
         try {
             setIsLoading(true);
             await changeUserPassword(

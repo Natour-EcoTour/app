@@ -66,7 +66,6 @@ export default function Profile() {
     }
   }) as any;
 
-  // IMAGE PICKER
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -79,7 +78,6 @@ export default function Profile() {
     }
   };
 
-  // CARREGA INFORMAÇÕES
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -106,15 +104,12 @@ export default function Profile() {
     fetchUserInfo();
   }, [setValue]);
 
-  // EDITAR NOME E FOTO
   const onSubmit = async (data: any) => {
     try {
       setIsLoading(true);
 
-      // Update user name
       await updateUser(data.name);
 
-      // Handle photo upload if a new image was selected
       if (selectedImage && selectedImage !== userInfo?.photo) {
         await handleImage();
       }
@@ -133,7 +128,6 @@ export default function Profile() {
     }
   };
 
-  // GUARDAR INFOS PRE EDIÇÃO
   const handleEditToggle = () => {
     if (isEditable && userInfo) {
       setValue('name', userInfo.username || '');
@@ -142,7 +136,6 @@ export default function Profile() {
     setIsEditable(prev => !prev);
   };
 
-  // APAGAR CONTA
   const handleConfirmDelete = async () => {
     setIsConfirmationVisible(false);
     setIsLoading(true);
@@ -154,7 +147,6 @@ export default function Profile() {
     } catch (error: any) {
       if (error.isNetworkError || error.isUnauthorized) {
         router.replace('/');
-        console.log('erro de network')
       } else {
         Toast.show({
           type: 'error',
@@ -167,7 +159,6 @@ export default function Profile() {
     }
   };
 
-  // IMAGE HANDLING
   const handleImage = async () => {
     if (!selectedImage || !userInfo) {
       throw new Error('Nenhuma imagem selecionada ou informações do usuário não carregadas');
@@ -193,10 +184,8 @@ export default function Profile() {
           throw new Error('Could not find photo ID in response');
         }
 
-        console.log('Updating existing photo with ID:', photoId);
         await updatePhoto('users', userInfo.id, photoId, selectedImage);
       } else {
-        console.log('Uploading new photo...');
         await uploadPhoto('users', userInfo.id, selectedImage);
       }
       const updatedUserInfo = await myInfo();

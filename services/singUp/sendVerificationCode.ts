@@ -14,7 +14,6 @@ export const sendVerificationCode = async (name: string, email: string, password
         return response.data;
     } catch (error: any) {
         const apiError = error?.response?.data?.detail;
-        console.log('API Error:', apiError);
         Toast.show({
             type: 'error',
             text1: 'Erro ao enviar código de verificação',

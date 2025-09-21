@@ -16,7 +16,7 @@ interface CustomModalProps {
   isVisible: boolean;
   onClose: () => void;
   title?: string;
-  route: RelativePathString;
+  route?: RelativePathString;
   imageSource?: ImageSourcePropType;
   imageUri?: string;
 }
@@ -33,7 +33,9 @@ export default function CustomModal({
 
   const handleClose = () => {
     onClose();
-    router.push(route);
+    if (route) {
+      router.push(route);
+    }
   };
 
   const source =

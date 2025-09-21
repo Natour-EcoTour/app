@@ -88,7 +88,6 @@ export default function RegisterScreen() {
     try {
       await SecureStore.deleteItemAsync('registerFormData');
       reset();
-      console.log('Form data cleared successfully');
     } catch (error) {
       console.error('Error clearing form data:', error);
     }
@@ -293,7 +292,6 @@ export default function RegisterScreen() {
               subtitle="Enviamos um código para seu email. Digite-o abaixo para confirmar sua conta."
               isPassword={false}
               onCodeSubmit={async (code) => {
-                console.log('Código recebido:', code);
                 const formData = getValues();
 
                 try {

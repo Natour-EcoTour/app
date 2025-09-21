@@ -28,7 +28,6 @@ interface LoginFormData {
   remember_me: boolean;
 }
 
-// FIXME ADICIONAR SAFEAREA
 export default function Index() {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);

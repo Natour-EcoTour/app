@@ -21,7 +21,6 @@ const getMimeType = (uri: string): string => {
 
 export const addPhoto = async (entityType: string, entityId: number, imageUri: string) => {
     try {
-        console.log(`Starting image upload for ${entityType} ${entityId}, image: ${imageUri}`);
 
         const formData = new FormData();
 
@@ -33,13 +32,11 @@ export const addPhoto = async (entityType: string, entityId: number, imageUri: s
         } as any;
 
         formData.append('image', imageFile);
-        console.log(`FormData created with image type: ${mimeType}`);
 
         const endpoint = entityType === 'users'
             ? `users/${entityId}/photo/upload/`
             : `points/${entityId}/photo/upload/`;
 
-        console.log(`Making POST request to: ${endpoint}`);
         const response = await apiClient.post(endpoint, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -47,7 +44,6 @@ export const addPhoto = async (entityType: string, entityId: number, imageUri: s
             timeout: 30000,
         });
 
-        console.log(`Image upload successful:`, response.data);
         return response.data;
     } catch (error: any) {
         console.error('Image upload error:', error);

@@ -22,7 +22,6 @@ const getMimeType = (uri: string): string => {
 
 // Helper function to create FormData for image upload
 const createImageFormData = (imageUri: string): FormData => {
-    console.log('Creating FormData for image URI:', imageUri);
     
     if (!imageUri) {
         throw new Error('Image URI is required');
@@ -42,7 +41,6 @@ const createImageFormData = (imageUri: string): FormData => {
         name: `image.${mimeType.split('/')[1]}`,
     } as any;
     
-    console.log('Image file object:', imageFile);
     
     formData.append('image', imageFile);
     return formData;
@@ -62,13 +60,12 @@ export const uploadPhoto = async (entityType: 'users' | 'points', entityId: numb
         // Construct the endpoint based on entity type
         const endpoint = `${entityType}/${entityId}/photo/upload/`;
 
-        console.log(`Uploading photo to: ${endpoint}`);
-        console.log('FormData created for:', imageUri);
 
         const response = await apiClient.post(endpoint, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
+            timeout: 30000,
         });
         
         return response.data;
@@ -93,8 +90,7 @@ export const updatePhoto = async (entityType: 'users' | 'points', entityId: numb
 
         // Add trailing slash to match API requirements
         const endpoint = `${entityType}/${entityId}/photo/update/${photoId}/`;
-        console.log(`Updating photo at: ${endpoint}`);
-        console.log('FormData created for:', imageUri);
+
 
         const response = await apiClient.put(endpoint, formData, {
             headers: {
@@ -119,13 +115,81 @@ export const updatePhoto = async (entityType: 'users' | 'points', entityId: numb
  */
 export const deletePhoto = async (entityType: 'users' | 'points', entityId: number, photoId: number) => {
     try {
-        const response = await apiClient.delete(`${entityType}/${entityId}/photo/delete/${photoId}`);
+        const response = await apiClient.delete(`${entityType}/${entityId}/photo/delete/${photoId}/`);
         return response.data;
     } catch (error: any) {
         const apiError = error?.response?.data?.error || error?.message;
         Toast.show({
             type: 'error',
             text1: 'Erro ao deletar foto',
+            text2: apiError,
+        });
+        throw error;
+    }
+};
+
+/**
+ * Delete multiple photos using the photos/delete endpoint
+ * @param photoIds - Array of photo IDs to delete
+ * @param publicIds - Array of public IDs corresponding to the photos
+ * @returns Promise with the response data
+ */
+export const deleteMultiplePhotos = async (photoIds: number[], publicIds: string[]) => {
+    try {
+        const response = await apiClient.delete('photos/delete/', {
+            data: {
+                ids: photoIds,
+                public_ids: publicIds
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        const apiError = error?.response?.data?.error || error?.message;
+        Toast.show({
+            type: 'error',
+            text1: 'Erro ao deletar fotos',
+            text2: apiError,
+        });
+        throw error;
+    }
+};
+
+/**
+ * Get photos for a specific user
+ * @param userId - The ID of the user
+ * @returns Promise with the photos data
+ */
+export const getPhotosByUser = async (userId: number) => {
+    try {
+        const response = await apiClient.get(`photos/?user_id=${userId}`);
+        return response.data;
+    } catch (error: any) {
+        const apiError = error?.response?.data?.error || error?.message;
+        console.error('Error getting user photos:', error);
+        Toast.show({
+            type: 'error',
+            text1: 'Erro ao buscar fotos',
+            text2: apiError,
+        });
+        throw error;
+    }
+};
+
+/**
+ * Get photos for a specific point
+ * @param pointId - The ID of the point
+ * @returns Promise with the photos data
+ */
+export const getPhotosByPoint = async (pointId: number) => {
+    try {
+        const response = await apiClient.get(`photos/?point_id=${pointId}`);
+        return response.data;
+    } catch (error: any) {
+        const apiError = error?.response?.data?.error || error?.message;
+        console.error('Error getting point photos:', error);
+        Toast.show({
+            type: 'error',
+            text1: 'Erro ao buscar fotos',
             text2: apiError,
         });
         throw error;
@@ -151,3 +215,9 @@ export const deleteUserPhoto = (userId: number, photoId: number) =>
 
 export const deletePointPhoto = (pointId: number, photoId: number) => 
     deletePhoto('points', pointId, photoId);
+
+// Legacy functions for compatibility with existing code
+export const addPhoto = uploadPhoto;
+export const addUserPhoto = uploadUserPhoto;
+export const addPointPhoto = uploadPointPhoto;
+export const getPhotoId = getPhotosByUser;

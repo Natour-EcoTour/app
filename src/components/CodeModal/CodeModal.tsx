@@ -56,7 +56,7 @@ export default function CodeModal({
                 router.push(route);
             });
         } catch (error) {
-            console.log('Error validating code:', error);
+            console.error('Error validating code:', error);
         } finally {
             setIsLoading(false);
         }

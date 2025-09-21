@@ -31,11 +31,6 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       await SecureStore.deleteItemAsync('access');
       await SecureStore.deleteItemAsync('refresh');
-      Toast.show({
-        type: 'error',
-        text1: 'Erro',
-        text2: error.response?.data?.message,
-      });
     }
 
     return Promise.reject(error);

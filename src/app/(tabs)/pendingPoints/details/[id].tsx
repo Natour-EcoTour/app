@@ -15,7 +15,6 @@ import TimeContainer from '@/src/components/TimeContainer';
 import AddressContainer from '@/src/components/AddressContainer';
 import { pointDetails } from '@/services/points/pointDetailsService';
 import { ActivityIndicator } from 'react-native-paper';
-import { translateWeekday } from '@/src/utils/weekdayTranslation';
 
 export default function PendingPointDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -64,6 +63,23 @@ export default function PendingPointDetail() {
       </View>
     );
   }
+  function translateWeekday(weekday: any): string | undefined {
+    const weekdays: { [key: string]: string } = {
+      'monday': 'Segunda-feira',
+      'tuesday': 'Terça-feira',
+      'wednesday': 'Quarta-feira',
+      'thursday': 'Quinta-feira',
+      'friday': 'Sexta-feira',
+      'saturday': 'Sábado',
+      'sunday': 'Domingo',
+    };
+
+    if (typeof weekday === 'string') {
+      return weekdays[weekday.toLowerCase()];
+    }
+    return undefined;
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.analiseWrapper}>

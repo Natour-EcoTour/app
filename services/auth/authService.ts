@@ -13,7 +13,6 @@ export const loginUser = async (email: string, password: string, remember_me: bo
         return response.data;
     } catch (error: any) {
         const apiError = error?.response?.data?.error;
-        // const apiError = error?.response?.data?.error || 'Ocorreu um erro. Tente novamente.';
         Toast.show({
             type: 'error',
             text1: apiError,

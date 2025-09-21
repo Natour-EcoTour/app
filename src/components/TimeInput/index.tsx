@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -72,8 +72,32 @@ export default function TimeInput({
   const [startTimeSelected, setStartTimeSelected] = useState(!!value.timeStart);
   const [endTimeSelected, setEndTimeSelected] = useState(!!value.timeEnd);
 
+  useEffect(() => {
+
+    if (value.weekStart && value.weekStart !== selectedDayStart) {
+      setSelectedDayStart(value.weekStart);
+    }
+
+    if (value.weekEnd && value.weekEnd !== selectedDayEnd) {
+      setSelectedDayEnd(value.weekEnd);
+    }
+
+    if (value.timeStart) {
+      const newStartTime = createDateFromTimeString(value.timeStart);
+      setStartTime(newStartTime);
+      setStartTimeSelected(true);
+    }
+
+    if (value.timeEnd) {
+      const newEndTime = createDateFromTimeString(value.timeEnd);
+      setEndTime(newEndTime);
+      setEndTimeSelected(true);
+    }
+  }, [value.weekStart, value.weekEnd, value.timeStart, value.timeEnd]);
+
   const updateParent = (changes: Partial<typeof value>) => {
-    onChange({ ...value, ...changes });
+    const newValue = { ...value, ...changes };
+    onChange(newValue);
   };
 
   const onStartTimeChange = (event: any, date?: Date) => {
@@ -96,7 +120,6 @@ export default function TimeInput({
     if (date) {
       setEndTime(date);
       setEndTimeSelected(true);
-      // Format time as HH:MM for the API
       const timeString = date.toLocaleTimeString('en-US', {
         hour12: false,
         hour: '2-digit',
@@ -157,7 +180,7 @@ export default function TimeInput({
         onPress={() => setShowStartPicker(true)}
       >
         <Text style={styles.buttonText}>
-          {startTimeSelected
+          {startTimeSelected && value.timeStart
             ? startTime.toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',
@@ -182,7 +205,7 @@ export default function TimeInput({
         onPress={() => setShowEndPicker(true)}
       >
         <Text style={styles.buttonText}>
-          {endTimeSelected
+          {endTimeSelected && value.timeEnd
             ? endTime.toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',

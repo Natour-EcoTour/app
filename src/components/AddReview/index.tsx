@@ -57,7 +57,6 @@ export default function AddReview() {
                 style={styles.button}
                 onPress={() => {
                   setIsModalVisible(false);
-                  console.log(`Avaliação enviada: ${rating} estrelas`);
                 }}
               >
                 <Text style={styles.buttonText}>Enviar Avaliação</Text>

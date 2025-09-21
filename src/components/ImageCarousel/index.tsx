@@ -15,7 +15,12 @@ const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32;
 
 type ImageItem = {
   id: string;
-  image: string;
+  image: {
+    id: number;
+    public_id: string;
+    url: string;
+  }
+
 };
 
 type ImageCarouselProps = {
@@ -65,7 +70,7 @@ export default function ImageCarousel({
     <TouchableOpacity onPress={() => onImagePress && onImagePress(item)}>
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: item.image }}
+          source={{ uri: item.image.url }}
           style={styles.image}
           resizeMode="center"
         />
@@ -73,7 +78,6 @@ export default function ImageCarousel({
     </TouchableOpacity>
   );
 
-  // Don't render anything if there are no images
   if (safeImages.length === 0) {
     return (
       <View style={styles.noImagesContainer}>

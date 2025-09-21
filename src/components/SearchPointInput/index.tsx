@@ -28,7 +28,6 @@ export default function SearchPointInput({
     if (searchTerm.trim().length >= 2) {
       try {
         const results = await searchPoints({ name: searchTerm });
-        console.log('Search results:', results);
         setSearchResults(results || []);
       } catch (error) {
         console.error('Search error:', error);

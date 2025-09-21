@@ -19,7 +19,6 @@ export const deleteUser = async () => {
             await SecureStore.deleteItemAsync('access');
             await SecureStore.deleteItemAsync('refresh');
         } catch (storeError) {
-            console.log('Error clearing tokens:', storeError);
         }
 
         error.isUnauthorized = error?.response?.status === 401;

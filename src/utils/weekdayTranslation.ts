@@ -1,46 +1,23 @@
-const WEEKDAY_TRANSLATIONS: { [key: string]: string } = {
-  'monday': 'Segunda-feira',
-  'tuesday': 'Terça-feira',
-  'wednesday': 'Quarta-feira',
-  'thursday': 'Quinta-feira',
-  'friday': 'Sexta-feira',
-  'saturday': 'Sábado',
-  'sunday': 'Domingo',
+const REVERSE_WEEKDAY_TRANSLATIONS: Record<string, string> = {
+  'segunda': 'monday',
+  'segunda-feira': 'monday',
+  'terça': 'tuesday',
+  'terca': 'tuesday',
+  'terça-feira': 'tuesday',
+  'terca-feira': 'tuesday',
+  'quarta': 'wednesday',
+  'quarta-feira': 'wednesday',
+  'quinta': 'thursday',
+  'quinta-feira': 'thursday',
+  'sexta': 'friday',
+  'sexta-feira': 'friday',
+  'sábado': 'saturday',
+  'sabado': 'saturday',
+  'domingo': 'sunday',
 };
 
-// Reverse mapping for Portuguese to English translation
-const REVERSE_WEEKDAY_TRANSLATIONS: { [key: string]: string } = {
-  'Segunda-feira': 'monday',
-  'Terça-feira': 'tuesday',
-  'Quarta-feira': 'wednesday',
-  'Quinta-feira': 'thursday',
-  'Sexta-feira': 'friday',
-  'Sábado': 'saturday',
-  'Domingo': 'sunday',
-};
-
-/**
- * Translates an English weekday (lowercase) to Portuguese
- * @param weekday - The English weekday in lowercase
- * @returns The Portuguese weekday name or empty string if invalid
- */
-export function translateWeekday(weekday: string | null | undefined): string {
-  if (!weekday) {
-    return '';
-  }
-  
-  return WEEKDAY_TRANSLATIONS[weekday] || '';
-}
-
-/**
- * Translates a Portuguese weekday to English (lowercase)
- * @param weekday - The Portuguese weekday name
- * @returns The English weekday name in lowercase or empty string if invalid
- */
-export function translateWeekdayToEnglish(weekday: string | null | undefined): string {
-  if (!weekday) {
-    return '';
-  }
-  
-  return REVERSE_WEEKDAY_TRANSLATIONS[weekday] || '';
+export function translateWeekdayToEnglish(weekday?: string | null): string {
+  if (!weekday) return '';
+  const key = weekday.toLowerCase().trim();
+  return REVERSE_WEEKDAY_TRANSLATIONS[key] || '';
 }

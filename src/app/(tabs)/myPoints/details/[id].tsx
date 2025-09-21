@@ -18,7 +18,6 @@ import AddressContainer from '@/src/components/AddressContainer';
 import CustomConfirmationModal from '@/src/components/CustomConfirmationModal';
 import { pointDetails } from '@/services/points/pointDetailsService';
 import { changePointStatus } from '@/services/points/changePointStatusService';
-import { translateWeekday } from '@/src/utils/weekdayTranslation';
 
 export default function PointDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -103,6 +102,36 @@ export default function PointDetail() {
       </View>
     );
   }
+  function translateWeekday(weekday: any): string | undefined {
+    const weekdays: { [key: string]: string } = {
+      'monday': 'Segunda-feira',
+      'tuesday': 'Terça-feira',
+      'wednesday': 'Quarta-feira',
+      'thursday': 'Quinta-feira',
+      'friday': 'Sexta-feira',
+      'saturday': 'Sábado',
+      'sunday': 'Domingo',
+      'segunda': 'Segunda-feira',
+      'terça': 'Terça-feira',
+      'quarta': 'Quarta-feira',
+      'quinta': 'Quinta-feira',
+      'sexta': 'Sexta-feira',
+      'sábado': 'Sábado',
+      'domingo': 'Domingo',
+      '1': 'Segunda-feira',
+      '2': 'Terça-feira',
+      '3': 'Quarta-feira',
+      '4': 'Quinta-feira',
+      '5': 'Sexta-feira',
+      '6': 'Sábado',
+      '7': 'Domingo',
+    };
+
+    if (!weekday) return undefined;
+    const key = String(weekday).toLowerCase();
+    return weekdays[key] || weekday;
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.analiseWrapper}>
