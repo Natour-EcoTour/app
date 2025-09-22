@@ -20,6 +20,7 @@ export default function FullnameInput({
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        placeholderTextColor="#6B7280"
         editable={editable}
         placeholder={placeholder}
         keyboardType="default"

@@ -14,6 +14,7 @@ export default function PasswordForm({
   return (
     <View style={styles.container}>
       <TextInput
+        placeholderTextColor="#6B7280"
         placeholder={placeholder}
         keyboardType="default"
         autoCapitalize="none"

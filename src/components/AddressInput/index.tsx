@@ -75,7 +75,7 @@ export default function AddressInput({
 
   const handleCepChange = async (text: string) => {
     const cleanedCep = text.replace(/\D/g, '');
-    
+
     // Update CEP immediately
     const updatedValue = { ...value, cep: cleanedCep };
     onChange(updatedValue);
@@ -101,9 +101,9 @@ export default function AddressInput({
             // Keep number unchanged
             number: value.number || '',
           };
-          
+
           onChange(completeUpdatedValue);
-          
+
           Toast.show({
             type: 'success',
             text1: 'CEP encontrado!',
@@ -132,6 +132,7 @@ export default function AddressInput({
   return (
     <View style={styles.container}>
       <TextInput
+        placeholderTextColor="#6B7280"
         label="Latitude"
         mode="outlined"
         style={styles.input}
@@ -149,6 +150,7 @@ export default function AddressInput({
       )}
 
       <TextInput
+        placeholderTextColor="#6B7280"
         label="Longitude"
         mode="outlined"
         style={styles.input}
@@ -176,6 +178,7 @@ export default function AddressInput({
       {isChecked && (
         <>
           <TextInput
+            placeholderTextColor="#6B7280"
             label="CEP"
             mode="outlined"
             style={styles.input}
@@ -191,6 +194,7 @@ export default function AddressInput({
           {errors.cep && <Text style={styles.error}>{errors.cep}</Text>}
 
           <TextInput
+            placeholderTextColor="#6B7280"
             label="Cidade"
             mode="outlined"
             style={styles.input}
@@ -203,6 +207,7 @@ export default function AddressInput({
           {errors.city && <Text style={styles.error}>{errors.city}</Text>}
 
           <TextInput
+            placeholderTextColor="#6B7280"
             label="Bairro"
             mode="outlined"
             style={styles.input}
@@ -217,6 +222,7 @@ export default function AddressInput({
           )}
 
           <TextInput
+            placeholderTextColor="#6B7280"
             label="UF"
             mode="outlined"
             style={styles.input}
@@ -231,6 +237,7 @@ export default function AddressInput({
           {errors.uf && <Text style={styles.error}>{errors.uf}</Text>}
 
           <TextInput
+            placeholderTextColor="#6B7280"
             label="Rua"
             mode="outlined"
             style={styles.input}
@@ -243,6 +250,7 @@ export default function AddressInput({
           {errors.street && <Text style={styles.error}>{errors.street}</Text>}
 
           <TextInput
+            placeholderTextColor="#6B7280"
             label="Número"
             mode="outlined"
             style={styles.input}

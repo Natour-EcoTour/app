@@ -21,18 +21,17 @@ export default function PasswordInput({
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
 
-      {/* Field container with border that holds input + icon */}
       <View style={styles.fieldContainer}>
         <TextInput
+          placeholderTextColor="#6B7280"
           placeholder={placeholder}
           keyboardType="default"
           autoCapitalize="none"
           secureTextEntry={!showPassword}
           autoComplete="password"
-          // For iOS autofill
           textContentType="password"
           style={styles.input}
-          value={value}
+          value={value ?? ''}
           onChangeText={onChange}
         />
 

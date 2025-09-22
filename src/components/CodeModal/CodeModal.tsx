@@ -83,13 +83,13 @@ export default function CodeModal({
 
                         <View style={styles.inputContainer}>
                             <TextInput
+                                placeholderTextColor="#6B7280"
                                 style={styles.input}
                                 placeholder="00000"
                                 value={code}
                                 onChangeText={setCode}
                                 maxLength={5}
                                 textAlign="center"
-                                placeholderTextColor="#999"
                                 autoFocus={true}
                             />
                         </View>

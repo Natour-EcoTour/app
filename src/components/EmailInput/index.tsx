@@ -19,13 +19,14 @@ export default function EmailInput({
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        placeholderTextColor="#6B7280"
         editable={editable}
         placeholder={placeholder}
         keyboardType="email-address"
         autoCapitalize="none"
         autoComplete="email"
         style={styles.input}
-        value={value}
+        value={value ?? ''}
         onChangeText={onChange}
       />
     </View>

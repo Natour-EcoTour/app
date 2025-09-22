@@ -74,7 +74,7 @@ export default function Index() {
       setIsLoading(true);
 
       const result = await login(data);
-      
+
       if (result && result.access && result.refresh) {
         setIsLoading(false);
         setIsModalVisible(true);
@@ -148,10 +148,7 @@ export default function Index() {
               name="password"
               render={({ field: { onChange, value } }) => (
                 <View style={styles.field}>
-                  <PasswordInput
-                    value={value}
-                    onChange={(text: string) => onChange(text)}
-                  />
+                  <PasswordInput value={value} onChange={(text: string) => onChange(text)} />
                   {errors.password && (
                     <Text style={styles.error}>{errors.password.message}</Text>
                   )}
