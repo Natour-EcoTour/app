@@ -1,16 +1,24 @@
 {
-  "build": {
-    "preview": {
-      "android": { "buildType": "apk" },
-      "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/"
-      }
-    },
-    "production": {
-      "android": { "buildType": "app-bundle" },
-      "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/"
-      }
+    "build": {
+        "preview": {
+            "android": {
+                "buildType": "apk"
+            },
+            "env": {
+                "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/"
+            }
+        },
+        "production": {
+            "android": {
+                "buildType": "app-bundle"
+            },
+            "env": {
+                "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/"
+            }
+        },
+        "updates": {
+            "checkAutomatically": "ON_LOAD",
+            "fallbackToCacheTimeout": 0
+        }
     }
-  }
 }
