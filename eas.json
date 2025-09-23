@@ -2,15 +2,13 @@
   "build": {
     "preview": {
       "android": { "buildType": "apk" },
-      "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/"
-      }
+      "channel": "development",
+      "env": { "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/" }
     },
     "production": {
       "android": { "buildType": "app-bundle" },
-      "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/"
-      }
+      "channel": "production",
+      "env": { "EXPO_PUBLIC_API_BASE_URL": "https://api.natour.com.br/" }
     }
   }
 }
