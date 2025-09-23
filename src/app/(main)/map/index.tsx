@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-import MapView, { Marker, Region } from 'react-native-maps';
+import MapView, { Marker, Region, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, View, Text, FlatList, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, {
@@ -29,7 +29,6 @@ import { addView } from '@/services/map/addViewService';
 export default function Map() {
   const router = useRouter();
   const [markers, setMarkers] = useState<any[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
@@ -40,6 +39,9 @@ export default function Map() {
   const snapPoints = useMemo(() => ['25%', '50%'], []);
 
   const [searchText, setSearchText] = useState('');
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalImageItem, setModalImageItem] = useState<any | null>(null);
 
   const DEFAULT_REGION = {
     latitude: -23.484787,
@@ -198,6 +200,7 @@ export default function Map() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <MapView
+          provider={PROVIDER_GOOGLE}
           ref={mapRef}
           customMapStyle={customMapStyle}
           showsBuildings={false}
@@ -264,6 +267,7 @@ export default function Map() {
                       currentIndex={currentImageIndex}
                       setCurrentIndex={setCurrentImageIndex}
                       onImagePress={(item) => {
+                        setModalImageItem(item);
                         setIsModalVisible(true);
                       }}
                     />
@@ -307,8 +311,8 @@ export default function Map() {
       {isModalVisible && (
         <ImageModal
           isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          imageUri={selectedMarker?.images[currentImageIndex]?.image}
+          onClose={() => { setIsModalVisible(false); setModalImageItem(null); }}
+          imageItem={modalImageItem}
         />
       )}
     </GestureHandlerRootView>
