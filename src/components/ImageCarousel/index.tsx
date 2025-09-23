@@ -20,7 +20,6 @@ type ImageItem = {
     public_id: string;
     url: string;
   }
-
 };
 
 type ImageCarouselProps = {

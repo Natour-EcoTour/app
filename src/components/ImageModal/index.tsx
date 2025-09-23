@@ -1,62 +1,57 @@
+import { useState } from 'react';
 import {
-  Modal,
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
+  Modal, View, Text, Image, StyleSheet, TouchableOpacity, Dimensions,
 } from 'react-native';
-import { PropsWithChildren } from 'react';
-import { useRouter } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-type Props = PropsWithChildren<{
+interface ImageData { id?: number; public_id?: string; url: string }
+interface ImageItem { id: string; image: string | ImageData }
+
+interface Props {
   isVisible: boolean;
   onClose: () => void;
-  imageUri?: string;
-}>;
+  imageItem?: ImageItem | null;
+}
 
-export default function ImageModal({ isVisible, imageUri, onClose }: Props) {
-  const router = useRouter();
+export default function ImageModal({ isVisible, onClose, imageItem }: Props) {
+  const [failed, setFailed] = useState(false);
 
-  const handleClose = () => {
-    onClose();
-  };
+  const raw =
+    typeof imageItem?.image === 'string'
+      ? imageItem?.image
+      : imageItem?.image?.url;
+
+  const url = raw ? raw.replace(/^http:\/\//, 'https://') : null;
+  const shouldShowImage = !!url && !failed;
 
   return (
-    <View>
-      <Modal animationType="fade" visible={isVisible} transparent={true}>
-        <View style={styles.overlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.imageContainer}>
-              {imageUri ? (
-                <Image
-                  source={{ uri: imageUri }}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-              ) : (
-                <Text style={styles.errorText}>Imagem não encontrada!</Text>
-              )}
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleClose}
-                accessibilityLabel="Fechar modal"
-              >
-                <Text style={styles.buttonText}>Fechar</Text>
-              </TouchableOpacity>
-            </View>
+    <Modal animationType="fade" visible={isVisible} transparent onRequestClose={onClose}>
+      <View style={styles.overlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.imageContainer}>
+            {shouldShowImage ? (
+              <Image
+                source={{ uri: url! }}
+                resizeMode="contain"
+                style={styles.image}
+                onError={() => setFailed(true)}
+              />
+            ) : (
+              <Text style={styles.errorText}>Imagem não encontrada!</Text>
+            )}
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={onClose}>
+              <Text style={styles.buttonText}>Fechar</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </Modal>
-    </View>
+      </View>
+    </Modal>
   );
 }
+
 
 const styles = StyleSheet.create({
   overlay: {
@@ -75,12 +70,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     backgroundColor: '#0000003c',
   },
-  buttonContainer: {
-    width: '100%',
-    paddingHorizontal: 20,
-    marginTop: 10,
-    marginBottom: 10,
-  },
+  buttonContainer: { width: '100%', paddingHorizontal: 20, marginTop: 10, marginBottom: 10 },
   button: {
     backgroundColor: '#ffffffff',
     paddingVertical: 12,
@@ -90,23 +80,8 @@ const styles = StyleSheet.create({
     borderColor: '#000000ff',
     borderWidth: 2,
   },
-  buttonText: {
-    color: '#000000ff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  imageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: SCREEN_WIDTH * 0.8,
-    height: '100%',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 16,
-    textAlign: 'center',
-  },
+  buttonText: { color: '#000000ff', fontSize: 16, fontWeight: '600' },
+  imageContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  image: { width: SCREEN_WIDTH * 0.8, height: '100%' },
+  errorText: { color: 'red', fontSize: 16, textAlign: 'center' },
 });
