@@ -26,7 +26,7 @@ export default function PasswordInput({
           placeholderTextColor="#6B7280"
           placeholder={placeholder}
           keyboardType="default"
-          autoCapitalize="none"
+          autoCapitalize="words"
           secureTextEntry={!showPassword}
           autoComplete="password"
           textContentType="password"

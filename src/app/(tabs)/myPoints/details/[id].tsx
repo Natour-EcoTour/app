@@ -31,6 +31,8 @@ export default function PointDetail() {
   const [isActive, setIsActive] = useState<boolean>(false);
   const { id } = useLocalSearchParams();
 
+  const [modalImageItem, setModalImageItem] = useState<any | null>(null);
+
   const fetchPoints = async () => {
     setIsLoading(true);
     const data = await pointDetails(Number(id));
@@ -171,7 +173,8 @@ export default function PointDetail() {
         images={point.images}
         currentIndex={currentImageIndex}
         setCurrentIndex={setCurrentImageIndex}
-        onImagePress={item => {
+        onImagePress={(item) => {
+          setModalImageItem(item);
           setIsModalVisible(true);
         }}
       />
@@ -205,8 +208,8 @@ export default function PointDetail() {
       {isModalVisible && (
         <ImageModal
           isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          imageUri={point?.images[currentImageIndex]?.image}
+          onClose={() => { setIsModalVisible(false); setModalImageItem(null); }}
+          imageItem={modalImageItem}
         />
       )}
 

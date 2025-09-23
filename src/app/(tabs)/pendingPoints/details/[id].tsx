@@ -20,8 +20,10 @@ export default function PendingPointDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [point, setPoint] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const { id } = useLocalSearchParams();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalImageItem, setModalImageItem] = useState<any | null>(null);
 
   const fetchPoints = async () => {
     setIsLoading(true);
@@ -97,7 +99,8 @@ export default function PendingPointDetail() {
         images={point.images}
         currentIndex={currentImageIndex}
         setCurrentIndex={setCurrentImageIndex}
-        onImagePress={item => {
+        onImagePress={(item) => {
+          setModalImageItem(item);
           setIsModalVisible(true);
         }}
       />
@@ -128,8 +131,8 @@ export default function PendingPointDetail() {
       {isModalVisible && (
         <ImageModal
           isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          imageUri={point?.images[currentImageIndex]?.image}
+          onClose={() => { setIsModalVisible(false); setModalImageItem(null); }}
+          imageItem={modalImageItem}
         />
       )}
     </ScrollView>
