@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     paddingVertical: 10,
+    color: '#000',
   },
   iconButton: {
     paddingLeft: 8,
