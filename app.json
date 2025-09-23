@@ -61,16 +61,7 @@
             "DEFAULT"
           ]
         }
-      ],
-      "navigationBar": {
-        "visible": "leanback",
-        "backgroundColor": "#000000"
-      },
-      "statusBar": {
-        "backgroundColor": "#000000",
-        "barStyle": "light-content",
-        "translucent": false
-      }
+      ]
     },
     "web": {
       "bundler": "metro",
