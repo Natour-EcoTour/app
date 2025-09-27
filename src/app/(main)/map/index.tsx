@@ -135,6 +135,7 @@ export default function Map() {
       return () => { isActive = false };
     }, [])
   );
+  console.log(process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY)
 
   const handleMarkerPress = async (marker: any) => {
 
