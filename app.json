@@ -24,7 +24,7 @@
       ]
     },
     "android": {
-      "config": { "googleMaps": { "apiKey": "YOUR_KEY" } },
+      "config": { "googleMaps": { "apiKey": "android.config.googleMaps.apiKey" } },
       "package": "com.flamingo_lindo.natour_app",
       "versionCode": 1,
       "adaptiveIcon": {
