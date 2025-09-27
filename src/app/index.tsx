@@ -6,8 +6,10 @@ import {
   View,
   ImageBackground,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  TouchableOpacity
 } from 'react-native';
+import * as Updates from 'expo-updates';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ActivityIndicator, Checkbox } from 'react-native-paper';
 import { useState, useEffect } from 'react';
@@ -33,6 +35,7 @@ export default function Index() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCheckingToken, setIsCheckingToken] = useState<boolean>(true);
+  const [isDebug, setIsDebug] = useState<boolean>(false);
 
   const insets = useSafeAreaInsets();
   const keyboardOffset = Platform.select({
@@ -194,6 +197,29 @@ export default function Index() {
               </Text>
             </View>
 
+            <View style={styles.debug}>
+              {!isDebug && (
+                <View>
+                  <Text
+                    onPress={() => setIsDebug(true)}
+                  >
+                    Versão
+                  </Text>
+                </View>
+              )}
+
+              {isDebug && (
+                <View>
+                  <TouchableOpacity
+                    onPress={() => setIsDebug(false)}
+                  >
+                    <Text>Channel: {(Updates as any).channel ?? 'unknown'}</Text>
+                    <Text>Runtime: {Updates.runtimeVersion}</Text>
+                    <Text>Update ID: {Updates.updateId ?? 'none (embedded or dev)'}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
             {isModalVisible && (
               <CustomModal
                 isVisible={isModalVisible}
@@ -211,6 +237,9 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
+  debug: {
+    padding: 12
+  },
   field: {
     width: '100%'
   },
