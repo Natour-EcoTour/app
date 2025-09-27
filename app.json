@@ -24,11 +24,6 @@
       ]
     },
     "android": {
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyAK29D4EnXkwCbvNE8GZaTN_OXpF8m_DKM"
-        }
-      },
       "package": "com.flamingo_lindo.natour_app",
       "versionCode": 1,
       "adaptiveIcon": {
