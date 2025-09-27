@@ -1,18 +1,107 @@
 import { ExpoConfig, ConfigContext } from 'expo/config';
 
-const EAS_PROJECT_ID = "4874ed03-7bf0-400f-84ae-e948d17e3a08"
-const PROJECT_SLUG = "natour_app"
-const OWNER = "flamingo_lindo"
-
-export default ({ config }: { config: ExpoConfig }) => ({
+export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  android: {
-    ...config.android,
-    config: {
-      ...(config.android?.config ?? {}),
-      googleMaps: {
-        apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-      },
+  name: "Natour",
+  slug: "natour_app",
+  version: "1.0.0",
+  orientation: "portrait",
+  icon: "./assets/icons/lidlNatourLogo.png",
+  scheme: "natour",
+  userInterfaceStyle: "automatic",
+  newArchEnabled: true,
+  ios: {
+    supportsTablet: true,
+    bundleIdentifier: "com.flamingolindo.natour",
+    buildNumber: "1",
+    infoPlist: {
+      NSCameraUsageDescription: "Permitir acesso à câmera para tirar fotos dos pontos.",
+      NSPhotoLibraryUsageDescription: "Permitir acesso às fotos para anexar imagens aos registros.",
+      NSLocationWhenInUseUsageDescription: "Usamos sua localização para registrar pontos próximos e rotas.",
+      NSFaceIDUsageDescription: "Usado apenas se você optar por login seguro com biometria."
     },
+    associatedDomains: [
+      "applinks:natour.com.br",
+      "applinks:www.natour.com.br"
+    ]
   },
+  android: {
+    config: {
+      googleMaps: {
+        apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
+      }
+    },
+    package: "com.flamingo_lindo.natour_app",
+    versionCode: 1,
+    adaptiveIcon: {
+      foregroundImage: "./assets/icons/lidlNatourLogo.png",
+      backgroundColor: "#ffffff"
+    },
+    permissions: [
+      "ACCESS_COARSE_LOCATION",
+      "ACCESS_FINE_LOCATION",
+      "READ_MEDIA_IMAGES"
+    ],
+    intentFilters: [
+      {
+        action: "VIEW",
+        autoVerify: true,
+        data: [
+          {
+            scheme: "https",
+            host: "natour.com.br",
+            pathPrefix: "/"
+          },
+          {
+            scheme: "https",
+            host: "www.natour.com.br",
+            pathPrefix: "/"
+          }
+        ],
+        category: [
+          "BROWSABLE",
+          "DEFAULT"
+        ]
+      }
+    ]
+  },
+  web: {
+    bundler: "metro",
+    output: "static",
+    favicon: "./assets/icons/lidlNatourLogo.png",
+    display: "standalone",
+    themeColor: "#0ea5e9",
+    backgroundColor: "#000000",
+    scope: "/",
+    startUrl: "/"
+  },
+  plugins: [
+    "expo-router",
+    "expo-font",
+    "expo-web-browser",
+    "expo-secure-store"
+  ],
+  experiments: {
+    typedRoutes: true
+  },
+  updates: {
+    url: "https://u.expo.dev/4874ed03-7bf0-400f-84ae-e948d17e3a08",
+    checkAutomatically: "ON_LOAD",
+    fallbackToCacheTimeout: 0
+  },
+  runtimeVersion: {
+    policy: "appVersion"
+  },
+  assetBundlePatterns: [
+    "**/*"
+  ],
+  extra: {
+    router: {},
+    apiUrl: "https://api.natour.com.br",
+    env: "production",
+    eas: {
+      projectId: "4874ed03-7bf0-400f-84ae-e948d17e3a08"
+    }
+  },
+  owner: "flamingo_lindo"
 });

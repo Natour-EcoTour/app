@@ -38,7 +38,13 @@ type UserInfo = {
   username: string;
 };
 
+function toHttps(u?: string | null) {
+  if (!u) return undefined;
+  return u.replace(/^http:\/\//, 'https://');
+}
+
 export default function Profile() {
+
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
@@ -90,7 +96,8 @@ export default function Profile() {
         setValue('email', userInfo.email || '');
 
         if (userInfo.photo) {
-          setSelectedImage(userInfo.photo);
+          const httpsUrl = toHttps(userInfo.photo);
+          setSelectedImage(httpsUrl);
         } else {
         }
 
@@ -221,9 +228,9 @@ export default function Profile() {
           <Image
             source={
               selectedImage
-                ? { uri: selectedImage }
+                ? { uri: toHttps(selectedImage) }
                 : userInfo?.photo
-                  ? { uri: userInfo.photo }
+                  ? { uri: toHttps(userInfo.photo) }
                   : images.noPfp
             }
             style={styles.image}

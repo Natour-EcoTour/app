@@ -3,7 +3,7 @@ import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import MapView, { Marker, Region, PROVIDER_GOOGLE } from 'react-native-maps';
-import { StyleSheet, View, Text, FlatList, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Dimensions, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, {
   BottomSheetScrollView,
@@ -217,9 +217,15 @@ export default function Map() {
             <Marker
               key={marker.id}
               coordinate={marker.coordinate}
-              image={marker.icon}
               onPress={() => handleMarkerPress(marker)}
-            />
+              anchor={{ x: 0.5, y: 0.5 }}
+            >
+              <Image
+                source={marker.icon}
+                style={{ width: 32, height: 32 }}
+                resizeMode="contain"
+              />
+            </Marker>
 
           ))}
         </MapView>

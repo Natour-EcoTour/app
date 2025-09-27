@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect, useMemo } from 'react';
 import {
   View,
   FlatList,
@@ -12,6 +12,11 @@ import {
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ARROW_BUTTON_WIDTH = 40;
 const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32;
+
+function toHttps(u?: string | null) {
+  if (!u) return undefined as unknown as string;
+  return u.replace(/^http:\/\//, 'https://');
+}
 
 type ImageItem = {
   id: string;
@@ -37,7 +42,17 @@ export default function ImageCarousel({
 }: ImageCarouselProps) {
   const flatListRef = useRef<FlatList>(null);
 
-  const safeImages = images || [];
+  const safeImages = useMemo(
+    () =>
+      (images || []).map(img => ({
+        ...img,
+        image: {
+          ...img.image,
+          url: toHttps(img.image?.url),
+        },
+      })),
+    [images]
+  );
 
   useEffect(() => {
     if (safeImages.length > 0 && currentIndex < safeImages.length) {

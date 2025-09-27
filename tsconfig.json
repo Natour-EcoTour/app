@@ -6,15 +6,36 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["*"],
-      "@/src/*": ["src/*"],
-      "@/components/*": ["src/components/*"],
-      "@/utils/*": ["src/utils/*"],
-      "@/validations/*": ["src/validations/*"],
-      "@/services/*": ["services/*"],
-      "@/assets/*": ["assets/*"],
-      "@/app/*": ["src/app/*"]
+      "@/*": [
+        "*"
+      ],
+      "@/src/*": [
+        "src/*"
+      ],
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/utils/*": [
+        "src/utils/*"
+      ],
+      "@/validations/*": [
+        "src/validations/*"
+      ],
+      "@/services/*": [
+        "services/*"
+      ],
+      "@/assets/*": [
+        "assets/*"
+      ],
+      "@/app/*": [
+        "src/app/*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

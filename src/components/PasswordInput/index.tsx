@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextInput, StyleSheet, View, Text, Pressable } from 'react-native';
+import { TextInput, StyleSheet, View, Text, Pressable, Platform } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface PasswordInputProps {
@@ -25,18 +25,20 @@ export default function PasswordInput({
         <TextInput
           placeholderTextColor="#6B7280"
           placeholder={placeholder}
-          keyboardType="default"
-          autoCapitalize="words"
           secureTextEntry={!showPassword}
-          autoComplete="password"
-          textContentType="password"
+          autoCapitalize="none"
+          autoCorrect={false}
+          {...(Platform.OS === 'ios'
+            ? { textContentType: 'password' as const }
+            : { autoComplete: 'password' as const, importantForAutofill: 'yes' as const })}
+
           style={styles.input}
           value={value ?? ''}
           onChangeText={onChange}
         />
 
         <Pressable
-          onPress={() => setShowPassword((v) => !v)}
+          onPress={() => setShowPassword(v => !v)}
           accessibilityRole="button"
           accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
           style={styles.iconButton}
@@ -49,14 +51,8 @@ export default function PasswordInput({
 }
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    width: '100%',
-  },
-  label: {
-    color: '#000',
-    marginBottom: 5,
-    fontSize: 16,
-  },
+  inputContainer: { width: '100%' },
+  label: { color: '#000', marginBottom: 5, fontSize: 16 },
   fieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -67,14 +63,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 15,
   },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    paddingVertical: 10,
-    color: '#000',
-  },
-  iconButton: {
-    paddingLeft: 8,
-    paddingVertical: 8,
-  },
+  input: { flex: 1, fontSize: 16, paddingVertical: 10, color: '#000' },
+  iconButton: { paddingLeft: 8, paddingVertical: 8 },
 });
