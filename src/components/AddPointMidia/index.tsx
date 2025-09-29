@@ -29,6 +29,11 @@ interface AddPointMidiaProps {
   onRemoveExistingPhoto?: (photoId: number, publicId: string) => void;
 }
 
+function toHttps(u?: string | null) {
+  if (!u) return undefined;
+  return u.replace(/^http:\/\//, 'https://');
+}
+
 export default function AddPointMidia({
   selectedImages,
   setSelectedImages,
@@ -98,19 +103,17 @@ export default function AddPointMidia({
         {totalImageCount} / {MAX_IMAGES} imagens
       </Text>
 
-      {/* All Photos Section */}
       {(existingPhotos.length > 0 || selectedImages.length > 0) && (
         <View style={styles.gridContainer}>
-          {/* Render existing photos first */}
           {existingPhotos.map((photo) => (
             <View key={`existing-${photo.id}`} style={styles.imageWrapper}>
               <TouchableOpacity
                 onPress={() => {
                   setIsImageModalVisible(true);
-                  setPreviewImageUri(photo.url);
+                  setPreviewImageUri(toHttps(photo.url) ?? null);
                 }}
               >
-                <Image source={{ uri: photo.url }} style={styles.image} />
+                <Image source={{ uri: toHttps(photo.url) }} style={styles.image} />
               </TouchableOpacity>
               {onRemoveExistingPhoto && (
                 <TouchableOpacity
@@ -122,8 +125,7 @@ export default function AddPointMidia({
               )}
             </View>
           ))}
-          
-          {/* Render new selected images */}
+
           {selectedImages.map((uri, index) => (
             <View key={`new-${index}`} style={styles.imageWrapper}>
               <TouchableOpacity
@@ -147,7 +149,6 @@ export default function AddPointMidia({
         </View>
       )}
 
-      {/* Show message when no images */}
       {totalImageCount === 0 && (
         <Text style={styles.noImageText}>Nenhuma imagem selecionada</Text>
       )}

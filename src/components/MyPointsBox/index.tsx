@@ -119,7 +119,6 @@ export default function MyPointsBox({
                   })
                 }
               >
-                {/* TODO INTEGRAR EDIÇÃO */}
                 <Ionicons name={'pencil'} size={25} color={'blue'} />
               </TouchableOpacity>
 

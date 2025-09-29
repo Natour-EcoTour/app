@@ -105,7 +105,6 @@ export default function TimeInput({
     if (date) {
       setStartTime(date);
       setStartTimeSelected(true);
-      // Format time as HH:MM for the API
       const timeString = date.toLocaleTimeString('en-US', {
         hour12: false,
         hour: '2-digit',
@@ -150,7 +149,7 @@ export default function TimeInput({
             onValueChange={handleWeekStartChange}
           >
             {days.map(day => (
-              <Picker.Item label={day} value={day} key={day} />
+              <Picker.Item color='#000' label={day} value={day} key={day} />
             ))}
           </Picker>
           {errors.weekStart && (
@@ -166,7 +165,7 @@ export default function TimeInput({
             onValueChange={handleWeekEndChange}
           >
             {days.map(day => (
-              <Picker.Item label={day} value={day} key={day} />
+              <Picker.Item color='#000' label={day} value={day} key={day} />
             ))}
           </Picker>
           {errors.weekEnd && <Text style={styles.error}>{errors.weekEnd}</Text>}

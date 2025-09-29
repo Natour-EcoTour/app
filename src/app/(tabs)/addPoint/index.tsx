@@ -84,7 +84,6 @@ export default function AddPoint() {
 
     setIsSubmitting(true);
     try {
-      // Required minimal fields
       if (!data.name?.trim()) {
         Toast.show({ type: 'error', text1: 'Erro', text2: 'Nome do ponto é obrigatório.' });
         setIsSubmitting(false);
@@ -96,7 +95,6 @@ export default function AddPoint() {
         return;
       }
 
-      // Horário: backend NÃO valida virada de dia → bloquear close < open
       const startM = toMinutes(data.time.timeStart);
       const endM = toMinutes(data.time.timeEnd);
       if (endM < startM) {
@@ -109,7 +107,6 @@ export default function AddPoint() {
         return;
       }
 
-      // Coordenadas: exigir lat e lng juntas; senão, não enviar nenhuma
       const latStr = data.address.latitude?.trim();
       const lngStr = data.address.longitude?.trim();
       const hasLat = !!latStr;
@@ -125,23 +122,20 @@ export default function AddPoint() {
         return;
       }
 
-      // Monta payload
       const pointData: any = {
         name: data.name.trim(),
         description: data.description.trim(),
-        week_start: data.time.weekStart, // traduz no service
-        week_end: data.time.weekEnd,     // traduz no service
+        week_start: data.time.weekStart,
+        week_end: data.time.weekEnd,    
         open_time: data.time.timeStart,
         close_time: data.time.timeEnd,
         point_type: data.type,
       };
 
-      // Link opcional (só envia se válido)
       if (data.link?.trim() && isValidUrl(data.link)) {
         pointData.link = data.link.trim();
       }
 
-      // Coordenadas (só se ambas válidas)
       if (hasLat && hasLng) {
         const lat = parseFloat(latStr!);
         const lng = parseFloat(lngStr!);
@@ -160,7 +154,6 @@ export default function AddPoint() {
         pointData.longitude = lng;
       }
 
-      // Endereço: seu backend aceita strings vazias
       pointData.zip_code = data.address.cep?.trim() || '';
       pointData.city = data.address.city?.trim() || '';
       pointData.neighborhood = data.address.neighborhood?.trim() || '';
@@ -177,14 +170,12 @@ export default function AddPoint() {
       const pointId = createdPoint.id || createdPoint.point_id;
       if (!pointId) throw new Error('Point ID not returned from creation');
 
-      // Upload de imagens
       for (let i = 0; i < selectedImages.length; i++) {
         const imageUri = selectedImages[i];
         try {
           await uploadPointPhoto(pointId, imageUri);
         } catch (e) {
           console.error(`Error uploading image ${i + 1}:`, e);
-          // segue para as demais
         }
       }
 
@@ -415,6 +406,7 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: '100%',
+    color: '#000'
   },
   loadingOverlay: {
     position: 'absolute',
