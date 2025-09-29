@@ -27,7 +27,7 @@ export default function forgotPassword() {
   } = useForm({
     resolver: yupResolver(forgotPasswordEmailSchema),
     defaultValues: {
-      email: 'vitorantunes2003@gmail.com',
+      email: '',
     },
   });
 
