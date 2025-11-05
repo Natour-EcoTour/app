@@ -4,8 +4,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { ComponentProps } from 'react';
 import { useRouter, type RelativePathString } from 'expo-router';
 
+// Icon type
 type IoniconName = ComponentProps<typeof Ionicons>['name'];
 
+// Settings button props
 interface LoginButtonProps {
   text: string;
   icon_type: IoniconName;
@@ -21,6 +23,7 @@ export default function SettingsButton({
 }: LoginButtonProps) {
   const router = useRouter();
 
+  // Handle button press
   const handlePress = () => {
     if (onPress) {
       onPress();

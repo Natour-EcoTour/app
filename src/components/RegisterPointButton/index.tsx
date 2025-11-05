@@ -1,6 +1,7 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
+// Register point button props
 interface LoginButtonProps {
   onPress: () => void;
   text: string;

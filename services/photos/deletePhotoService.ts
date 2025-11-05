@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import Toast from 'react-native-toast-message';
 
+// Delete photo service
 export const deletePhoto = async (photoId: number, publicId: string) => {
     try {
         const response = await apiClient.delete(`photos/delete/`, {

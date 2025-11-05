@@ -9,15 +9,18 @@ import {
   Dimensions,
 } from 'react-native';
 
+// Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ARROW_BUTTON_WIDTH = 40;
 const CAROUSEL_WIDTH = SCREEN_WIDTH - ARROW_BUTTON_WIDTH * 2 - 32;
 
+// Convert HTTP to HTTPS
 function toHttps(u?: string | null) {
   if (!u) return undefined as unknown as string;
   return u.replace(/^http:\/\//, 'https://');
 }
 
+// Image item props
 type ImageItem = {
   id: string;
   image: {
@@ -27,6 +30,7 @@ type ImageItem = {
   }
 };
 
+// Image carousel props
 type ImageCarouselProps = {
   images: ImageItem[];
   currentIndex: number;

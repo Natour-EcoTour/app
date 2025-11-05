@@ -1,8 +1,10 @@
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
+// Base URL from environment
 export const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
+// Login user service
 export const loginUser = async (email: string, password: string, remember_me: boolean) => {
     try {
         const response = await axios.post(`${baseURL}users/login/`, {

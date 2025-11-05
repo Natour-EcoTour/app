@@ -28,31 +28,34 @@ import { addView } from '@/services/map/addViewService';
 
 export default function Map() {
   const router = useRouter();
-  const [markers, setMarkers] = useState<any[]>([]);
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const [selectedMarker, setSelectedMarker] = useState<any>(null);
-  const [loadingDetails, setLoadingDetails] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const flatListRef = useRef<FlatList>(null);
-  const mapRef = useRef<MapView>(null);
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-  const [searchText, setSearchText] = useState('');
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalImageItem, setModalImageItem] = useState<any | null>(null);
-
+  
+  // Default map region
   const DEFAULT_REGION = {
     latitude: -23.484787,
     longitude: -46.206867,
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
   };
-
+  
+  // Use states
+  const [markers, setMarkers] = useState<any[]>([]);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [selectedMarker, setSelectedMarker] = useState<any>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [searchText, setSearchText] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalImageItem, setModalImageItem] = useState<any | null>(null);
   const [region, setRegion] = useState<Region>(DEFAULT_REGION);
   const [loading, setLoading] = useState(true);
+  
+  // Use refs
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const flatListRef = useRef<FlatList>(null);
+  const mapRef = useRef<MapView>(null);
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
 
+  // Get icon for point type
   const getIconForPointType = (pointType: string) => {
     const iconMap: { [key: string]: any } = {
       'water_fall': points.waterfall,
@@ -64,6 +67,7 @@ export default function Map() {
     return iconMap[pointType] || points.marker;
   };
 
+  // Translate weekday to Portuguese
   function translateWeekday(week_start: string | number | undefined): string {
     if (typeof week_start === 'undefined' || week_start === null) return '';
     const weekdays: { [key: string]: string } = {
@@ -86,6 +90,7 @@ export default function Map() {
     return weekdays[key] || '';
   };
 
+  // Fetch all map points
   const fetchPoints = async () => {
     setLoading(true);
     const data = await mapPoints();

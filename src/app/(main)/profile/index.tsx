@@ -26,11 +26,13 @@ import { displayValidationErrors, getExactError } from '@/src/utils/errorHandlin
 import { getPhotoId } from '@/services/photos/photoIdService';
 import { ActivityIndicator } from 'react-native-paper';
 
+// Profile form props
 type ProfileFormData = {
   name: string;
   email: string;
 };
 
+// User info props
 type UserInfo = {
   id: number;
   email: string;
@@ -38,6 +40,7 @@ type UserInfo = {
   username: string;
 };
 
+// Convert HTTP to HTTPS
 function toHttps(u?: string | null) {
   if (!u) return undefined;
   return u.replace(/^http:\/\//, 'https://');
@@ -46,6 +49,8 @@ function toHttps(u?: string | null) {
 export default function Profile() {
 
   const router = useRouter();
+  
+  // Use states
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
@@ -59,6 +64,7 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
+  // Handle form
   const {
     control,
     handleSubmit,
@@ -72,6 +78,7 @@ export default function Profile() {
     }
   }) as any;
 
+  // Pick image from gallery
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],

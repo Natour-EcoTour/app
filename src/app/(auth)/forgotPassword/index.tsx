@@ -15,9 +15,11 @@ import { sendForgotPasswordCode } from '@/services/auth/sendForgotPassword';
 import { updateForgotPassword } from '@/services/auth/updateForgotPassword';
 
 export default function forgotPassword() {
+  // Use states
   const [isCodeModalVisible, setIsCodeModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Handle form
   const {
     control,
     handleSubmit,
@@ -31,6 +33,7 @@ export default function forgotPassword() {
     },
   });
 
+  // Submit form
   const onSubmit = async (data: any) => {
     setIsLoading(true);
     try {
@@ -43,6 +46,7 @@ export default function forgotPassword() {
     }
   };
 
+  // Clear form data from secure store
   const clearFormData = async () => {
     try {
       await SecureStore.deleteItemAsync('registerFormData');

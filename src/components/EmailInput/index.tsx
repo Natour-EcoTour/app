@@ -1,5 +1,6 @@
 import { TextInput, StyleSheet, View, Text } from 'react-native';
 
+// Email input props
 interface EmailInputProps {
   label?: string;
   placeholder?: string;

@@ -26,6 +26,7 @@ import { sendVerificationCode } from '@/services/singUp/sendVerificationCode';
 import { verifyCodeAndRegister } from '@/services/singUp/verifyCodeAndRegister';
 import { createAccount } from '@/services/singUp/createAccountService';
 
+// Register form props
 interface RegisterFormData {
   name: string;
   email: string;
@@ -35,8 +36,11 @@ interface RegisterFormData {
 }
 
 export default function RegisterScreen() {
+  // Use states
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+  // Handle form
   const {
     control,
     handleSubmit,
@@ -49,6 +53,7 @@ export default function RegisterScreen() {
 
   });
 
+  // Save form data to secure store
   const saveFormData = useCallback(async () => {
     try {
       const currentValues = getValues();
@@ -58,6 +63,7 @@ export default function RegisterScreen() {
     }
   }, [getValues]);
 
+  // Load form data from secure store
   const loadFormData = useCallback(async () => {
     try {
       const savedData = await SecureStore.getItemAsync('registerFormData');
@@ -72,10 +78,12 @@ export default function RegisterScreen() {
     }
   }, [setValue]);
 
+  // Load form data on mount
   useEffect(() => {
     loadFormData();
   }, [loadFormData]);
 
+  // Save form data when screen loses focus
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -84,6 +92,7 @@ export default function RegisterScreen() {
     }, [saveFormData])
   );
 
+  // Clear form data from secure store
   const clearFormData = async () => {
     try {
       await SecureStore.deleteItemAsync('registerFormData');
@@ -93,6 +102,7 @@ export default function RegisterScreen() {
     }
   };
 
+  // Submit form
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setIsLoading(true);

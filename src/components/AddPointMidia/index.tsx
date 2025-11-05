@@ -13,15 +13,18 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 
+// Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MAX_IMAGES = 10;
 
+// Existing photo props
 interface ExistingPhoto {
   id: number;
   url: string;
   public_id: string;
 }
 
+// Add point midia props
 interface AddPointMidiaProps {
   selectedImages: string[];
   setSelectedImages: Dispatch<SetStateAction<string[]>>;
@@ -29,6 +32,7 @@ interface AddPointMidiaProps {
   onRemoveExistingPhoto?: (photoId: number, publicId: string) => void;
 }
 
+// Convert HTTP to HTTPS
 function toHttps(u?: string | null) {
   if (!u) return undefined;
   return u.replace(/^http:\/\//, 'https://');

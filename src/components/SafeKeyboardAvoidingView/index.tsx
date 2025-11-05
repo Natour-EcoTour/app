@@ -1,6 +1,7 @@
 import { KeyboardAvoidingView, Platform, KeyboardAvoidingViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+// Safe keyboard avoiding view props
 interface SafeKeyboardAvoidingViewProps extends Omit<KeyboardAvoidingViewProps, 'keyboardVerticalOffset' | 'behavior'> {
   behavior?: KeyboardAvoidingViewProps['behavior'];
   additionalOffset?: number;
@@ -13,8 +14,10 @@ export default function SafeKeyboardAvoidingView({
   additionalOffset = 16,
   ...props 
 }: SafeKeyboardAvoidingViewProps) {
+  // Set safe area
   const insets = useSafeAreaInsets();
   
+  // Calculate keyboard offset
   const keyboardOffset = Platform.select({
     ios: insets.top + additionalOffset,
     android: 0,

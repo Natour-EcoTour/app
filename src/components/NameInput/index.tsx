@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextInput, StyleSheet, View, Text } from 'react-native';
 
+// Name input props
 interface NameInputProps {
   label?: string;
   placeholder?: string;

@@ -10,6 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { View, StyleSheet, Text, ImageBackground, Alert, TouchableOpacity } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
+// Form data props
 interface FormData {
     currentPassword: string;
     newPassword: string;
@@ -17,9 +18,11 @@ interface FormData {
 }
 
 export default function changePassword() {
+    // Use states
     const [modalVisible, setModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    // Handle form
     const {
         control,
         handleSubmit,
@@ -28,6 +31,7 @@ export default function changePassword() {
         resolver: yupResolver(newPasswordSchema)
     });
 
+    // Submit form
     const onSubmit = async (data: FormData) => {
         try {
             setIsLoading(true);

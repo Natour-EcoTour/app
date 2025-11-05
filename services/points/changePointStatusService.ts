@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import { handleApiError } from '@/src/utils/errorHandling';
 
+// Change point status service
 export const changePointStatus = async (pointId: number) => {
     try {
 

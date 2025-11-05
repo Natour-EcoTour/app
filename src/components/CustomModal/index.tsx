@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 import { useRouter, type RelativePathString } from 'expo-router';
 
+// Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+// Custom modal props
 interface CustomModalProps {
   isVisible: boolean;
   onClose: () => void;

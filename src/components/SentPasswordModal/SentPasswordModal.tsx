@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react';
 import { useRouter } from 'expo-router';
 import { images } from '@/src/utils/assets';
 
+// Sent password modal props
 type Props = PropsWithChildren<{
   isVisible: boolean;
   onClose: () => void;
@@ -15,6 +16,7 @@ export default function SentPasswordModal({
 }: Props) {
   const router = useRouter();
 
+  // Handle close modal
   const handleClose = () => {
     onClose();
     router.push('/');

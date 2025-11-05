@@ -11,7 +11,10 @@ import { View, StyleSheet } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 export default function RootLayout() {
+  // Set safe area
   const insets = useSafeAreaInsets();
+  
+  // Set navigation bar style
   useEffect(() => {
     NavigationBar.setButtonStyleAsync('light');
   }, []);

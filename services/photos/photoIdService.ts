@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import Toast from 'react-native-toast-message';
 
+// Get photo ID service
 export const getPhotoId = async (userId: number) => {
     try {
         const response = await apiClient.get(`photos/?user_id=${userId}`);

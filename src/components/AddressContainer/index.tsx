@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Linking } from 'react-native';
 
+// Address props
 interface AddressProps {
   cep?: string;
   city?: string;
@@ -23,6 +24,7 @@ export default function AddressContainer({
   latitude,
   longitude
 }: AddressProps) {
+  // Handle open in maps
   const handleOpenInMaps = () => {
     let url: string;
 

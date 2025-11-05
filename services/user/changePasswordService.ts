@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import { handleApiError } from '@/src/utils/errorHandling';
 
+// Change user password service
 export const changeUserPassword = async (old_password: string,
     new_password: string,
     confirm_password: string) => {

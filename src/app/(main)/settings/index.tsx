@@ -5,6 +5,7 @@ import SettingsButton from '@/components/SettingsButton';
 import { router } from 'expo-router';
 
 export default function Settings() {
+  // Handle logout
   const handleLogout = async () => {
     await logout(router);
   };

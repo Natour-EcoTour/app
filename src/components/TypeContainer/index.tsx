@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 
+// Type props
 interface TypeProps {
   type: string;
 }
 
+// Get translated type
 const getTranslatedType = (type: string): string => {
   const typeTranslations: { [key: string]: string } = {
     'trail': 'Trilha',

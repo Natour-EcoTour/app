@@ -2,7 +2,7 @@ import apiClient from '@/services/apiClient';
 import Toast from 'react-native-toast-message';
 import { handleApiError } from '@/src/utils/errorHandling';
 
-// Helper function to get MIME type from URI
+// Get MIME type from URI
 const getMimeType = (uri: string): string => {
     const extension = uri.split('.').pop()?.toLowerCase();
     switch (extension) {
@@ -20,7 +20,7 @@ const getMimeType = (uri: string): string => {
     }
 };
 
-// Helper function to create FormData for image upload
+// Create FormData for image upload
 const createImageFormData = (imageUri: string): FormData => {
     
     if (!imageUri) {
@@ -46,18 +46,11 @@ const createImageFormData = (imageUri: string): FormData => {
     return formData;
 };
 
-/**
- * Generic photo upload service that works for both users and points
- * @param entityType - 'users' or 'points'
- * @param entityId - The ID of the user or point
- * @param imageUri - The local URI of the image to upload
- * @returns Promise with the response data
- */
+// Generic photo upload service for users and points
 export const uploadPhoto = async (entityType: 'users' | 'points', entityId: number, imageUri: string) => {
     try {
         const formData = createImageFormData(imageUri);
         
-        // Construct the endpoint based on entity type
         const endpoint = `${entityType}/${entityId}/photo/upload/`;
 
 
@@ -76,19 +69,10 @@ export const uploadPhoto = async (entityType: 'users' | 'points', entityId: numb
     }
 };
 
-/**
- * Update an existing photo
- * @param entityType - 'users' or 'points'
- * @param entityId - The ID of the user or point
- * @param photoId - The ID of the photo to update
- * @param imageUri - The local URI of the new image
- * @returns Promise with the response data
- */
 export const updatePhoto = async (entityType: 'users' | 'points', entityId: number, photoId: number, imageUri: string) => {
     try {
         const formData = createImageFormData(imageUri);
 
-        // Add trailing slash to match API requirements
         const endpoint = `${entityType}/${entityId}/photo/update/${photoId}/`;
 
 
@@ -106,13 +90,6 @@ export const updatePhoto = async (entityType: 'users' | 'points', entityId: numb
     }
 };
 
-/**
- * Delete a photo
- * @param entityType - 'users' or 'points'
- * @param entityId - The ID of the user or point
- * @param photoId - The ID of the photo to delete
- * @returns Promise with the response data
- */
 export const deletePhoto = async (entityType: 'users' | 'points', entityId: number, photoId: number) => {
     try {
         const response = await apiClient.delete(`${entityType}/${entityId}/photo/delete/${photoId}/`);
@@ -128,12 +105,6 @@ export const deletePhoto = async (entityType: 'users' | 'points', entityId: numb
     }
 };
 
-/**
- * Delete multiple photos using the photos/delete endpoint
- * @param photoIds - Array of photo IDs to delete
- * @param publicIds - Array of public IDs corresponding to the photos
- * @returns Promise with the response data
- */
 export const deleteMultiplePhotos = async (photoIds: number[], publicIds: string[]) => {
     try {
         const response = await apiClient.delete('photos/delete/', {
@@ -154,11 +125,6 @@ export const deleteMultiplePhotos = async (photoIds: number[], publicIds: string
     }
 };
 
-/**
- * Get photos for a specific user
- * @param userId - The ID of the user
- * @returns Promise with the photos data
- */
 export const getPhotosByUser = async (userId: number) => {
     try {
         const response = await apiClient.get(`photos/?user_id=${userId}`);
@@ -175,11 +141,7 @@ export const getPhotosByUser = async (userId: number) => {
     }
 };
 
-/**
- * Get photos for a specific point
- * @param pointId - The ID of the point
- * @returns Promise with the photos data
- */
+
 export const getPhotosByPoint = async (pointId: number) => {
     try {
         const response = await apiClient.get(`photos/?point_id=${pointId}`);
@@ -195,8 +157,6 @@ export const getPhotosByPoint = async (pointId: number) => {
         throw error;
     }
 };
-
-// Convenience functions for backward compatibility and specific use cases
 
 export const uploadUserPhoto = (userId: number, imageUri: string) => 
     uploadPhoto('users', userId, imageUri);
@@ -216,7 +176,6 @@ export const deleteUserPhoto = (userId: number, photoId: number) =>
 export const deletePointPhoto = (pointId: number, photoId: number) => 
     deletePhoto('points', pointId, photoId);
 
-// Legacy functions for compatibility with existing code
 export const addPhoto = uploadPhoto;
 export const addUserPhoto = uploadUserPhoto;
 export const addPointPhoto = uploadPointPhoto;

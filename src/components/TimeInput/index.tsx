@@ -9,6 +9,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 
+// Days of the week
 const days = [
   'Segunda-feira',
   'Terça-feira',
@@ -19,6 +20,7 @@ const days = [
   'Domingo',
 ];
 
+// Time input component
 export default function TimeInput({
   value,
   onChange,

@@ -13,22 +13,28 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { addReview } from '@/services/points/addReviewService';
 
+// Add review props
 type AddReviewProps = { pointId: number };
 
 export default function AddReview({ pointId }: AddReviewProps) {
+  // Use states
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
+  // Calculate top offset for toast
   const topOffset =
     Platform.OS === 'ios' ? 70 : (StatusBar.currentHeight ?? 0) + 12;
 
+  // Select rating
   const selectRating = (value: number) => setRating(value);
 
+  // Show toast message
   const showToast = (type: 'success' | 'error' | 'info' | 'warning', text1: string, text2?: string) => {
     Toast.show({ type, position: 'top', topOffset, text1, text2 });
   };
 
+  // Handle submit review
   const handleSubmit = async () => {
     if (rating === 0) {
       showToast('warning', 'Atenção', 'Selecione uma nota antes de enviar.');

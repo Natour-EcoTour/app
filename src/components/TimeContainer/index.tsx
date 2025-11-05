@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
+// Time props
 interface TimeProps {
   startWeekday?: string;
   startTime?: string;

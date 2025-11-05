@@ -8,6 +8,7 @@ import {
   TextInputContentSizeChangeEventData,
 } from 'react-native';
 
+// Description input props
 interface DescriptionInputProps {
   label?: string;
   placeholder?: string;
@@ -23,8 +24,10 @@ export default function DescriptionInput({
   editable,
   onChange,
 }: DescriptionInputProps) {
+  // Use states
   const [inputHeight, setInputHeight] = useState(40);
 
+  // Handle content size change
   const handleContentSizeChange = (
     e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
   ) => {

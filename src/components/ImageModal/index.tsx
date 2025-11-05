@@ -3,11 +3,14 @@ import {
   Modal, View, Text, Image, StyleSheet, TouchableOpacity, Dimensions,
 } from 'react-native';
 
+// Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+// Image data props
 interface ImageData { id?: number; public_id?: string; url: string }
 interface ImageItem { id: string; image: string | ImageData }
 
+// Image modal props
 interface Props {
   isVisible: boolean;
   onClose: () => void;
@@ -15,6 +18,7 @@ interface Props {
 }
 
 export default function ImageModal({ isVisible, onClose, imageItem }: Props) {
+  // Use states
   const [failed, setFailed] = useState(false);
 
   const raw =

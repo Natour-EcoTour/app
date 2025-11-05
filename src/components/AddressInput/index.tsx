@@ -3,6 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { Checkbox, TextInput } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
+// Address input component
 export default function AddressInput({
   value,
   onChange,

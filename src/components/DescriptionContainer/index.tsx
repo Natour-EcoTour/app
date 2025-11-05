@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
+// Description props
 interface DescriptionProps {
   description: string;
 }

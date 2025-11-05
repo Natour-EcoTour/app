@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import PasswordInput from '@/src/components/PasswordInput';
 
+// Code modal props
 type Props = PropsWithChildren<{
     isVisible: boolean;
     onClose: () => void;
@@ -32,10 +33,13 @@ export default function CodeModal({
     onCodeSubmit,
 }: Props) {
     const router = useRouter();
+    
+    // Use states
     const [code, setCode] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    // Handle validate code
     const handleValidateCode = async () => {
         setIsLoading(true);
 

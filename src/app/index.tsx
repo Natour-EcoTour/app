@@ -24,6 +24,7 @@ import LoginButton from '@/components/LoginButton';
 import CustomModal from '@/components/CustomModal';
 import EmailInput from '@/components/EmailInput';
 
+// Login props
 interface LoginFormData {
   email: string;
   password: string;
@@ -32,17 +33,21 @@ interface LoginFormData {
 
 export default function Index() {
   const router = useRouter();
+
+  // Use states
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCheckingToken, setIsCheckingToken] = useState<boolean>(true);
   const [isDebug, setIsDebug] = useState<boolean>(false);
 
+  // Set safe area
   const insets = useSafeAreaInsets();
   const keyboardOffset = Platform.select({
     ios: insets.top + 16,
     android: 0,
   });
 
+  // Check token
   useEffect(() => {
     const checkExistingToken = async () => {
       try {
@@ -59,6 +64,7 @@ export default function Index() {
     checkExistingToken();
   }, [router]);
 
+  // Handle login
   const {
     control,
     handleSubmit,
@@ -72,6 +78,7 @@ export default function Index() {
     },
   });
 
+  // Submit form
   const onSubmit = async (data: LoginFormData) => {
     try {
       setIsLoading(true);

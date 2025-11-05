@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import { handleApiError } from '@/src/utils/errorHandling';
 
+// Update user service
 export const updateUser = async (username: string) => {
     try {
         const response = await apiClient.put('users/me/update/',

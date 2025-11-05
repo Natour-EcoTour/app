@@ -2,27 +2,31 @@ import apiClient from '@/services/apiClient';
 import { handleApiError } from '@/src/utils/errorHandling';
 import { translateWeekdayToEnglish } from '@/src/utils/weekdayTranslation';
 
-// Helpers
+// Week enum
 const WEEK_ENUM = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] as const;
 type WeekDay = typeof WEEK_ENUM[number];
 
+// Convert time to HH:MM:SS format
 const toHHMMSS = (t?: string) => {
   if (!t) return '';
-  // aceita "HH:MM" ou "HH:MM:SS"
   if (/^\d{2}:\d{2}$/.test(t)) return `${t}:00`;
   if (/^\d{2}:\d{2}:\d{2}$/.test(t)) return t;
-  return ''; // inválido
+  return '';
 };
 
+// Sanitize string
 const sanitizeStr = (v?: string) => (typeof v === 'string' ? v.trim() : '');
+
+// Check if valid point type
 const isPointType = (t: string): t is 'trail'|'water_fall'|'park'|'farm'|'other' =>
   ['trail','water_fall','park','farm','other'].includes(t);
 
+// Point data input interface
 interface PointDataInput {
   name: string;
   description: string;
-  week_start: string; // PT-BR vindo do front
-  week_end: string;   // PT-BR vindo do front
+  week_start: string;
+  week_end: string;
   open_time: string;
   close_time: string;
   point_type: 'trail'|'water_fall'|'park'|'farm'|'other';
@@ -42,8 +46,8 @@ interface PointDataAPI {
   description: string;
   week_start: WeekDay;
   week_end: WeekDay;
-  open_time: string;  // HH:MM:SS
-  close_time: string; // HH:MM:SS
+  open_time: string;
+  close_time: string;
   point_type: 'trail'|'water_fall'|'park'|'farm'|'other';
   link: string;
   latitude?: number;
@@ -97,10 +101,8 @@ export const createPoint = async (pointData: PointDataInput) => {
       neighborhood: sanitizeStr(pointData.neighborhood),
       state: sanitizeStr(pointData.state),
       street: sanitizeStr(pointData.street),
-      // number: só envia se existir e for > 0
       ...(typeof pointData.number === 'number' && pointData.number > 0 ? { number: pointData.number } : {}),
 
-      // latitude/longitude: só envia se vieram ambos (validados no front)
       ...(typeof pointData.latitude === 'number' && typeof pointData.longitude === 'number'
         ? { latitude: pointData.latitude, longitude: pointData.longitude }
         : {}),
@@ -112,7 +114,6 @@ export const createPoint = async (pointData: PointDataInput) => {
     });
     return res.data;
   } catch (error: any) {
-    // Log útil pra 500 (HTML)
     if (error?.response) {
       const ct = String(error.response.headers?.['content-type'] || '');
       console.error('createPoint status:', error.response.status);

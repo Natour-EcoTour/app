@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TextInput, StyleSheet, View, Text, Pressable, Platform } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+// Password input props
 interface PasswordInputProps {
   label?: string;
   placeholder?: string;
@@ -15,6 +16,7 @@ export default function PasswordInput({
   value,
   onChange,
 }: PasswordInputProps) {
+  // Use states
   const [showPassword, setShowPassword] = useState(false);
 
   return (

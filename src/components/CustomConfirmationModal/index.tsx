@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 import { RelativePathString } from 'expo-router';
 
+// Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+// Custom confirmation modal props
 interface CustomConfirmationModalProps {
   isVisible: boolean;
   onClose: () => void;

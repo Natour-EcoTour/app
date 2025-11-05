@@ -17,9 +17,11 @@ import { uploadPointPhoto } from '@/services/photos/photoService';
 import { router } from 'expo-router';
 
 export default function AddPoint() {
+  // Use states
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Handle form
   const {
     control,
     handleSubmit,
@@ -53,6 +55,7 @@ export default function AddPoint() {
     },
   });
 
+  // Set selected images with validation
   const setSelectedImagesWithValidation = (value: React.SetStateAction<string[]>) => {
     setSelectedImages(value);
     const newImages = typeof value === 'function' ? value(selectedImages) : value;
@@ -60,11 +63,13 @@ export default function AddPoint() {
     trigger('images');
   };
 
+  // Convert time to minutes
   const toMinutes = (hhmm: string) => {
     const [h, m] = hhmm.split(':').map(Number);
     return h * 60 + m;
   };
 
+  // Validate URL
   const isValidUrl = (url?: string) => {
     if (!url) return false;
     const trimmed = url.trim();
@@ -72,6 +77,7 @@ export default function AddPoint() {
     return /^https?:\/\/\S+\.\S+/.test(trimmed);
   };
 
+  // Handle create point with images
   const handleCreatePointWithImages = async (data: any) => {
     if (selectedImages.length === 0) {
       Toast.show({

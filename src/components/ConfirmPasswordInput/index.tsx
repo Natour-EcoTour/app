@@ -1,5 +1,6 @@
 import { TextInput, StyleSheet, View } from 'react-native';
 
+// Password form props
 interface PasswordFormProps {
   password: string;
   placeholder?: string;

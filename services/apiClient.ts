@@ -3,12 +3,14 @@ import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
 import Toast from 'react-native-toast-message';
 
+// Create API client with base configuration
 export const apiClient = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
   timeout: 10000,
 });
 
 
+// Request interceptor to add authorization token
 apiClient.interceptors.request.use(
   async (config) => {
     const accessToken = await SecureStore.getItemAsync('access');
@@ -25,6 +27,7 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Response interceptor to handle 401 errors
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {

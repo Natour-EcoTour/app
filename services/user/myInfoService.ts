@@ -1,6 +1,7 @@
 import Toast from 'react-native-toast-message';
 import apiClient from '@/services/apiClient';
 
+// Get my info service
 export const myInfo = async () => {
     try {
         const response = await apiClient.get('users/me/');

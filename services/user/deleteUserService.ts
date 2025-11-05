@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import * as SecureStore from 'expo-secure-store';
 
+// Delete user service
 export const deleteUser = async () => {
     try {
         const response = await apiClient.delete('users/me/delete/',

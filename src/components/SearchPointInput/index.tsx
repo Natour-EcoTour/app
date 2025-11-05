@@ -2,26 +2,33 @@ import { TextInput, StyleSheet, View, Dimensions, TouchableOpacity, Text } from 
 import { searchPoints } from '@/services/points/searchPoint';
 import { useState, useEffect, useRef } from 'react';
 
+// Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+// Search result props
 interface SearchResult {
   id: number;
   name: string;
 }
 
+// Search point input props
 interface SearchPointInputProps {
   placeholder?: string;
   value: string;
   onChangeText: (text: string) => void;
   onSelectResult?: (resultId: number, resultName: string) => void;
 }
+
 export default function SearchPointInput({
   placeholder = 'Digite o nome do ponto...',
   value,
   onChangeText,
   onSelectResult,
 }: SearchPointInputProps) {
+  // Use states
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  
+  // Use refs
   const debounceTimeoutRef = useRef<number | null>(null);
 
   const performSearch = async (searchTerm: string) => {

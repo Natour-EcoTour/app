@@ -1,8 +1,10 @@
 import axios from "axios";
 import Toast from "react-native-toast-message";
 
+// Base URL from environment
 export const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
+// Send verification code service
 export const sendVerificationCode = async (name: string, email: string, password: string) => {
     try {
         const response = await axios.post(`${baseURL}code/send/`, {

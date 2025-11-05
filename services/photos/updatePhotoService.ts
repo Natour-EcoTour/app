@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import Toast from 'react-native-toast-message';
 
+// Get MIME type from URI
 const getMimeType = (uri: string): string => {
     const extension = uri.split('.').pop()?.toLowerCase();
     switch (extension) {
@@ -18,6 +19,7 @@ const getMimeType = (uri: string): string => {
     }
 };
 
+// Update photo service
 export const updatePhoto = async (entityType: string, entityId: number, photoId: number, imageUri: string) => {
     try {
         const formData = new FormData();

@@ -2,8 +2,10 @@ import apiClient from '@/services/apiClient';
 import { handleApiError } from '@/src/utils/errorHandling';
 import { translateWeekdayToEnglish } from '@/src/utils/weekdayTranslation';
 
+// Week days types
 type week_days_types = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
+// Form values interface
 export interface FormValues  {
   name: string;
   description: string;
@@ -28,6 +30,7 @@ export interface FormValues  {
   images: any[];
 };
 
+// Update point service
 export const updatePoint = async (pointData: FormValues, pointId: string) => {
     try {
         const apiData: FormValues = {

@@ -1,11 +1,13 @@
 import { StyleSheet, View } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 
+// Star rating props
 interface StarRatingProps {
   rating: number;
 }
 
 export default function StarRating({ rating }: StarRatingProps) {
+  // Clamp rating between 0 and 5
   const clampedRating = Math.max(0, Math.min(5, rating));
 
   return (

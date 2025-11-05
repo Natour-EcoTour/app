@@ -1,11 +1,13 @@
 import apiClient from '@/services/apiClient';
 import { handleApiError } from '@/src/utils/errorHandling';
 
+// Get my points params interface
 interface GetMyPointsParams {
     name?: string;
     status?: 'true' | 'false' | 'null' | 'none';
 }
 
+// Get my points service
 export const getMyPoints = async (params?: GetMyPointsParams) => {
     try {
         const queryParams = new URLSearchParams();

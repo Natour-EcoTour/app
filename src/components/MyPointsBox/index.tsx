@@ -14,8 +14,10 @@ import StarRating from '@/components/StarRating';
 import { deletePoint } from '@/services/points/deletePointService';
 import { ActivityIndicator } from 'react-native-paper';
 
+// Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+// My points box props
 interface MyPointsBoxProps {
   id: number;
   pointName: string;

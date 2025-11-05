@@ -1,8 +1,10 @@
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
+// Base URL from environment
 export const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
+// Get terms service
 export const getTerms = async (id: number) => {
     try {
         const response = await axios.get(`${baseURL}terms/${id}/`);
